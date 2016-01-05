@@ -1,0 +1,4 @@
+#-dontshrink 
+#-dontoptimize 
+#-verbose 
+#-keep public class * extends android.content.ContentProvider
