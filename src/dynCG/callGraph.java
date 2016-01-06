@@ -4,7 +4,7 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 12/10/15		hcai		created; for representing dynamic call graph
- *
+ * 01/05/16		hcai		the first basic, working version
 */
 package dynCG;
 
@@ -26,6 +26,11 @@ public class callGraph {
 	// bijective mapping between string and integer tagging of canonically named method (package + class + method signature)
 	public static final Map<String, Integer> g_me2idx = new HashMap<String, Integer>();
 	public static final Map<Integer, String> g_idx2me = new HashMap<Integer,String>();
+	
+	public String toString() {
+		return "dynamic conflated call graph: " + g_me2idx.size() + " methods; " + 
+				this._graph.vertexSet().size() + " nodes; " + this._graph.edgeSet().size() + " edges.";
+	}
 
 	public static class CGNode {
 		// method index
@@ -44,6 +49,12 @@ public class callGraph {
 				return null;
 			}
 			return g_idx2me.get(this.idx);
+		}
+		public boolean equals(Object other) {
+			return ((CGNode)other).idx.intValue() == this.idx.intValue();
+		}
+		public int hashCode() {
+			return idx.hashCode();
 		}
 	}
 	
@@ -87,8 +98,21 @@ public class callGraph {
 		_graph.addEdge(src, tgt);
 	}
 	
+	private CGNode getCreateNode(int mid) {
+		CGNode tobe = new CGNode(mid);
+		if (!_graph.containsVertex(tobe)) return tobe;
+		for (CGNode n : _graph.vertexSet()) {
+			if (tobe.equals(n)) {
+				return n;
+			}
+		}
+		return null;
+		//throw new Exception("impossible error!");
+	}
+	
 	public void addCall (int caller, int callee) {
-		addEdge(new CGNode(caller), new CGNode(callee));
+		//addEdge(new CGNode(caller), new CGNode(callee));
+		addEdge (getCreateNode(caller), getCreateNode(callee));
 	}
 	
 	public int addMethod (String mename) {
@@ -108,6 +132,15 @@ public class callGraph {
 		assert traceLine.contains(CALL_DELIMIT);
 		String[] segs = traceLine.split(CALL_DELIMIT);
 		assert segs.length == 2;
+		for (int k = 0; k < segs.length; ++k) {
+			segs[k] = segs[k].trim();
+			if (segs[k].startsWith("<")) {
+				segs[k] = segs[k].substring(1);
+			}
+			if (segs[k].endsWith(">")) {
+				segs[k] = segs[k].substring(0, segs[k].length()-1);
+			}
+		}
 		
 		addCall (addMethod (segs[0]), addMethod (segs[1]));
 	}
