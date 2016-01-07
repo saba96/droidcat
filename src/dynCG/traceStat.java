@@ -35,9 +35,14 @@ public class traceStat {
 	}
 	*/
 	private String traceFn; // name of trace file
-	traceStat (String _traceFn) {
+	public traceStat (String _traceFn) {
 		this.traceFn = _traceFn;
 	}
+	
+	public traceStat () {
+		traceFn = null;
+	}
+	public void setTracefile (String tfname) { this.traceFn = tfname; }
 	
 	public static class ICCIntent extends Intent {
 		public static final String INTENT_SENT_DELIMIT = "[ Intent sent ]";
@@ -227,6 +232,7 @@ public class traceStat {
 	}
 	
 	public void stat() {
+		if (this.traceFn == null) return;
 		parseTrace (this.traceFn);
 	}
 
