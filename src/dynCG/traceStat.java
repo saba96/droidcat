@@ -44,6 +44,7 @@ public class traceStat {
 		public static final String INTENT_RECV_DELIMIT = "[ Intent received ]";
 		public static final String[] fdnames = {
 			"Action", "Categories", "PackageName", "DataString", "DataURI", "Scheme", "Flags", "Type", "Extras", "Component"};
+		public int ts;
 		/*
 		String action = null;
 		String packagename = null;
@@ -66,10 +67,12 @@ public class traceStat {
 			for (String fdname : fdnames) {
 				fields.put(fdname, "null");
 			}
+			ts = -1;
 		}
 		
 		public String toString() {
 			String ret = fields.toString() + "\n";
+			ret += "ts: " + this.ts + "\n";
 			ret += "External ICC: " + bExternal + "\n";
 			ret += "Incoming ICC: " + bIncoming + "\n";
 			ret += "Explicit ICC: " + isExplicit() + "\n";
@@ -102,12 +105,15 @@ public class traceStat {
 			}
 		}
 		
+		public void setTS (int _ts) { this.ts = _ts; }
+		public int getTS () { return this.ts; }
+		
 		public boolean isExplicit () {
 			return fields.get("Component")!=null;
 		}
 		
 		public boolean hasExtras () {
-			return fields.get("Extras")!=null;
+			return fields.get("Extras").compareTo("null")!=0;
 		}
 		
 		public boolean hasData() {
@@ -157,6 +163,7 @@ public class traceStat {
 		try {
 			BufferedReader br = new BufferedReader (new FileReader(fnTrace));
 			String line = br.readLine().trim();
+			int ts = 0; // time stamp, for ordering all the method and ICC calls
 			while (line != null) {
 				// try to retrieve a block of intent info
 				boolean boutICC = line.contains(ICCIntent.INTENT_SENT_DELIMIT);
@@ -174,10 +181,13 @@ public class traceStat {
 							if (comp.contains(recvCls)) {
 								itn.setExternal(false);
 							}
-							cg.addCall(line);
+							cg.addCall(line,ts);
+							ts ++;
 						}
 					}
 					allIntents.add(itn);
+					itn.setTS(ts);
+					ts ++;
 					
 					line = br.readLine().trim();
 					continue;
@@ -185,7 +195,8 @@ public class traceStat {
 				
 				// try to retrieve a call line
 				if (line.contains(callGraph.CALL_DELIMIT)) {
-					cg.addCall(line);
+					cg.addCall(line,ts);
+					ts ++;
 				}
 				
 				// others
@@ -210,6 +221,9 @@ public class traceStat {
 			System.out.println(allIntents.get(k));
 		}
 		System.out.println(this.cg);
+		this.cg.listEdgeByFrequency();
+		this.cg.listCallers();
+		this.cg.listCallees();
 	}
 	
 	public void stat() {

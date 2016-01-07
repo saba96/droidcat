@@ -9,8 +9,11 @@
 package dynCG;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +22,8 @@ import org.jgrapht.*;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.alg.*;
 import org.jgrapht.traverse.*;
+
+import com.google.android.collect.Lists;
 
 /** represent the dynamic call graph built from whole program path profiles */
 public class callGraph {
@@ -56,6 +61,10 @@ public class callGraph {
 		public int hashCode() {
 			return idx.hashCode();
 		}
+		
+		public String toString() {
+			return getMethodName() + "[" + idx + "]";
+		}
 	}
 	
 	public static class CGNodeFactory implements VertexFactory<CGNode> {
@@ -68,15 +77,28 @@ public class callGraph {
 	public static class CGEdge {
 		private CGNode src;
 		private CGNode tgt;
+		/* keep the time stamp of each instance, in the order of enrollment */
+		/* then the size of this collection indicates the frequency of this call */
+		private Set<Integer> tss = new LinkedHashSet<Integer>();
 		CGEdge(CGNode _src, CGNode _tgt) {
 			src = _src;
 			tgt = _tgt;
+		}
+		public void addInstance (int ts) {
+			tss.add(ts);
 		}
 		public CGNode getSource() {
 			return src;
 		}
 		public CGNode getTarget() {
 			return tgt;
+		}
+		
+		public int getFrequency() { return tss.size(); }
+		public Set<Integer> getAllTS () { return tss; }
+		
+		public String toString() {
+			return "["+g_idx2me.get(src.getIndex()) + "->" + g_idx2me.get(tgt.getIndex())+"]:" + getFrequency();
 		}
 	}
 	
@@ -92,10 +114,15 @@ public class callGraph {
 	callGraph() {
 	}
 	
-	private void addEdge(CGNode src, CGNode tgt) {
+	public DirectedGraph<CGNode, CGEdge> getInternalGraph() { return _graph; }
+	
+	private void addEdge(CGNode src, CGNode tgt, int ts) {
 		_graph.addVertex(src);
 		_graph.addVertex(tgt);
-		_graph.addEdge(src, tgt);
+		if (!_graph.containsEdge(src, tgt)) {
+			_graph.addEdge(src, tgt);
+		}
+		_graph.getEdge(src, tgt).addInstance(ts);
 	}
 	
 	private CGNode getCreateNode(int mid) {
@@ -110,9 +137,9 @@ public class callGraph {
 		//throw new Exception("impossible error!");
 	}
 	
-	public void addCall (int caller, int callee) {
+	public void addCall (int caller, int callee, int ts) {
 		//addEdge(new CGNode(caller), new CGNode(callee));
-		addEdge (getCreateNode(caller), getCreateNode(callee));
+		addEdge (getCreateNode(caller), getCreateNode(callee), ts);
 	}
 	
 	public int addMethod (String mename) {
@@ -127,7 +154,7 @@ public class callGraph {
 		return curidx;
 	}
 
-	public void addCall (String traceLine) {
+	public void addCall (String traceLine, int ts) {
 		traceLine = traceLine.trim();
 		assert traceLine.contains(CALL_DELIMIT);
 		String[] segs = traceLine.split(CALL_DELIMIT);
@@ -142,7 +169,7 @@ public class callGraph {
 			}
 		}
 		
-		addCall (addMethod (segs[0]), addMethod (segs[1]));
+		addCall (addMethod (segs[0]), addMethod (segs[1]), ts);
 	}
 	
 	public CGNode getNodeByName (String mename) {
@@ -196,6 +223,76 @@ public class callGraph {
 	public boolean isReachable (String caller, String callee) {
 		return !getPath(caller, callee).isEmpty();
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	static class CGEdgeComparator implements Comparator<CGEdge> {
+		private CGEdgeComparator() {
+		}
+		
+		private static final CGEdgeComparator cgcSingleton = new CGEdgeComparator(); 
+		public static final CGEdgeComparator inst() { return cgcSingleton; }
+
+		public int compare(CGEdge a, CGEdge b) {
+			if ( a.getFrequency() > b.getFrequency() ) {
+				return 1;
+			}
+			else if ( a.getFrequency() < b.getFrequency() ) {
+				return -1;
+			}
+			return 0;
+		}
+	}
+	
+	public void listEdgeByFrequency() {
+		System.out.println("\n==== call frequencies ===\n ");
+		List<CGEdge> allEdges = new ArrayList<CGEdge>();
+		allEdges.addAll(this._graph.edgeSet());
+		Collections.sort(allEdges, CGEdgeComparator.inst());
+		for (CGEdge e : allEdges) {
+			System.out.println(e);
+		}
+	}
+	
+	public void listCallers() {
+		System.out.println("\n==== caller ranked by non-ascending fan-out  === \n");
+		List<CGNode> allNodes = new ArrayList<CGNode>();
+		allNodes.addAll(this._graph.vertexSet());
+		Collections.sort(allNodes, new Comparator<CGNode>() {
+			public int compare(CGNode a, CGNode b) {
+				if ( _graph.outDegreeOf(a) > _graph.outDegreeOf(b) ) {
+					return 1;
+				}
+				else if ( _graph.outDegreeOf(a) < _graph.outDegreeOf(b) ) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		for (CGNode n : allNodes) {
+			System.out.println(n+":"+_graph.outDegreeOf(n));
+		}
+	}
+	
+	public void listCallees() {
+		System.out.println("\n==== callee ranked by non-ascending fan-in  === \n");
+		List<CGNode> allNodes = new ArrayList<CGNode>();
+		allNodes.addAll(this._graph.vertexSet());
+		Collections.sort(allNodes, new Comparator<CGNode>() {
+			public int compare(CGNode a, CGNode b) {
+				if ( _graph.inDegreeOf(a) > _graph.inDegreeOf(b) ) {
+					return 1;
+				}
+				else if ( _graph.inDegreeOf(a) < _graph.inDegreeOf(b) ) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		for (CGNode n : allNodes) {
+			System.out.println(n+":"+_graph.inDegreeOf(n));
+		}
+	}
+
 }
 
 /* vim :set ts=4 tw=4 tws=4 */
