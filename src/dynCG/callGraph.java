@@ -23,8 +23,6 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.alg.*;
 import org.jgrapht.traverse.*;
 
-import com.google.android.collect.Lists;
-
 /** represent the dynamic call graph built from whole program path profiles */
 public class callGraph {
 	public static final String CALL_DELIMIT = "->";
@@ -54,6 +52,14 @@ public class callGraph {
 				return null;
 			}
 			return g_idx2me.get(this.idx);
+		}
+		public String getSootMethodName() {
+			return "<" + getMethodName() + ">";
+		}
+		public String getSootClassName() {
+			String ret = getMethodName();
+			if (ret == null) return null;
+			return ret.substring(0, ret.indexOf(":"));
 		}
 		public boolean equals(Object other) {
 			return ((CGNode)other).idx.intValue() == this.idx.intValue();

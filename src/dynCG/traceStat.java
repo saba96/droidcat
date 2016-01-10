@@ -44,7 +44,7 @@ public class traceStat {
 	}
 	public void setTracefile (String tfname) { this.traceFn = tfname; }
 	
-	public static class ICCIntent extends Intent {
+	public static class ICCIntent { //extends Intent {
 		public static final String INTENT_SENT_DELIMIT = "[ Intent sent ]";
 		public static final String INTENT_RECV_DELIMIT = "[ Intent received ]";
 		public static final String[] fdnames = {
@@ -139,6 +139,9 @@ public class traceStat {
 	
 	private callGraph cg = new callGraph();
 	private List<ICCIntent> allIntents = new ArrayList<ICCIntent>();
+	
+	public callGraph getCG () { return cg; }
+	public List<ICCIntent> getAllICCs () { return allIntents; }
 	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		List<String> infolines = new ArrayList<String>();
