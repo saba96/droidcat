@@ -170,6 +170,7 @@ public class traceStat {
 			i++;
 		}
 		*/
+		br.mark(1000);
 		String line = br.readLine().trim();
 		
 		while (line != null) {
@@ -206,7 +207,6 @@ public class traceStat {
 			BufferedReader br = new BufferedReader (new FileReader(fnTrace));
 			String line = br.readLine().trim();
 			int ts = 0; // time stamp, for ordering all the method and ICC calls
-			String prevGetIntentCS = ""; // the most recent Intent receiving call site
 			while (line != null) {
 				// try to retrieve a block of intent info
 				boolean boutICC = line.contains(ICCIntent.INTENT_SENT_DELIMIT);
@@ -221,11 +221,12 @@ public class traceStat {
 					if (line.contains(callGraph.CALL_DELIMIT)) {
 						CGEdge ne = cg.addCall(line,ts);
 						ts ++;
-						if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
-							prevGetIntentCS = ne.toString(); //ne.getSource().getSootMethodName();
-						}
 						
 						if (binICC) {
+							if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
+								itn.setCallsite(ne.toString());
+							}
+							
 							String comp = itn.getFields("Component");
 							if (comp != null) {
 								//String recvCls = line.substring(line.indexOf('<')+1, line.indexOf(": "));
@@ -236,13 +237,10 @@ public class traceStat {
 							}
 						}
 						else { // outgoing ICC
-							itn.setCallsite(ne.getTarget().getSootMethodName());
+							if (iccAPICom.is_IntentSendingAPI(ne.getTarget().getMethodName())) {
+								itn.setCallsite(ne.getTarget().getSootMethodName());
+							}
 						}
-					}
-					
-					if (binICC) {
-						assert !prevGetIntentCS.isEmpty();
-						itn.setCallsite(prevGetIntentCS);
 					}
 					
 					itn.setTS(ts);
@@ -255,11 +253,8 @@ public class traceStat {
 				
 				// try to retrieve a call line
 				if (line.contains(callGraph.CALL_DELIMIT)) {
-					CGEdge ne = cg.addCall(line,ts);
+					cg.addCall(line,ts);
 					ts ++;
-					if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
-						prevGetIntentCS = ne.toString(); //ne.getSource().getSootMethodName();
-					}
 				}
 				
 				// others

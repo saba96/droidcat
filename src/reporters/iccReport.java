@@ -135,7 +135,7 @@ public class iccReport implements Extension {
 		Iterator<SootClass> clsIt = Scene.v().getClasses().iterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
-			//if ( sClass.isPhantom() ) {	continue; }
+			if ( sClass.isPhantom() ) {	continue; }
 			boolean isAppCls = false, isSDKCls = false, isULCls = false;
 			//if ( sClass.isApplicationClass() ) {
 			if (sClass.getName().contains(packName)) {	
@@ -152,20 +152,30 @@ public class iccReport implements Extension {
 				}
 			}
 			
+			if (!sClass.isApplicationClass()) {
+				continue;
+			}
+			
+			System.out.println("now on class " + sClass.getName());
+			
 			/* traverse all methods of the class */
 			Iterator<SootMethod> meIt = sClass.getMethods().iterator();
 			while (meIt.hasNext()) {
 				SootMethod sMethod = (SootMethod) meIt.next();
 				if ( !sMethod.isConcrete() ) {
-					// skip abstract methods and phantom methods, and native methods as well
-					//continue; 
-				}
-				if (!sMethod.hasActiveBody()) {
-					continue;
-				}
+                    // skip abstract methods and phantom methods, and native methods as well
+                    continue; 
+                }
+                if ( sMethod.toString().indexOf(": java.lang.Class class$") != -1 ) {
+                    // don't handle reflections now either
+                    continue;
+                }
 				String meId = sMethod.getSignature();
 				
-				Iterator<Unit> itchain = sMethod.getActiveBody().getUnits().iterator();
+				Body body = sMethod.retrieveActiveBody();
+				PatchingChain<Unit> pchn = body.getUnits();
+				
+				Iterator<Unit> itchain = pchn.snapshotIterator();
 				while (itchain.hasNext()) {
 					Stmt s = (Stmt)itchain.next();
 					if (iccAPICom.is_IntentSendingAPI(s)) {
