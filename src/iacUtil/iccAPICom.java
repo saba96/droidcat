@@ -73,6 +73,20 @@ public class iccAPICom {
 			// simple and naive decision based on textual matching
 			return g__IntentReceivingAPIs.contains(inv.getMethod().getName());
 		}
+		
+		public static boolean is_IntentReceivingAPI(String cs) {
+			for (String s : g__IntentReceivingAPIs) {
+				if (cs.contains(s)) return true;
+			}
+			return false;
+		}
+		
+		public static boolean is_IntentSendingAPI(String cs) {
+			for (String s : g__IntentSendingAPIs) {
+				if (cs.contains(s)) return true;
+			}
+			return false;
+		}
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

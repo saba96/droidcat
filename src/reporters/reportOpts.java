@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class reportOpts {
-	protected boolean debugOut = false;
+	protected boolean debugOut = true;
 	protected String traceFile = null;
 	
 	public String[] process(String[] args) {

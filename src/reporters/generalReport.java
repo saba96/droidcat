@@ -10,36 +10,19 @@
 */
 package reporters;
 
-import iacUtil.*;
-
-import java.io.File;
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import dua.Extension;
 import dua.Forensics;
 import dua.global.ProgramFlowGraph;
-import dua.method.CFG;
-import dua.method.CFG.CFGNode;
-import dua.method.CallSite;
-import dua.util.Util;
 
 import soot.*;
-import soot.jimple.*;
-import soot.toolkits.graph.Block;
-import soot.toolkits.graph.BlockGraph;
-import soot.toolkits.graph.ExceptionalBlockGraph;
-import soot.util.*;
 
 import dynCG.*;
 import dynCG.callGraph.CGNode;
-
 
 public class generalReport implements Extension {
 	
@@ -124,7 +107,7 @@ public class generalReport implements Extension {
 	}
 	
 	public void run() {
-		System.out.println("Running static analysis for characterization");
+		System.out.println("Running static analysis for method/class coverage characterization");
 
 		init();
 		
@@ -134,36 +117,7 @@ public class generalReport implements Extension {
 		
 		System.exit(0);
 	}
-	
-	/** store the coverage at different levels of granularity */
-	class covStat {
-		public covStat () {
-			covered = 0;
-			total = 0;
-			tag = "unknown";
-		}
-		public covStat(String _tag) {
-			this();
-			tag = _tag;
-		}
-		private String tag;
-		private int covered;
-		private int total; 
-		public void incCovered (int increment) { covered += increment; }
-		public void incTotal (int increment) { total += increment; }
-		public void incCovered () { incCovered(1); }
-		public void incTotal () { incTotal(1); }
-		public int getCovered() { return covered; }
-		public int getTotal() { return total; }
-		public double getCoverage () {
-			if (total == 0) return .0D;
-			return (double)(covered * 1.0 / total); 
-		}
-		@Override public String toString() {
-			return tag + " " + covered + " covered out of " + total + " for a coverage of " + getCoverage(); 
-		}
-	}
-	
+
 	Set<String> traversedClasses = new HashSet<String>();
 	Set<String> traversedMethods = new HashSet<String>();
 	
@@ -225,6 +179,7 @@ public class generalReport implements Extension {
 					}
 				}
 				else {
+					assert isULCls;
 					ulMethodCov.incTotal();
 					if (allCoveredMethods.contains(meId)) {
 						ulMethodCov.incCovered();
@@ -240,25 +195,63 @@ public class generalReport implements Extension {
 	
 	public void report() {
 		/** report statistics for the current trace */
-		System.out.println(appClsCov);
-		System.out.println(appMethodCov);
-		System.out.println(ulClsCov);
-		System.out.println(ulMethodCov);
-		System.out.println(sdkClsCov);
-		System.out.println(sdkMethodCov);
+		if (opts.debugOut) {
+			System.out.println(appClsCov);
+			System.out.println(appMethodCov);
+			System.out.println(ulClsCov);
+			System.out.println(ulMethodCov);
+			System.out.println(sdkClsCov);
+			System.out.println(sdkMethodCov);
+		}
 		
-		System.out.println("Total classes: " + (appClsCov.getTotal()+ulClsCov.getTotal()+sdkClsCov.getTotal()) );
-		System.out.println("Covered classes: " + (appClsCov.getCovered()+ulClsCov.getCovered()+sdkClsCov.getCovered()) );
-		System.out.println("Covered classes seen in the dynamic callgraph: " + allCoveredClasses.size() );
+		int sclsTotal = appClsCov.getTotal()+ulClsCov.getTotal()+sdkClsCov.getTotal();
+		if (opts.debugOut) {
+			System.out.println();
+			System.out.println("Total classes: " +  sclsTotal);
+			System.out.print("distribution: application user-lib sdk ");
+			System.out.println(appClsCov.getTotal()*1.0/sclsTotal + " " + ulClsCov.getTotal()*1.0/sclsTotal + " " + sdkClsCov.getTotal()*1.0/sclsTotal);
+		}
 		
-		System.out.println("Total methods: " + (appMethodCov.getTotal()+ulMethodCov.getTotal()+sdkMethodCov.getTotal()) );
-		System.out.println("Covered methods: " + (appMethodCov.getCovered()+ulMethodCov.getCovered()+sdkMethodCov.getCovered()) );
-		System.out.println("Covered methods seen in the dynamic callgraph: " + allCoveredMethods.size() );
+		int dclsTotal = (appClsCov.getCovered()+ulClsCov.getCovered()+sdkClsCov.getCovered());
+		if (opts.debugOut) {
+			System.out.println("Covered classes: " +  dclsTotal);
+			System.out.print("distribution: application user-lib sdk ");
+			System.out.println(appClsCov.getCovered()*1.0/dclsTotal + " " + ulClsCov.getCovered()*1.0/dclsTotal + " " + sdkClsCov.getCovered()*1.0/dclsTotal);
+			System.out.println("Covered classes seen in the dynamic callgraph: " + allCoveredClasses.size() );
+		}
 		
-		allCoveredClasses.removeAll(traversedClasses);
-		System.out.println("covered classes not found during traversal: " + allCoveredClasses);
-		allCoveredMethods.removeAll(traversedMethods);
-		System.out.println("covered methods not found during traversal: " + allCoveredMethods);
+		int smeTotal = (appMethodCov.getTotal()+ulMethodCov.getTotal()+sdkMethodCov.getTotal());
+		if (opts.debugOut) {
+			System.out.println();
+			System.out.println("Total methods: " + smeTotal);
+			System.out.print("distribution: application user-lib sdk ");
+			System.out.println(appMethodCov.getTotal()*1.0/smeTotal + " " + ulMethodCov.getTotal()*1.0/smeTotal + " " + sdkMethodCov.getTotal()*1.0/smeTotal);
+		}
+		
+		int dmeTotal = (appMethodCov.getCovered()+ulMethodCov.getCovered()+sdkMethodCov.getCovered());
+		if (opts.debugOut) {
+			System.out.println("Covered methods: " +  dmeTotal);
+			System.out.print("distribution: application user-lib sdk ");
+			System.out.println(appMethodCov.getCovered()*1.0/dmeTotal + " " + ulMethodCov.getCovered()*1.0/dmeTotal + " " + sdkMethodCov.getCovered()*1.0/dmeTotal);
+			System.out.println("Covered methods seen in the dynamic callgraph: " + allCoveredMethods.size() );
+			
+			System.out.println();
+			allCoveredClasses.removeAll(traversedClasses);
+			System.out.println("covered classes not found during traversal: " + allCoveredClasses);
+			allCoveredMethods.removeAll(traversedMethods);
+			System.out.println("covered methods not found during traversal: " + allCoveredMethods);
+		}
+		
+		System.out.println("tabulation");
+		DecimalFormat df = new DecimalFormat("#.####");
+		System.out.println(appClsCov.getTotal() + "\t" + ulClsCov.getTotal() + "\t" + sdkClsCov.getTotal() + "\t" + sclsTotal + "\t" + 
+						   appMethodCov.getTotal() + "\t" + ulMethodCov.getTotal() + "\t" + sdkMethodCov.getTotal() + "\t" + smeTotal);
+		System.out.println(appClsCov.getCovered() + "\t" + ulClsCov.getCovered() + "\t" + sdkClsCov.getCovered() + "\t" + dclsTotal + "\t" +
+				   appMethodCov.getCovered() + "\t" + ulMethodCov.getCovered() + "\t" + sdkMethodCov.getCovered() + "\t" + dmeTotal);
+		System.out.println(df.format(appClsCov.getCoverage()) + "\t" + df.format(ulClsCov.getCoverage()) + "\t" + df.format(sdkClsCov.getCoverage()) + "\t" + 
+				df.format(1.0*dclsTotal/sclsTotal) + "\t" + 
+				df.format(appMethodCov.getCoverage()) + "\t" + df.format(ulMethodCov.getCoverage()) + "\t" + df.format(sdkMethodCov.getCoverage()) + "\t" + 
+				df.format(1.0*dmeTotal/smeTotal));
 	}
 }  
 

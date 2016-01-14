@@ -5,6 +5,7 @@
  * -------------------------------------------------------------------------------------------
  * 12/10/15		hcai		created; for parsing traces and calculating statistics 
  * 01/05/16		hcai		the first basic, working version
+ * 01/13/16		hcai		added call site tracking for each ICC instance
 */
 package dynCG;
 
@@ -26,6 +27,8 @@ import org.jgrapht.alg.*;
 import org.jgrapht.traverse.*;
 
 import android.content.Intent;
+import dynCG.callGraph.CGEdge;
+import iacUtil.iccAPICom;
 
 public class traceStat {
 	/*
@@ -67,12 +70,15 @@ public class traceStat {
 		public void setIncoming (boolean _bv) { bIncoming = _bv; }
 		// mapping from intent field name to field value
 		protected Map<String, String> fields = new HashMap<String, String>();
+		
+		protected String callsite; // the call site that sends or receives this Intent
 
 		ICCIntent() {
 			for (String fdname : fdnames) {
 				fields.put(fdname, "null");
 			}
 			ts = -1;
+			callsite = "";
 		}
 		
 		public String toString() {
@@ -82,6 +88,7 @@ public class traceStat {
 			ret += "Incoming ICC: " + bIncoming + "\n";
 			ret += "Explicit ICC: " + isExplicit() + "\n";
 			ret += "HasExtras: " + hasExtras() + "\n";
+			ret += "call site: " + callsite + "\n";
 			return ret;
 		}
 		
@@ -112,6 +119,9 @@ public class traceStat {
 		
 		public void setTS (int _ts) { this.ts = _ts; }
 		public int getTS () { return this.ts; }
+		
+		public String getCallsite() { return callsite; }
+		public void setCallsite (String stmt) { callsite = stmt; }
 		
 		public boolean isExplicit () {
 			return fields.get("Component")!=null;
@@ -145,6 +155,7 @@ public class traceStat {
 	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		List<String> infolines = new ArrayList<String>();
+		/*
 		int i = 1;
 		int total = ICCIntent.fdnames.length;
 		String line = null;
@@ -158,11 +169,34 @@ public class traceStat {
 			}
 			i++;
 		}
+		*/
+		String line = br.readLine().trim();
+		
+		while (line != null) {
+			boolean stop = true;;
+			for (String fdname : ICCIntent.fdnames) {
+				if (line.startsWith(fdname)) {
+					infolines.add(line);
+					if (fdname.equalsIgnoreCase("Categories") && !line.endsWith("=null")) {
+						int ninnerlns = Integer.valueOf(line.substring(line.indexOf('=')+1));
+						for (int k=0; k < ninnerlns; ++k) {
+							infolines.add(br.readLine().trim());
+						}
+					}
+					stop = false;
+					break;
+				}
+			}
+			if (stop) break;
+			br.mark(1000);
+			line = br.readLine().trim();
+		}
 		
 		// not enough lines read for an expected intent block
 		if (null == line) {
 			throw new IOException("unexpected end reached before reading an Intent object block");
 		}
+		br.reset();
 		
 		return new ICCIntent (infolines);
 	}
@@ -172,6 +206,7 @@ public class traceStat {
 			BufferedReader br = new BufferedReader (new FileReader(fnTrace));
 			String line = br.readLine().trim();
 			int ts = 0; // time stamp, for ordering all the method and ICC calls
+			String prevGetIntentCS = ""; // the most recent Intent receiving call site
 			while (line != null) {
 				// try to retrieve a block of intent info
 				boolean boutICC = line.contains(ICCIntent.INTENT_SENT_DELIMIT);
@@ -179,23 +214,40 @@ public class traceStat {
 				if (boutICC || binICC) {
 					ICCIntent itn = readIntentBlock(br);
 					itn.setIncoming(binICC);
-					String comp = itn.getFields("Component");
+					
 					//if (comp != null && comp.contains(appPackname)) {
-					if (comp != null && binICC) {
-						// look ahead one more line to find the receiver component
-						line = br.readLine().trim();
-						if (line.contains(callGraph.CALL_DELIMIT)) {
-							String recvCls = line.substring(line.indexOf('<')+1, line.indexOf(": "));
-							if (comp.contains(recvCls)) {
-								itn.setExternal(false);
+					// look ahead one more line to find the receiver component
+					line = br.readLine().trim();
+					if (line.contains(callGraph.CALL_DELIMIT)) {
+						CGEdge ne = cg.addCall(line,ts);
+						ts ++;
+						if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
+							prevGetIntentCS = ne.toString(); //ne.getSource().getSootMethodName();
+						}
+						
+						if (binICC) {
+							String comp = itn.getFields("Component");
+							if (comp != null) {
+								//String recvCls = line.substring(line.indexOf('<')+1, line.indexOf(": "));
+								String recvCls = ne.getSource().getSootClassName();
+								if (comp.contains(recvCls)) {
+									itn.setExternal(false);
+								}
 							}
-							cg.addCall(line,ts);
-							ts ++;
+						}
+						else { // outgoing ICC
+							itn.setCallsite(ne.getTarget().getSootMethodName());
 						}
 					}
-					allIntents.add(itn);
+					
+					if (binICC) {
+						assert !prevGetIntentCS.isEmpty();
+						itn.setCallsite(prevGetIntentCS);
+					}
+					
 					itn.setTS(ts);
 					ts ++;
+					allIntents.add(itn);
 					
 					line = br.readLine().trim();
 					continue;
@@ -203,8 +255,11 @@ public class traceStat {
 				
 				// try to retrieve a call line
 				if (line.contains(callGraph.CALL_DELIMIT)) {
-					cg.addCall(line,ts);
+					CGEdge ne = cg.addCall(line,ts);
 					ts ++;
+					if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
+						prevGetIntentCS = ne.toString(); //ne.getSource().getSootMethodName();
+					}
 				}
 				
 				// others

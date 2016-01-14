@@ -122,13 +122,15 @@ public class callGraph {
 	
 	public DirectedGraph<CGNode, CGEdge> getInternalGraph() { return _graph; }
 	
-	private void addEdge(CGNode src, CGNode tgt, int ts) {
+	private CGEdge addEdge(CGNode src, CGNode tgt, int ts) {
 		_graph.addVertex(src);
 		_graph.addVertex(tgt);
 		if (!_graph.containsEdge(src, tgt)) {
 			_graph.addEdge(src, tgt);
 		}
-		_graph.getEdge(src, tgt).addInstance(ts);
+		CGEdge ret = _graph.getEdge(src, tgt);
+		ret.addInstance(ts);
+		return ret;
 	}
 	
 	private CGNode getCreateNode(int mid) {
@@ -143,9 +145,9 @@ public class callGraph {
 		//throw new Exception("impossible error!");
 	}
 	
-	public void addCall (int caller, int callee, int ts) {
+	public CGEdge addCall (int caller, int callee, int ts) {
 		//addEdge(new CGNode(caller), new CGNode(callee));
-		addEdge (getCreateNode(caller), getCreateNode(callee), ts);
+		return addEdge (getCreateNode(caller), getCreateNode(callee), ts);
 	}
 	
 	public int addMethod (String mename) {
@@ -160,7 +162,7 @@ public class callGraph {
 		return curidx;
 	}
 
-	public void addCall (String traceLine, int ts) {
+	public CGEdge addCall (String traceLine, int ts) {
 		traceLine = traceLine.trim();
 		assert traceLine.contains(CALL_DELIMIT);
 		String[] segs = traceLine.split(CALL_DELIMIT);
@@ -175,7 +177,7 @@ public class callGraph {
 			}
 		}
 		
-		addCall (addMethod (segs[0]), addMethod (segs[1]), ts);
+		return addCall (addMethod (segs[0]), addMethod (segs[1]), ts);
 	}
 	
 	public CGNode getNodeByName (String mename) {
