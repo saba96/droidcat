@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/dyniac/src/IAC/iacInstr.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="IAC.iacInstr"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-w -cp /home/hcai//workspace/duaf/bin:/home/hcai//workspace/dyniac/bin -p cg verbose:false,implicit-entry:false -p cg.spark verbose:false,on-fly-cg:true,rta:false -d /home/hcai/Documents/ -debug -dumpJimple -brinstr:off -duainstr:off -allowphantom -slicectxinsens -android-jars /home/hcai/libs/android.jar -process-dir /home/hcai/Documents/AppClude.ShakingFlashLight.apk"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dyniac"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1g -ea"/>
+</launchConfiguration>
