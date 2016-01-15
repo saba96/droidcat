@@ -251,18 +251,27 @@ public class callGraph {
 		}
 	}
 	
-	public void listEdgeByFrequency() {
-		System.out.println("\n==== call frequencies ===\n ");
+	public List<CGEdge> listEdgeByFrequency() { return listEdgeByFrequency(true); }
+	public List<CGEdge> listEdgeByFrequency(boolean verbose) {
+		if (verbose) {
+			System.out.println("\n==== call frequencies ===\n ");
+		}
 		List<CGEdge> allEdges = new ArrayList<CGEdge>();
 		allEdges.addAll(this._graph.edgeSet());
 		Collections.sort(allEdges, CGEdgeComparator.inst());
-		for (CGEdge e : allEdges) {
-			System.out.println(e);
+		if (verbose) {
+			for (CGEdge e : allEdges) {
+				System.out.println(e);
+			}
 		}
+		return allEdges;
 	}
 	
-	public void listCallers() {
-		System.out.println("\n==== caller ranked by non-ascending fan-out  === \n");
+	public List<CGNode> listCallers() { return listCallers(true); }
+	public List<CGNode> listCallers(boolean verbose) {
+		if (verbose) {
+			System.out.println("\n==== caller ranked by non-ascending fan-out  === \n");
+		}
 		List<CGNode> allNodes = new ArrayList<CGNode>();
 		allNodes.addAll(this._graph.vertexSet());
 		Collections.sort(allNodes, new Comparator<CGNode>() {
@@ -276,13 +285,19 @@ public class callGraph {
 				return 0;
 			}
 		});
-		for (CGNode n : allNodes) {
-			System.out.println(n+":"+_graph.outDegreeOf(n));
+		if (verbose) {
+			for (CGNode n : allNodes) {
+				System.out.println(n+":"+_graph.outDegreeOf(n));
+			}
 		}
+		return allNodes;
 	}
 	
-	public void listCallees() {
-		System.out.println("\n==== callee ranked by non-ascending fan-in  === \n");
+	public List<CGNode> listCallees() { return listCallees(true); }
+	public List<CGNode> listCallees(boolean verbose) {
+		if (verbose) {
+			System.out.println("\n==== callee ranked by non-ascending fan-in  === \n");
+		}
 		List<CGNode> allNodes = new ArrayList<CGNode>();
 		allNodes.addAll(this._graph.vertexSet());
 		Collections.sort(allNodes, new Comparator<CGNode>() {
@@ -296,11 +311,13 @@ public class callGraph {
 				return 0;
 			}
 		});
-		for (CGNode n : allNodes) {
-			System.out.println(n+":"+_graph.inDegreeOf(n));
+		if (verbose) {
+			for (CGNode n : allNodes) {
+				System.out.println(n+":"+_graph.inDegreeOf(n));
+			}
 		}
+		return allNodes;
 	}
-
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

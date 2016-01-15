@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import soot.Scene;
+import soot.SootClass;
 import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
@@ -87,6 +89,16 @@ public class iccAPICom {
 			}
 			return false;
 		}
+		
+		public static final SootClass COMPONENT_TYPE_ACTIVITY = Scene.v().getSootClass("android.app.Activity");
+		public static final SootClass COMPONENT_TYPE_SERVICE = Scene.v().getSootClass("android.app.Service");
+		public static final SootClass COMPONENT_TYPE_RECEIVER = Scene.v().getSootClass("android.content.BroadcastReceiver");
+		public static final SootClass COMPONENT_TYPE_PROVIDER = Scene.v().getSootClass("android.content.ContentProvider");
+		public static final SootClass COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object"); //null;
+		
+		public static final SootClass[] component_type_classes = 
+			{COMPONENT_TYPE_ACTIVITY, COMPONENT_TYPE_SERVICE,  COMPONENT_TYPE_RECEIVER, COMPONENT_TYPE_PROVIDER, COMPONENT_TYPE_UNKNOWN};
+		public static final String[] component_type_names = {"Activity", "Service", "BroadcaseReceiver", "ContentProvider", "Unknown"};
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

@@ -13,6 +13,7 @@ import iacUtil.*;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -51,7 +52,10 @@ public class iccReport implements Extension {
 	protected final covStat outIccCov = new covStat("Outgoing ICC Coverage");
 	
 	String packName = "";
-
+	
+	Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
+	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
+	
 	public static void main(String args[]){
 		args = preProcessArgs(opts, args);
 		
@@ -133,8 +137,8 @@ public class iccReport implements Extension {
 	/** obtaining all statically resolved ICCs needs a separate analysis such as IC3 */ 
 	//Set<ICCIntent> traversedInICCs = new HashSet<ICCIntent>();
 	//Set<ICCIntent> traversedOutICCs = new HashSet<ICCIntent>();
-	Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
-	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
+	Map<SootMethod, Set<Stmt>> traversedInICCs = new HashMap<SootMethod, Set<Stmt>>();
+	Map<SootMethod, Set<Stmt>> traversedOutICCs = new HashMap<SootMethod, Set<Stmt>>();
 	
 	public void traverse() {
 		/* traverse all classes */
@@ -184,9 +188,21 @@ public class iccReport implements Extension {
 					Stmt s = (Stmt)itchain.next();
 					if (iccAPICom.is_IntentSendingAPI(s)) {
 						outIccCov.incTotal();
+						Set<Stmt> sites = traversedOutICCs.get(sMethod);
+						if (null==sites) {
+							sites = new HashSet<Stmt>();
+							traversedOutICCs.put(sMethod, sites);
+						}
+						sites.add(s);
 					}
 					else if (iccAPICom.is_IntentReceivingAPI(s)) {
 						inIccCov.incTotal();
+						Set<Stmt> sites = traversedInICCs.get(sMethod);
+						if (null==sites) {
+							sites = new HashSet<Stmt>();
+							traversedInICCs.put(sMethod, sites);
+						}
+						sites.add(s);
 					}
 				}
 				
@@ -197,13 +213,19 @@ public class iccReport implements Extension {
 	
 	public void report() {
 		/** report statistics for the current trace */
+		/*
 		if (opts.debugOut) {
 			System.out.println(inIccCov);
 			System.out.println(outIccCov);
 		}
+		*/
+		System.out.println("*** overview ***");
+		System.out.println("format: s_in\t s_out\t d_in\t d_out");
+		System.out.println(inIccCov.getTotal() +"\t " + outIccCov.getTotal() + "\t " + 
+				inIccCov.getCovered() + "\t " + outIccCov.getCovered());				
 		
-		System.out.println("tabulation");
-		System.out.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		System.out.println("*** tabulation ***");
+		System.out.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		DecimalFormat df = new DecimalFormat("#.####");
 		
 		// dynamic
