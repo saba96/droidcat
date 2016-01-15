@@ -27,7 +27,9 @@ instr()
 	#for subdir in "implicit" "implicit_2ndset"
 	#for subdir in "implicit_3rdset"
 	#for subdir in "implicit"
-	for subdir in "implicit_2ndset"
+	#for subdir in "implicit_2ndset"
+	#for subdir in "explicit_2ndset"
+	for subdir in "explicit" "implicit"
 	do
 		#for ((i=1;i<51;i++))
 		for i in $(seq 1 101)

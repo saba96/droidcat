@@ -4,7 +4,8 @@
 
 pn=$1
 destdir=/home/hcai/testbed/cg.instrumented/pairs/
-finaldir=$destdir/implicit_installed
+#finaldir=$destdir/implicit_installed
+finaldir=$destdir/explicit_installed
 
 timeout() {
 
@@ -29,9 +30,9 @@ run()
 
 	while true; 
 	do
-		adb shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 5
+		adb shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 100
 		sleep 1
-		adb shell monkey -p $srcp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 5
+		adb shell monkey -p $srcp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 100
 	done
 }
 

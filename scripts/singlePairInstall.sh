@@ -4,7 +4,8 @@
 
 pn=$1
 destdir=/home/hcai/testbed/cg.instrumented/pairs/
-finaldir=$destdir/implicit_installed
+#finaldir=$destdir/implicit_installed
+finaldir=$destdir/explicit_installed
 
 install()
 {

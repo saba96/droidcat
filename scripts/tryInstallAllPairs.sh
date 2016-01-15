@@ -1,8 +1,10 @@
 #!/bin/bash
 
 destdir=/home/hcai/testbed/cg.instrumented/pairs/
-tgtdir=$destdir/implicit_instrumented/
-finaldir=$destdir/implicit_installed
+tgtdir=$destdir/explicit_instrumented/
+#tgtdir=$destdir/implicit_instrumented/
+finaldir=$destdir/explicit_installed
+#finaldir=$destdir/implicit_installed
 mkdir -p $finaldir
 
 tryInstall()
