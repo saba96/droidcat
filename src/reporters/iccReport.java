@@ -4,6 +4,7 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 01/12/16		hcai		created; for computing ICC related statistics in android app call traces
+ * 01/14/16		hcai		done the first version : mainly dynamic ICC statics
 */
 package reporters;
 
@@ -97,6 +98,7 @@ public class iccReport implements Extension {
 		packName = ProgramFlowGraph.appPackageName;
 		
 		// set up the trace stating agent
+		stater.setPackagename(packName);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
@@ -105,9 +107,13 @@ public class iccReport implements Extension {
 		for (ICCIntent iit : stater.getAllICCs()) {
 			if (iit.isIncoming()) {
 				coveredInICCs.add(iit);
+				
+				inIccCov.incCovered();
 			}
 			else {
 				coveredOutICCs.add(iit);
+				
+				outIccCov.incCovered();
 			}
 		}
 	}
@@ -156,8 +162,6 @@ public class iccReport implements Extension {
 				continue;
 			}
 			
-			System.out.println("now on class " + sClass.getName());
-			
 			/* traverse all methods of the class */
 			Iterator<SootMethod> meIt = sClass.getMethods().iterator();
 			while (meIt.hasNext()) {
@@ -199,8 +203,94 @@ public class iccReport implements Extension {
 		}
 		
 		System.out.println("tabulation");
+		System.out.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		DecimalFormat df = new DecimalFormat("#.####");
-	}
+		
+		// dynamic
+		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+		}
+		System.out.println("[ALL]");
+		//System.out.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		System.out.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
+				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
+		
+		//// for ICC carrying data only
+		int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (!itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (!itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+		}
+		System.out.println("[hasData]");
+		//System.out.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		System.out.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
+				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
+		
+		//// for ICC carrying extraData only
+		int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (!itn.hasExtras()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (!itn.hasExtras()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+		}
+		System.out.println("[hasExtras]");
+		//System.out.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		System.out.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
+				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
+	} 
 }  
 
 /* vim :set ts=4 tw=4 tws=4 */

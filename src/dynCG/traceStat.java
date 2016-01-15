@@ -31,12 +31,13 @@ import dynCG.callGraph.CGEdge;
 import iacUtil.iccAPICom;
 
 public class traceStat {
-	/*
-	private String appPackname; // package name set in the Manifest file
-	traceStat (String packname) {
+	
+	private String appPackname=""; // package name set in the Manifest file
+	traceStat (String _traceFn, String packname) {
 		appPackname = packname;
+		this.traceFn = _traceFn;
 	}
-	*/
+	
 	private String traceFn; // name of trace file
 	public traceStat (String _traceFn) {
 		this.traceFn = _traceFn;
@@ -45,6 +46,7 @@ public class traceStat {
 	public traceStat () {
 		traceFn = null;
 	}
+	public void setPackagename (String packname) { this.appPackname = packname; }
 	public void setTracefile (String tfname) { this.traceFn = tfname; }
 	
 	public static class ICCIntent { //extends Intent {
@@ -64,7 +66,7 @@ public class traceStat {
 		String extras = null;
 		String component = null;
 		*/
-		protected boolean bExternal = false;
+		protected boolean bExternal = true;
 		protected boolean bIncoming = false;
 		public void setExternal (boolean _bv) { bExternal = _bv; }
 		public void setIncoming (boolean _bv) { bIncoming = _bv; }
@@ -124,7 +126,7 @@ public class traceStat {
 		public void setCallsite (String stmt) { callsite = stmt; }
 		
 		public boolean isExplicit () {
-			return fields.get("Component")!=null;
+			return fields.get("Component").compareTo("null")!=0;
 		}
 		
 		public boolean hasExtras () {
@@ -132,7 +134,7 @@ public class traceStat {
 		}
 		
 		public boolean hasData() {
-			return (fields.get("DataString")!=null) || (fields.get("DataURI")!=null);
+			return (fields.get("DataString").compareTo("null")!=0) || (fields.get("DataURI").compareTo("null")!=0);
 		}
 		
 		public boolean isExternal() {
@@ -231,6 +233,9 @@ public class traceStat {
 							if (comp != null) {
 								//String recvCls = line.substring(line.indexOf('<')+1, line.indexOf(": "));
 								String recvCls = ne.getSource().getSootClassName();
+								if (!this.appPackname.isEmpty()) {
+									recvCls = this.appPackname;
+								}
 								if (comp.contains(recvCls)) {
 									itn.setExternal(false);
 								}

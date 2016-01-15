@@ -94,6 +94,7 @@ public class generalReport implements Extension {
 		packName = ProgramFlowGraph.appPackageName;
 		
 		// set up the trace stating agent
+		stater.setPackagename(packName);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
