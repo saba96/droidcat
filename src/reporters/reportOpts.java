@@ -14,6 +14,7 @@ import java.util.List;
 public class reportOpts {
 	protected boolean debugOut = true;
 	protected String traceFile = null;
+	protected String srcsinkFile = null;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -27,6 +28,10 @@ public class reportOpts {
 			}
 			else if (arg.equals("-trace")) {
 				traceFile = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-srcsink")) {
+				srcsinkFile = args[i+1];
 				i++;
 			}
 			else if (arg.equals("-nophantom")) {
