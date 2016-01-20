@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class reportOpts {
-	protected boolean debugOut = true;
+	protected boolean debugOut = false;
 	protected String traceFile = null;
 	protected String srcsinkFile = null;
 	

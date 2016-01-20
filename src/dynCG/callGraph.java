@@ -25,7 +25,7 @@ import org.jgrapht.traverse.*;
 
 /** represent the dynamic call graph built from whole program path profiles */
 public class callGraph {
-	public static final String CALL_DELIMIT = "->";
+	public static final String CALL_DELIMIT = " -> ";
 	// bijective mapping between string and integer tagging of canonically named method (package + class + method signature)
 	public static final Map<String, Integer> g_me2idx = new HashMap<String, Integer>();
 	public static final Map<Integer, String> g_idx2me = new HashMap<Integer,String>();
@@ -59,6 +59,10 @@ public class callGraph {
 		public String getSootClassName() {
 			String ret = getMethodName();
 			if (ret == null) return null;
+			if (ret.indexOf(":")==-1) {
+				System.err.println("weird node: " + ret);
+				System.exit(-1);
+			}
 			return ret.substring(0, ret.indexOf(":"));
 		}
 		public boolean equals(Object other) {

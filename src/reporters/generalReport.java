@@ -11,6 +11,10 @@
 */
 package reporters;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,6 +78,8 @@ public class generalReport implements Extension {
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
 		
+		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
+		
 		Forensics.registerExtension(grep);
 		Forensics.main(args);
 	}
@@ -130,11 +136,40 @@ public class generalReport implements Extension {
 		
 		traverse();
 		
-		rankingByClass();
-		
-		report();
-		componentTypeDist();
+		String dir = System.getProperty("user.dir");
+
+		try {
+			if (opts.debugOut) {
+				report (System.out);
+				rankingEdgeFreqByClass (System.out);
+				rankingCallerByClass (System.out);
+				rankingCalleeByClass (System.out);
+				componentTypeDist(System.out);
+			}
+			else {
+				String fngdistcov = dir + File.separator + "gdistcov.txt";
+				PrintStream psgdistcov = new PrintStream (new FileOutputStream(fngdistcov,true));
+				report(psgdistcov);
+
+				String fnedgefreq = dir + File.separator + "edgefreq.txt";
+				PrintStream psedgefreq = new PrintStream (new FileOutputStream(fnedgefreq,true));
+				rankingEdgeFreqByClass(psedgefreq);
 				
+				String fncallerrank = dir + File.separator + "callerrank.txt";
+				PrintStream pscallerrank = new PrintStream (new FileOutputStream(fncallerrank,true));
+				rankingCallerByClass(pscallerrank);
+
+				String fncalleerank = dir + File.separator + "calleerank.txt";
+				PrintStream pscalleerank = new PrintStream (new FileOutputStream(fncalleerank,true));
+				rankingCalleeByClass(pscalleerank);
+				
+				String fncompdist = dir + File.separator + "compdist.txt";
+				PrintStream pscompdist = new PrintStream (new FileOutputStream(fncompdist,true));
+				componentTypeDist(pscompdist);
+			}
+		}
+		catch (Exception e) {e.printStackTrace();}
+			
 		System.exit(0);
 	}
 
@@ -163,8 +198,7 @@ public class generalReport implements Extension {
 		Iterator<SootClass> clsIt = Scene.v().getClasses().iterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
-			
-			//if ( sClass.isPhantom() ) {	continue; }
+			if ( sClass.isPhantom() ) {	continue; }
 			boolean isAppCls = false, isSDKCls = false, isULCls = false;
 			//if ( sClass.isApplicationClass() ) {
 			if (sClass.getName().contains(packName)) {	
@@ -243,69 +277,77 @@ public class generalReport implements Extension {
 		} // -- while (clsIt.hasNext())
 	}
 	
-	public void report() {
+	public void report(PrintStream os) {
 		/** report statistics for the current trace */
 		if (opts.debugOut) {
-			System.out.println(appClsCov);
-			System.out.println(appMethodCov);
-			System.out.println(ulClsCov);
-			System.out.println(ulMethodCov);
-			System.out.println(sdkClsCov);
-			System.out.println(sdkMethodCov);
+			os.println(appClsCov);
+			os.println(appMethodCov);
+			os.println(ulClsCov);
+			os.println(ulMethodCov);
+			os.println(sdkClsCov);
+			os.println(sdkMethodCov);
 		}
 		
 		int sclsTotal = appClsCov.getTotal()+ulClsCov.getTotal()+sdkClsCov.getTotal();
 		if (opts.debugOut) {
-			System.out.println();
-			System.out.println("Total classes: " +  sclsTotal);
-			System.out.print("distribution: application user-lib sdk ");
-			System.out.println(appClsCov.getTotal()*1.0/sclsTotal + " " + ulClsCov.getTotal()*1.0/sclsTotal + " " + sdkClsCov.getTotal()*1.0/sclsTotal);
+			os.println();
+			os.println("Total classes: " +  sclsTotal);
+			os.print("distribution: application user-lib sdk ");
+			os.println(appClsCov.getTotal()*1.0/sclsTotal + " " + ulClsCov.getTotal()*1.0/sclsTotal + " " + sdkClsCov.getTotal()*1.0/sclsTotal);
 		}
 		
 		int dclsTotal = (appClsCov.getCovered()+ulClsCov.getCovered()+sdkClsCov.getCovered());
 		if (opts.debugOut) {
-			System.out.println("Covered classes: " +  dclsTotal);
-			System.out.print("distribution: application user-lib sdk ");
-			System.out.println(appClsCov.getCovered()*1.0/dclsTotal + " " + ulClsCov.getCovered()*1.0/dclsTotal + " " + sdkClsCov.getCovered()*1.0/dclsTotal);
-			System.out.println("Covered classes seen in the dynamic callgraph: " + allCoveredClasses.size() );
+			os.println("Covered classes: " +  dclsTotal);
+			os.print("distribution: application user-lib sdk ");
+			os.println(appClsCov.getCovered()*1.0/dclsTotal + " " + ulClsCov.getCovered()*1.0/dclsTotal + " " + sdkClsCov.getCovered()*1.0/dclsTotal);
+			os.println("Covered classes seen in the dynamic callgraph: " + allCoveredClasses.size() );
 		}
 		
 		int smeTotal = (appMethodCov.getTotal()+ulMethodCov.getTotal()+sdkMethodCov.getTotal());
 		if (opts.debugOut) {
-			System.out.println();
-			System.out.println("Total methods: " + smeTotal);
-			System.out.print("distribution: application user-lib sdk ");
-			System.out.println(appMethodCov.getTotal()*1.0/smeTotal + " " + ulMethodCov.getTotal()*1.0/smeTotal + " " + sdkMethodCov.getTotal()*1.0/smeTotal);
+			os.println();
+			os.println("Total methods: " + smeTotal);
+			os.print("distribution: application user-lib sdk ");
+			os.println(appMethodCov.getTotal()*1.0/smeTotal + " " + ulMethodCov.getTotal()*1.0/smeTotal + " " + sdkMethodCov.getTotal()*1.0/smeTotal);
 		}
 		
 		int dmeTotal = (appMethodCov.getCovered()+ulMethodCov.getCovered()+sdkMethodCov.getCovered());
 		if (opts.debugOut) {
-			System.out.println("Covered methods: " +  dmeTotal);
-			System.out.print("distribution: application user-lib sdk ");
-			System.out.println(appMethodCov.getCovered()*1.0/dmeTotal + " " + ulMethodCov.getCovered()*1.0/dmeTotal + " " + sdkMethodCov.getCovered()*1.0/dmeTotal);
-			System.out.println("Covered methods seen in the dynamic callgraph: " + allCoveredMethods.size() );
+			os.println("Covered methods: " +  dmeTotal);
+			os.print("distribution: application user-lib sdk ");
+			os.println(appMethodCov.getCovered()*1.0/dmeTotal + " " + ulMethodCov.getCovered()*1.0/dmeTotal + " " + sdkMethodCov.getCovered()*1.0/dmeTotal);
+			os.println("Covered methods seen in the dynamic callgraph: " + allCoveredMethods.size() );
 			
-			System.out.println();
+			os.println();
 			allCoveredClasses.removeAll(traversedClasses);
-			System.out.println("covered classes not found during traversal: " + allCoveredClasses);
+			os.println("covered classes not found during traversal: " + allCoveredClasses);
 			allCoveredMethods.removeAll(traversedMethods);
-			System.out.println("covered methods not found during traversal: " + allCoveredMethods);
+			os.println("covered methods not found during traversal: " + allCoveredMethods);
 		}
 		
-		System.out.println("*** tabulation *** ");
-		System.out.println("format: class_app\t class_ul\t class_sdk\t class_all\t method_app\t method_ul\t method_sdk\t method_all");
+		if (opts.debugOut) {
+			os.println("*** tabulation *** ");
+			os.println("format: class_app\t class_ul\t class_sdk\t class_all\t method_app\t method_ul\t method_sdk\t method_all");
+		}
 		DecimalFormat df = new DecimalFormat("#.####");
 		
-		System.out.println("[static]");
-		System.out.println(appClsCov.getTotal() + "\t" + ulClsCov.getTotal() + "\t" + sdkClsCov.getTotal() + "\t" + sclsTotal + "\t" + 
+		if (opts.debugOut) {
+			os.println("[static]");
+		}
+		os.println(appClsCov.getTotal() + "\t" + ulClsCov.getTotal() + "\t" + sdkClsCov.getTotal() + "\t" + sclsTotal + "\t" + 
 						   appMethodCov.getTotal() + "\t" + ulMethodCov.getTotal() + "\t" + sdkMethodCov.getTotal() + "\t" + smeTotal);
 		
-		System.out.println("[dynamic]");
-		System.out.println(appClsCov.getCovered() + "\t" + ulClsCov.getCovered() + "\t" + sdkClsCov.getCovered() + "\t" + dclsTotal + "\t" +
+		if (opts.debugOut) {
+			os.println("[dynamic]");
+		}
+		os.println(appClsCov.getCovered() + "\t" + ulClsCov.getCovered() + "\t" + sdkClsCov.getCovered() + "\t" + dclsTotal + "\t" +
 				   appMethodCov.getCovered() + "\t" + ulMethodCov.getCovered() + "\t" + sdkMethodCov.getCovered() + "\t" + dmeTotal);
 		
-		System.out.println("[dynamic/static ratio]");
-		System.out.println(df.format(appClsCov.getCoverage()) + "\t" + df.format(ulClsCov.getCoverage()) + "\t" + df.format(sdkClsCov.getCoverage()) + "\t" + 
+		if (opts.debugOut) {
+			os.println("[dynamic/static ratio]");
+		}
+		os.println(df.format(appClsCov.getCoverage()) + "\t" + df.format(ulClsCov.getCoverage()) + "\t" + df.format(sdkClsCov.getCoverage()) + "\t" + 
 				df.format(1.0*dclsTotal/sclsTotal) + "\t" + 
 				df.format(appMethodCov.getCoverage()) + "\t" + df.format(ulMethodCov.getCoverage()) + "\t" + df.format(sdkMethodCov.getCoverage()) + "\t" + 
 				df.format(1.0*dmeTotal/smeTotal));
@@ -318,44 +360,60 @@ public class generalReport implements Extension {
 		if (coveredSDKClasses.contains(nameCls)) return "SDK";
 		return "Unknown";
 	}
-	public void rankingByClass() {
+
+	public void rankingEdgeFreqByClass(PrintStream os) {
 		List<CGEdge> orderedEdges = stater.getCG().listEdgeByFrequency(false);
+		
+		if (opts.debugOut) {
+			os.println("*** edge frequency ranking *** ");
+			os.println("format: rank\t class_source\t class_tgt");
+		}
+		for (CGEdge e : orderedEdges) {
+			os.println(e.getFrequency() + "\t " + getCategory(e.getSource().getSootClassName()) + "\t " + getCategory(e.getTarget().getSootClassName()));
+		}
+	}
+	public void rankingCallerByClass(PrintStream os) {
 		List<CGNode> orderedCallers = stater.getCG().listCallers(false);
+		if (opts.debugOut) {
+			os.println("*** caller (out-degree) ranking *** ");
+			os.println("format: rank\t class");
+			os.println("[caller]");
+		}
+		for (CGNode n : orderedCallers) {
+			os.println(stater.getCG().getInternalGraph().outDegreeOf(n) + "\t" + getCategory(n.getSootClassName()));
+		}
+	}
+	public void rankingCalleeByClass(PrintStream os) {
 		List<CGNode> orderedCallees = stater.getCG().listCallees(false);
 		
-		System.out.println("*** edge frequency ranking *** ");
-		System.out.println("format: rank\t class_source\t class_tgt");
-		for (CGEdge e : orderedEdges) {
-			System.out.println(e.getFrequency() + "\t " + getCategory(e.getSource().getSootClassName()) + "\t " + getCategory(e.getTarget().getSootClassName()));
+		if (opts.debugOut) {
+			os.println("*** callee (in-degree) ranking *** ");
+			os.println("format: rank\t class");
+			os.println("[callee]");
 		}
-		
-		System.out.println("*** caller (out-degree) / callee (in-degree) ranking *** ");
-		System.out.println("format: rank\t class");
-		System.out.println("[caller]");
-		for (CGNode n : orderedCallers) {
-			System.out.println(stater.getCG().getInternalGraph().outDegreeOf(n) + "\t" + getCategory(n.getSootClassName()));
-		}
-		
-		System.out.println("[callee]");
 		for (CGNode n : orderedCallees) {
-			System.out.println(stater.getCG().getInternalGraph().inDegreeOf(n) + "\t" + getCategory(n.getSootClassName()));
+			os.println(stater.getCG().getInternalGraph().inDegreeOf(n) + "\t" + getCategory(n.getSootClassName()));
 		}
 	}
 	
 	/** distribution regarding the four component types */
-	public void componentTypeDist() {
-		System.out.println("*** component type distribution *** ");
-		System.out.println("format: activity\t service\t broadcast_receiver\t content_provider");
-		System.out.println("[static]");
-		for (String ctn : iccAPICom.component_type_names) {
-			System.out.print(sct2cc.get(ctn).size() + "\t ");
+	public void componentTypeDist(PrintStream os) {
+		if (opts.debugOut) {
+			os.println("*** component type distribution *** ");
+			os.println("format: activity\t service\t broadcast_receiver\t content_provider");
+			os.println("[static]");
 		}
-		System.out.println();
-		System.out.println("[dynamic]");
 		for (String ctn : iccAPICom.component_type_names) {
-			System.out.print(dct2cc.get(ctn).size() + "\t ");
+			os.print(sct2cc.get(ctn).size() + "\t ");
 		}
-		System.out.println();
+		os.println();
+		if (opts.debugOut) {
+			os.println("[dynamic]");
+		}
+		for (String ctn : iccAPICom.component_type_names) {
+			os.print(dct2cc.get(ctn).size() + "\t ");
+		}
+		os.println();
 	}
 }  
 
