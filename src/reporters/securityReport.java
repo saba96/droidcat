@@ -5,12 +5,16 @@
  * -------------------------------------------------------------------------------------------
  * 01/15/16		hcai		created; reporting security related statistics
  * 01/18/16		hcai		done drafting the preliminary statistics (coverage centric only)
+ * 01/23/16		hcai		added callback methods (separately for lifecycle methods and event handlers) statistics
 */
 package reporters;
 
 import iacUtil.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +58,12 @@ public class securityReport implements Extension {
 	// gross ICC coverage statistics
 	protected final covStat srcCov = new covStat("source coverage");
 	protected final covStat sinkCov = new covStat("sink coverage");
+
+	protected final covStat lifecycleCov = new covStat("lifecylce method coverage");
+	protected final covStat eventhandlerCov = new covStat("event handler coverage");
+	
+	protected final Set<String> allCoveredClasses = new HashSet<String>();
+	protected final Set<String> allCoveredMethods = new HashSet<String>();
 	
 	String packName = "";
 	
@@ -62,6 +72,14 @@ public class securityReport implements Extension {
 	
 	Set<String> allSources = new HashSet<String>();
 	Set<String> allSinks = new HashSet<String>();
+	
+	Set<String> callbackClses = new HashSet<String>();
+	Set<SootClass> callbackSootClses = new HashSet<SootClass>();
+	
+	Set<String> traversedLifecycleMethods = new HashSet<String>();
+	Set<String> traversedEventHandlerMethods = new HashSet<String>();
+	Set<String> coveredLifecycleMethods = new HashSet<String>();
+	Set<String> coveredEventHandlerMethods = new HashSet<String>();
 	
 	public static void main(String args[]){
 		args = preProcessArgs(opts, args);
@@ -72,6 +90,10 @@ public class securityReport implements Extension {
 		}
 		if (opts.srcsinkFile==null || opts.srcsinkFile.isEmpty()) {
 			// this report relies on an externally purveyed list of taint sources and sinks
+			return;
+		}
+		if (opts.callbackFile ==null || opts.callbackFile.isEmpty()) {
+			// this report relies on an externally purveyed list of android callback interfaces
 			return;
 		}
 
@@ -105,6 +127,33 @@ public class securityReport implements Extension {
 		argsForDuaF[args.length+0 - offset] = "-keeprepbrs";
 		
 		return argsForDuaF;
+	}
+	
+	/**
+	 * Loads the set of interfaces that are used to implement Android callback
+	 * handlers from a file on disk
+	 * @return A set containing the names of the interfaces that are used to
+	 * implement Android callback handlers
+	 */
+	private Set<String> loadAndroidCallbacks() throws IOException {
+		Set<String> androidCallbacks = new HashSet<String>();
+		BufferedReader rdr = null;
+		try {
+			String fileName = opts.callbackFile;
+			if (!new File(fileName).exists()) {
+				throw new RuntimeException("Callback definition file not found");
+			}
+			rdr = new BufferedReader(new FileReader(fileName));
+			String line;
+			while ((line = rdr.readLine()) != null)
+				if (!line.isEmpty())
+					androidCallbacks.add(line);
+		}
+		finally {
+			if (rdr != null)
+				rdr.close();
+		}
+		return androidCallbacks;
 	}
 	
 	/**
@@ -156,7 +205,35 @@ public class securityReport implements Extension {
 				coveredSinks.add(n.getSootMethodName());
 				sinkCov.incCovered();
 			}
+			
+			allCoveredClasses.add(n.getSootClassName());
+			allCoveredMethods.add(n.getSootMethodName());
 		}
+		
+		try {
+			callbackClses.addAll(loadAndroidCallbacks());
+			for (String clsname : callbackClses) {
+				callbackSootClses.add( Scene.v().getSootClass(clsname) );
+			}
+		}
+		catch (Exception e) {
+			System.err.println("Failed in parsing the androidCallbacks file: ");
+			e.printStackTrace(System.err);
+			System.exit(-1);
+		}
+	}
+
+	public boolean isCallbackClass(SootClass cls) {
+		FastHierarchy har = Scene.v().getOrMakeFastHierarchy();
+		for (SootClass scls : callbackSootClses) {
+			if (har.getAllSubinterfaces(scls).contains(cls)) {
+				return true;
+			}
+			if (har.getAllImplementersOfInterface(scls).contains(cls)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void run() {
@@ -197,6 +274,8 @@ public class securityReport implements Extension {
 				}
 			}
 			
+			boolean isCallbackCls = isCallbackClass(sClass);
+			
 			/* traverse all methods of the class */
 			Iterator<SootMethod> meIt = sClass.getMethods().iterator();
 			while (meIt.hasNext()) {
@@ -210,6 +289,27 @@ public class securityReport implements Extension {
                     continue;
                 }
 				String meId = sMethod.getSignature();
+
+				if (generalReport.getComponentType(sClass).compareTo("Unknown")!=0 && 
+					AndroidEntryPointConstants.isLifecycleMethod(sMethod.getName())) {
+					traversedLifecycleMethods.add(meId);
+					lifecycleCov.incTotal();
+
+					if (allCoveredMethods.contains( meId )) {
+						coveredLifecycleMethods.add(meId);
+						lifecycleCov.incCovered();
+					}
+				}
+				
+				if (isCallbackCls && sMethod.getName().startsWith("on")) {
+					traversedEventHandlerMethods.add(meId);
+					eventhandlerCov.incTotal();
+					
+					if (allCoveredMethods.contains(meId)) {
+						coveredEventHandlerMethods.add(meId);
+						eventhandlerCov.incCovered();
+					}
+				}
 				
 				Body body = sMethod.retrieveActiveBody();
 				PatchingChain<Unit> pchn = body.getUnits();
@@ -242,17 +342,24 @@ public class securityReport implements Extension {
 		if (opts.debugOut) {
 			System.out.println(srcCov);
 			System.out.println(sinkCov);
+			
+			System.out.println(lifecycleCov);
+			System.out.println(eventhandlerCov);
 		}
 		
-		System.out.println("*** overview ***");
+		System.out.println("*** tabulation ***");
 		System.out.println("format: s_source\t s_sink\t d_source\t d_sink");
 		System.out.println(srcCov.getTotal() +"\t " + sinkCov.getTotal() + "\t " + 
 				srcCov.getCovered() + "\t " + sinkCov.getCovered());				
+
+		System.out.println("format: s_lifecycle\t s_eventHandler\t d_lifecycle\t d_eventHandler");
+		System.out.println(lifecycleCov.getTotal() +"\t " + eventhandlerCov.getTotal() + "\t " + 
+				lifecycleCov.getCovered() + "\t " + eventhandlerCov.getCovered());				
 		
 		//System.out.println("*** tabulation ***");
 		//System.out.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		DecimalFormat df = new DecimalFormat("#.####");
-	} 
+	}
 }  
 
 /* vim :set ts=4 tw=4 tws=4 */

@@ -94,11 +94,17 @@ public class iccAPICom {
 		public static final SootClass COMPONENT_TYPE_SERVICE = Scene.v().getSootClass("android.app.Service");
 		public static final SootClass COMPONENT_TYPE_RECEIVER = Scene.v().getSootClass("android.content.BroadcastReceiver");
 		public static final SootClass COMPONENT_TYPE_PROVIDER = Scene.v().getSootClass("android.content.ContentProvider");
-		public static final SootClass COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object"); //null;
+		public static final SootClass COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object");
+		
+		public static final SootClass COMPONENT_TYPE_APPLICATION = Scene.v().getSootClass("android.app.Application");
+		public static final SootClass COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS = Scene.v().getSootClass("com.google.android.gcm.GCMBaseIntentService");
+		public static final SootClass COMPONENT_TYPE_GCMLISTENERSERVICECLASS = Scene.v().getSootClass("com.google.android.gms.gcm.GcmListenerService");
 		
 		public static final SootClass[] component_type_classes = 
-			{COMPONENT_TYPE_ACTIVITY, COMPONENT_TYPE_SERVICE,  COMPONENT_TYPE_RECEIVER, COMPONENT_TYPE_PROVIDER, COMPONENT_TYPE_UNKNOWN};
-		public static final String[] component_type_names = {"Activity", "Service", "BroadcaseReceiver", "ContentProvider", "Unknown"};
+			{COMPONENT_TYPE_ACTIVITY, COMPONENT_TYPE_SERVICE,  COMPONENT_TYPE_RECEIVER, COMPONENT_TYPE_PROVIDER, 
+			COMPONENT_TYPE_APPLICATION, COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS, COMPONENT_TYPE_GCMLISTENERSERVICECLASS,
+			COMPONENT_TYPE_UNKNOWN};
+		public static final String[] component_type_names = {"Activity", "Service", "BroadcaseReceiver", "ContentProvider", "Application"};
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

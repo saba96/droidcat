@@ -15,6 +15,7 @@ public class reportOpts {
 	protected boolean debugOut = false;
 	protected String traceFile = null;
 	protected String srcsinkFile = null;
+	protected String callbackFile = null;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -32,6 +33,10 @@ public class reportOpts {
 			}
 			else if (arg.equals("-srcsink")) {
 				srcsinkFile = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-callback")) {
+				callbackFile = args[i+1];
 				i++;
 			}
 			else if (arg.equals("-nophantom")) {

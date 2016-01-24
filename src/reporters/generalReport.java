@@ -8,6 +8,7 @@
  * 01/07/16		hcai		added coverage statistics           
  * 01/09/16		hcai		first working version of basic (coverage related) statistics
  * 01/15/16		hcai		added class ranking by edge frequency and call in/out degrees; added component type distribution statistics              
+ * 01/19/16		hcai		separate different statistics outputs by streaming them to separate files
 */
 package reporters;
 
@@ -184,12 +185,16 @@ public class generalReport implements Extension {
 		FastHierarchy har = Scene.v().getOrMakeFastHierarchy();
 		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_ACTIVITY))
 			return "Activity";
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_SERVICE))
+		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_SERVICE) ||
+			har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS) ||
+			har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMLISTENERSERVICECLASS))
 			return "Service";
 		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_RECEIVER))
 			return "BroadcaseReceiver";
 		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_PROVIDER))
 			return "ContentProvider";
+		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_APPLICATION))
+			return "Application";
 		return "Unknown";
 	}
 	
@@ -400,7 +405,7 @@ public class generalReport implements Extension {
 	public void componentTypeDist(PrintStream os) {
 		if (opts.debugOut) {
 			os.println("*** component type distribution *** ");
-			os.println("format: activity\t service\t broadcast_receiver\t content_provider");
+			os.println("format: activity\t service\t broadcast_receiver\t content_provider\t application");
 			os.println("[static]");
 		}
 		for (String ctn : iccAPICom.component_type_names) {
