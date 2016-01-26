@@ -6,6 +6,8 @@
  * 01/15/16		hcai		created; reporting security related statistics
  * 01/18/16		hcai		done drafting the preliminary statistics (coverage centric only)
  * 01/23/16		hcai		added callback methods (separately for lifecycle methods and event handlers) statistics
+ * 01/25/16		hcai		added the use of the exhaustive set of source/sink produced by SuSi; and categorized 
+ * 							sources and sinks in the code and the traces
 */
 package reporters;
 
@@ -13,10 +15,13 @@ import iacUtil.*;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -36,6 +41,9 @@ import dua.util.Util;
 
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.infoflow.android.data.AndroidMethod;
+import soot.jimple.infoflow.android.data.AndroidMethod.CATEGORY;
+import soot.jimple.infoflow.android.data.parsers.CategorizedAndroidSourceSinkParser;
 import soot.jimple.infoflow.android.data.parsers.PermissionMethodParser;
 import soot.jimple.infoflow.android.source.data.ISourceSinkDefinitionProvider;
 import soot.jimple.infoflow.android.source.data.SourceSinkDefinition;
@@ -44,6 +52,7 @@ import soot.toolkits.graph.Block;
 import soot.toolkits.graph.BlockGraph;
 import soot.toolkits.graph.ExceptionalBlockGraph;
 import soot.util.*;
+import soot.jimple.infoflow.android.data.AndroidMethod.*;
 
 import dynCG.*;
 import dynCG.callGraph.CGNode;
@@ -67,12 +76,32 @@ public class securityReport implements Extension {
 	
 	String packName = "";
 	
-	Set<String> coveredSources = new HashSet<String>();
-	Set<String> coveredSinks = new HashSet<String>();
-	
+	/** for uncategorized source/sink */
 	Set<String> allSources = new HashSet<String>();
 	Set<String> allSinks = new HashSet<String>();
+	Set<String> traversedSinks = new HashSet<String>();
+	Set<String> traversedSources = new HashSet<String>();
+	Set<String> coveredSources = new HashSet<String>();
+	Set<String> coveredSinks = new HashSet<String>();
+	// total number of instances of src/sink being called
+	int allSrcInCalls = 0;
+	int allSinkInCalls = 0;
 	
+	/** for categorized source/sink */
+	Map<String, CATEGORY> allCatSrcs = new HashMap<String,CATEGORY>();
+	Map<String, CATEGORY> allCatSinks = new HashMap<String,CATEGORY>();
+	Map<CATEGORY, Set<String>> traversedCatSrcs = new HashMap<CATEGORY, Set<String>>();
+	Map<CATEGORY, Set<String>> traversedCatSinks = new HashMap<CATEGORY, Set<String>>();
+	Map<CATEGORY, Set<String>> coveredCatSrcs = new HashMap<CATEGORY, Set<String>>();
+	Map<CATEGORY, Set<String>> coveredCatSinks = new HashMap<CATEGORY, Set<String>>();
+	// total number of instances of src/sink being called
+	Map<CATEGORY, Integer> allCatSrcInCalls = new HashMap<CATEGORY, Integer>();
+	Map<CATEGORY, Integer> allCatSinkInCalls = new HashMap<CATEGORY, Integer>();
+	
+	/** for method-level taint flow */
+	
+	
+	/** for callbacks */
 	Set<String> callbackClses = new HashSet<String>();
 	Set<SootClass> callbackSootClses = new HashSet<SootClass>();
 	
@@ -89,8 +118,10 @@ public class securityReport implements Extension {
 			return;
 		}
 		if (opts.srcsinkFile==null || opts.srcsinkFile.isEmpty()) {
-			// this report relies on an externally purveyed list of taint sources and sinks
-			return;
+			if (opts.catsink==null || opts.catsrc==null) {
+				// this report relies on an externally purveyed list of taint sources and sinks
+				return;
+			}
 		}
 		if (opts.callbackFile ==null || opts.callbackFile.isEmpty()) {
 			// this report relies on an externally purveyed list of android callback interfaces
@@ -109,6 +140,7 @@ public class securityReport implements Extension {
 		//output as APK, too//-f J
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
+		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
 		
 		Forensics.registerExtension(grep);
 		Forensics.main(args);
@@ -169,6 +201,27 @@ public class securityReport implements Extension {
 		// parse the trace
 		stater.stat();
 		
+		if (opts.srcsinkFile != null) {
+			readSrcSinks();
+		}
+		else if (opts.catsink!=null && opts.catsrc!=null) {
+			readCatSrcSinks();
+		}
+		
+		try {
+			callbackClses.addAll(loadAndroidCallbacks());
+			for (String clsname : callbackClses) {
+				callbackSootClses.add( Scene.v().getSootClass(clsname) );
+			}
+		}
+		catch (Exception e) {
+			System.err.println("Failed in parsing the androidCallbacks file: ");
+			e.printStackTrace(System.err);
+			System.exit(-1);
+		}
+	}
+	
+	protected void readSrcSinks() {
 		ISourceSinkDefinitionProvider parser = null;
 		String sourceSinkFile = opts.srcsinkFile;
 
@@ -200,26 +253,89 @@ public class securityReport implements Extension {
 			if (allSources.contains(n.getSootMethodName())) {
 				coveredSources.add(n.getSootMethodName());
 				srcCov.incCovered();
+				
+				allSrcInCalls += stater.getCG().getTotalInCalls(n.getMethodName());
 			}
 			if (allSinks.contains(n.getSootMethodName())) {
 				coveredSinks.add(n.getSootMethodName());
 				sinkCov.incCovered();
+	
+				allSinkInCalls += stater.getCG().getTotalInCalls(n.getMethodName());
 			}
 			
 			allCoveredClasses.add(n.getSootClassName());
 			allCoveredMethods.add(n.getSootMethodName());
 		}
-		
+	}
+
+	protected void readCatSrcSinks() {
+		Set<CATEGORY> allcats = new HashSet<CATEGORY>();
+		allcats.addAll(Arrays.asList(CATEGORY.ALL.getDeclaringClass().getEnumConstants()));
+		CategorizedAndroidSourceSinkParser catsrcparser = 
+			new CategorizedAndroidSourceSinkParser(allcats, opts.catsrc, true, false);
+		CategorizedAndroidSourceSinkParser catsinkparser = 
+			new CategorizedAndroidSourceSinkParser(allcats, opts.catsink, false, true);
+
 		try {
-			callbackClses.addAll(loadAndroidCallbacks());
-			for (String clsname : callbackClses) {
-				callbackSootClses.add( Scene.v().getSootClass(clsname) );
+			for (AndroidMethod am : catsrcparser.parse()) {
+				allCatSrcs.put(am.getSignature(), am.getCategory());
+				
 			}
+			for (AndroidMethod am : catsinkparser.parse()) {
+				allCatSinks.put(am.getSignature(), am.getCategory());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (Exception e) {
-			System.err.println("Failed in parsing the androidCallbacks file: ");
-			e.printStackTrace(System.err);
-			System.exit(-1);
+		
+		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
+		for (CGNode n : allCGNodes) {
+			String mename = n.getSootMethodName();
+			if (allCatSrcs.keySet().contains(mename)) {
+				srcCov.incCovered();
+
+				CATEGORY cat = allCatSrcs.get(mename);
+				Set<String> cts = coveredCatSrcs.get(cat);
+				if (null==cts) {
+					cts = new HashSet<String>();
+					coveredCatSrcs.put(cat, cts);
+				}
+				cts.add(mename);
+				
+				Integer cct = allCatSrcInCalls.get(cat); 
+				if (cct==null) {
+					cct = 0;
+				}
+				int curn = stater.getCG().getTotalInCalls(n.getMethodName());
+				cct += curn;
+				allCatSrcInCalls.put(cat, cct);
+				
+				allSrcInCalls += curn;
+			}
+			if (allCatSinks.keySet().contains(mename)) {
+				sinkCov.incCovered();
+
+				CATEGORY cat = allCatSinks.get(mename);
+				Set<String> cts = coveredCatSinks.get(cat);
+				if (null==cts) {
+					cts = new HashSet<String>();
+					coveredCatSinks.put(cat, cts);
+				}
+				cts.add(mename);
+
+				Integer cct = allCatSinkInCalls.get(cat); 
+				if (cct==null) {
+					cct = 0;
+				}
+				int curn = stater.getCG().getTotalInCalls(n.getMethodName());
+				cct += curn;
+				allCatSinkInCalls.put(cat, cct);
+				
+				allSinkInCalls += curn;
+			}
+			
+			allCoveredClasses.add(n.getSootClassName());
+			allCoveredMethods.add(n.getSootMethodName());
 		}
 	}
 
@@ -237,21 +353,37 @@ public class securityReport implements Extension {
 	}
 	
 	public void run() {
-		System.out.println("Running static analysis for ICC distribution characterization");
+		System.out.println("Running static analysis for security-relevant feature characterization");
 
 		init();
 		
 		traverse();
 		
-		report();
+		String dir = System.getProperty("user.dir");
+
+		try {
+			if (opts.debugOut) {
+				reportSrcSinks (System.out);
+				reportCallbacks (System.out);
+			}
+			else {
+				String fnsrcsink = dir + File.separator + "srcsink.txt";
+				PrintStream pssrcsink = new PrintStream (new FileOutputStream(fnsrcsink,true));
+				reportSrcSinks (pssrcsink);
+
+				String fncb = dir + File.separator + "callback.txt";
+				PrintStream pscb = new PrintStream (new FileOutputStream(fncb,true));
+				reportCallbacks(pscb);
+			}
+		}
+		catch (Exception e) {e.printStackTrace();}
 		
 		System.exit(0);
 	}
 	
 	/** obtaining all statically resolved ICCs needs a separate analysis such as IC3 */ 
-	Set<String> traversedSinks = new HashSet<String>();
-	Set<String> traversedSources = new HashSet<String>();
-		
+	
+	int totalCls = 0, totalMethods = 0;
 	public void traverse() {
 		/* traverse all classes */
 		Iterator<SootClass> clsIt = Scene.v().getClasses().iterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
@@ -273,25 +405,19 @@ public class securityReport implements Extension {
 					isULCls = true;
 				}
 			}
-			
+			totalCls ++;
 			boolean isCallbackCls = isCallbackClass(sClass);
 			
 			/* traverse all methods of the class */
 			Iterator<SootMethod> meIt = sClass.getMethods().iterator();
 			while (meIt.hasNext()) {
 				SootMethod sMethod = (SootMethod) meIt.next();
-				if ( !sMethod.isConcrete() ) {
-                    // skip abstract methods and phantom methods, and native methods as well
-                    continue; 
-                }
-                if ( sMethod.toString().indexOf(": java.lang.Class class$") != -1 ) {
-                    // don't handle reflections now either
-                    continue;
-                }
 				String meId = sMethod.getSignature();
+				
+				totalMethods ++;
 
 				if (generalReport.getComponentType(sClass).compareTo("Unknown")!=0 && 
-					AndroidEntryPointConstants.isLifecycleMethod(sMethod.getName())) {
+					AndroidEntryPointConstants.isLifecycleMethod(sMethod.getSubSignature())) {
 					traversedLifecycleMethods.add(meId);
 					lifecycleCov.incTotal();
 
@@ -310,6 +436,15 @@ public class securityReport implements Extension {
 						eventhandlerCov.incCovered();
 					}
 				}
+
+				if ( !sMethod.isConcrete() ) {
+                    // skip abstract methods and phantom methods, and native methods as well
+                    continue; 
+                }
+                if ( sMethod.toString().indexOf(": java.lang.Class class$") != -1 ) {
+                    // don't handle reflections now either
+                    //continue;
+                }
 				
 				Body body = sMethod.retrieveActiveBody();
 				PatchingChain<Unit> pchn = body.getUnits();
@@ -321,13 +456,38 @@ public class securityReport implements Extension {
 						continue;
 					}
 					String calleename = s.getInvokeExpr().getMethod().getSignature();
-					if (allSources.contains(calleename)) {
-						traversedSources.add(calleename);
-						srcCov.incTotal();
+					
+					if (opts.srcsinkFile != null) {
+						if (allSources.contains(calleename)) {
+							traversedSources.add(calleename);
+							srcCov.incTotal();
+						}
+						if (allSinks.contains(calleename)) {
+							traversedSinks.add(calleename);
+							sinkCov.incTotal();
+						}
 					}
-					if (allSinks.contains(calleename)) {
-						traversedSinks.add(calleename);
-						sinkCov.incTotal();
+					else if (opts.catsink!=null && opts.catsrc!=null) {
+						if (allCatSrcs.keySet().contains(calleename)) {
+							srcCov.incTotal();
+
+							Set<String> cts = traversedCatSrcs.get(allCatSrcs.get(calleename));
+							if (null==cts) {
+								cts = new HashSet<String>();
+								traversedCatSrcs.put(allCatSrcs.get(calleename), cts);
+							}
+							cts.add(calleename);
+						}
+						if (allCatSinks.keySet().contains(calleename)) {
+							sinkCov.incTotal();
+
+							Set<String> cts = traversedCatSrcs.get(allCatSinks.get(calleename));
+							if (null==cts) {
+								cts = new HashSet<String>();
+								traversedCatSinks.put(allCatSinks.get(calleename), cts);
+							}
+							cts.add(calleename);
+						}
 					}
 				}
 				
@@ -336,29 +496,61 @@ public class securityReport implements Extension {
 		} // -- while (clsIt.hasNext())
 	}
 	
-	public void report() {
+	public void reportSrcSinks(PrintStream os) {
 		/** report statistics for the current trace */
-		
 		if (opts.debugOut) {
-			System.out.println(srcCov);
-			System.out.println(sinkCov);
-			
-			System.out.println(lifecycleCov);
-			System.out.println(eventhandlerCov);
+			os.println(srcCov);
+			os.println(sinkCov);
+		}
+		if (opts.debugOut) {
+			os.println("*** tabulation ***");
+			os.println("format: s_source\t s_sink\t d_source\t d_sink\t s_all\t d_all\t d_allSrcInCall\t d_allSinkInCall");
+		}
+		os.println(srcCov.getTotal() +"\t " + sinkCov.getTotal() + "\t " + 
+				srcCov.getCovered() + "\t " + sinkCov.getCovered() + "\t" +
+				totalMethods + "\t" + allCoveredMethods.size() + "\t" +
+				allSrcInCalls + "\t" + allSinkInCalls);				
+		
+		if (opts.catsink==null || opts.catsrc==null) {
+			return;
+		}
+
+		// list src/sink by category if applicable
+		os.println("[SOURCE]");
+		if (opts.debugOut) {
+			os.println("format: category\t s_source\t d_source\t d_allSrcInCall");
+		}
+		for (CATEGORY cat : traversedCatSrcs.keySet()) {
+			os.println( cat + "\t" + traversedCatSrcs.get(cat) + "\t" + 
+					(coveredCatSrcs.containsKey(cat)?coveredCatSrcs.get(cat).size():0) + "\t" +
+					(allCatSrcInCalls.containsKey(cat)?allCatSrcInCalls.get(cat):0) );
+		}
+
+		os.println("[SINK]");
+		if (opts.debugOut) {
+			os.println("format: category\t s_sink\t d_sink\t d_allSinkInCall");
+		}
+		for (CATEGORY cat : traversedCatSinks.keySet()) {
+			os.println( cat + "\t" + traversedCatSinks.get(cat) + "\t" + 
+					(coveredCatSinks.containsKey(cat)?coveredCatSinks.get(cat).size():0) + "\t" +
+					(allCatSinkInCalls.containsKey(cat)?allCatSinkInCalls.get(cat):0) );
+		}
+	}
+	
+	public void reportCallbacks(PrintStream os) {
+		/** report statistics for the current trace */
+		if (opts.debugOut) {
+			os.println(lifecycleCov);
+			os.println(eventhandlerCov);
 		}
 		
-		System.out.println("*** tabulation ***");
-		System.out.println("format: s_source\t s_sink\t d_source\t d_sink");
-		System.out.println(srcCov.getTotal() +"\t " + sinkCov.getTotal() + "\t " + 
-				srcCov.getCovered() + "\t " + sinkCov.getCovered());				
-
-		System.out.println("format: s_lifecycle\t s_eventHandler\t d_lifecycle\t d_eventHandler");
-		System.out.println(lifecycleCov.getTotal() +"\t " + eventhandlerCov.getTotal() + "\t " + 
-				lifecycleCov.getCovered() + "\t " + eventhandlerCov.getCovered());				
-		
-		//System.out.println("*** tabulation ***");
-		//System.out.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
-		DecimalFormat df = new DecimalFormat("#.####");
+		if (opts.debugOut) {
+			os.println("*** tabulation ***");
+			os.println("format: s_lifecycle\t s_eventHandler\t d_lifecycle\t d_eventHandler\t s_all\t d_all");
+		}
+		os.println(lifecycleCov.getTotal() +"\t " + eventhandlerCov.getTotal() + "\t " + 
+				lifecycleCov.getCovered() + "\t " + eventhandlerCov.getCovered() + "\t" +				
+				totalMethods + "\t" + allCoveredMethods.size());				
 	}
 }  
 

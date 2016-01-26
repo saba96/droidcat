@@ -5,6 +5,7 @@
  * -------------------------------------------------------------------------------------------
  * 12/10/15		hcai		created; for representing dynamic call graph
  * 01/05/16		hcai		the first basic, working version
+ * 01/25/16		hcai		added routines counting total outgoing and incoming calls from a node
 */
 package dynCG;
 
@@ -219,6 +220,30 @@ public class callGraph {
 		
 		for (CGEdge ie : _graph.incomingEdgesOf(tgt)) {
 			ret.add(ie.getSource());
+		}
+		return ret;
+	}
+
+	public int getTotalOutCalls (String caller) {
+		int ret = 0;
+		
+		CGNode src = getNodeByName (caller);
+		if (null == src) return ret;
+		
+		for (CGEdge oe : _graph.outgoingEdgesOf(src)) {
+			ret += oe.getFrequency();
+		}
+		return ret;
+	}
+
+	public int getTotalInCalls (String callee) {
+		int ret = 0;
+		
+		CGNode tgt = getNodeByName (callee);
+		if (null == tgt) return ret;
+		
+		for (CGEdge ie : _graph.incomingEdgesOf(tgt)) {
+			ret += ie.getFrequency();
 		}
 		return ret;
 	}

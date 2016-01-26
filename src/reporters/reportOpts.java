@@ -14,8 +14,13 @@ import java.util.List;
 public class reportOpts {
 	protected boolean debugOut = false;
 	protected String traceFile = null;
+	// simple uniform list of source and sinks
 	protected String srcsinkFile = null;
 	protected String callbackFile = null;
+	
+	// categorized sources and sinks
+	protected String catsrc = null;
+	protected String catsink = null;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -33,6 +38,14 @@ public class reportOpts {
 			}
 			else if (arg.equals("-srcsink")) {
 				srcsinkFile = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-catsrc")) {
+				catsrc = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-catsink")) {
+				catsink = args[i+1];
 				i++;
 			}
 			else if (arg.equals("-callback")) {
