@@ -180,6 +180,18 @@ public class AndroidEntryPointConstants {
 				|| getGCMListenerServiceMethods().contains(methodName)
 				|| getServiceLifecycleMethods().contains(methodName);
 	}
+
+	public static String getLifecycleType(String methodName) {
+		if (getActivityLifecycleMethods().contains(methodName)) return "Activity";
+		if (getApplicationLifecycleMethods().contains(methodName)) return "Application";
+		if (getBroadcastLifecycleMethods().contains(methodName)) return "BroadcastReceiver";
+		if (getContentproviderLifecycleMethods().contains(methodName)) return "ContentProvider";
+		if (getGCMIntentServiceMethods().contains(methodName)
+				|| getGCMListenerServiceMethods().contains(methodName)
+				|| getServiceLifecycleMethods().contains(methodName)) return "Service";
+		assert false;
+		return "Unknown";
+	}
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

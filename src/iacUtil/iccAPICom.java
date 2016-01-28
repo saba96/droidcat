@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import soot.FastHierarchy;
+import soot.Hierarchy;
 import soot.Scene;
 import soot.SootClass;
 import soot.jimple.AssignStmt;
@@ -104,7 +106,56 @@ public class iccAPICom {
 			{COMPONENT_TYPE_ACTIVITY, COMPONENT_TYPE_SERVICE,  COMPONENT_TYPE_RECEIVER, COMPONENT_TYPE_PROVIDER, 
 			COMPONENT_TYPE_APPLICATION, COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS, COMPONENT_TYPE_GCMLISTENERSERVICECLASS,
 			COMPONENT_TYPE_UNKNOWN};
-		public static final String[] component_type_names = {"Activity", "Service", "BroadcaseReceiver", "ContentProvider", "Application"};
+		public static final String[] component_type_names = {"Activity", "Service", "BroadcastReceiver", "ContentProvider", "Application"};
+
+		public static String getComponentType(SootClass cls) {
+			try {
+				final FastHierarchy fhar = Scene.v().getOrMakeFastHierarchy();
+				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_ACTIVITY))
+					return "Activity";
+				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_SERVICE) ||
+					fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS) ||
+					fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMLISTENERSERVICECLASS))
+					return "Service";
+				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_RECEIVER))
+					return "BroadcastReceiver";
+				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_PROVIDER))
+					return "ContentProvider";
+				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_APPLICATION))
+					return "Application";
+				return "Unknown";
+			}
+			catch (Exception e) {
+				return "Unknown";
+			}
+		}
+
+		public static String getComponentTypeActive(SootClass cls) {
+			final Hierarchy har = Scene.v().getActiveHierarchy();
+			if (har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_ACTIVITY))
+				return "Activity";
+			if (har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_SERVICE) ||
+				har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS) ||
+				har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_GCMLISTENERSERVICECLASS))
+				return "Service";
+			if (har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_RECEIVER))
+				return "BroadcaseReceiver";
+			if (har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_PROVIDER))
+				return "ContentProvider";
+			if (har.isClassSubclassOf(cls, iccAPICom.COMPONENT_TYPE_APPLICATION))
+				return "Application";
+			return "Unknown";
+		}
+		
+		public enum EVENTCAT {
+			// all categories
+			ALL,
+			// SYSTEM
+			SYSTEM_OTHER, HARDWARE_MANAGEMENT, DATA_MANAGEMENT, NETWORK_MANAGEMENT, LOCATION_MANAGEMENT,
+			// UI
+			UI_OTHER, DIALOG, MEDIA_CONTROL, VIEW, WIDGET
+		}
+	
 }
 
 /* vim :set ts=4 tw=4 tws=4 */

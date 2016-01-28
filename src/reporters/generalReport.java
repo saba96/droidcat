@@ -9,6 +9,8 @@
  * 01/09/16		hcai		first working version of basic (coverage related) statistics
  * 01/15/16		hcai		added class ranking by edge frequency and call in/out degrees; added component type distribution statistics              
  * 01/19/16		hcai		separate different statistics outputs by streaming them to separate files
+ * 01/26/16		hcai		added total instances of being called for gdistcov and compDist metrics
+ * 01/28/16		hcai		added reports on caller/callee ranking by total outgoing/incoming call instances
 */
 package reporters;
 
@@ -56,6 +58,10 @@ public class generalReport implements Extension {
 	// framework library (Android SDK) code coverage  
 	protected final covStat sdkClsCov = new covStat("SDK Class");
 	protected final covStat sdkMethodCov = new covStat("SDK Method");
+	
+	// count all instances per category of code
+	int[] insClsAll = new int[] {0,0,0}; // {userCode, 3rdpartyLib, SDK}
+	int[] insMethodAll = new int[]{0,0,0};
 	
 	String packName = "";
 
@@ -131,7 +137,7 @@ public class generalReport implements Extension {
 	
 	public void run() {
 		System.out.println("Running static analysis for method/class coverage characterization");
-		System.out.println(Scene.v().getPkgList());
+		//System.out.println(Scene.v().getPkgList());
 		
 		init();
 		
@@ -142,15 +148,22 @@ public class generalReport implements Extension {
 		try {
 			if (opts.debugOut) {
 				report (System.out);
+				reportIns (System.out);
 				rankingEdgeFreqByClass (System.out);
 				rankingCallerByClass (System.out);
 				rankingCalleeByClass (System.out);
+				rankingCallerInsByClass (System.out);
+				rankingCalleeInsByClass (System.out);
 				componentTypeDist(System.out);
 			}
 			else {
 				String fngdistcov = dir + File.separator + "gdistcov.txt";
 				PrintStream psgdistcov = new PrintStream (new FileOutputStream(fngdistcov,true));
 				report(psgdistcov);
+
+				String fngdistcovIns = dir + File.separator + "gdistcovIns.txt";
+				PrintStream psgdistcovIns = new PrintStream (new FileOutputStream(fngdistcovIns,true));
+				reportIns(psgdistcovIns);
 
 				String fnedgefreq = dir + File.separator + "edgefreq.txt";
 				PrintStream psedgefreq = new PrintStream (new FileOutputStream(fnedgefreq,true));
@@ -163,6 +176,14 @@ public class generalReport implements Extension {
 				String fncalleerank = dir + File.separator + "calleerank.txt";
 				PrintStream pscalleerank = new PrintStream (new FileOutputStream(fncalleerank,true));
 				rankingCalleeByClass(pscalleerank);
+
+				String fncallerInsrank = dir + File.separator + "callerrankIns.txt";
+				PrintStream pscallerInsrank = new PrintStream (new FileOutputStream(fncallerInsrank,true));
+				rankingCallerInsByClass(pscallerInsrank);
+
+				String fncalleeInsrank = dir + File.separator + "calleerankIns.txt";
+				PrintStream pscalleeInsrank = new PrintStream (new FileOutputStream(fncalleeInsrank,true));
+				rankingCalleeInsByClass(pscalleeInsrank);
 				
 				String fncompdist = dir + File.separator + "compdist.txt";
 				PrintStream pscompdist = new PrintStream (new FileOutputStream(fncompdist,true));
@@ -180,27 +201,14 @@ public class generalReport implements Extension {
 	Set<String> coveredAppClasses = new HashSet<String>();
 	Set<String> coveredULClasses = new HashSet<String>();
 	Set<String> coveredSDKClasses = new HashSet<String>();
-	
-	public static String getComponentType(SootClass cls) {
-		FastHierarchy har = Scene.v().getOrMakeFastHierarchy();
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_ACTIVITY))
-			return "Activity";
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_SERVICE) ||
-			har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS) ||
-			har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_GCMLISTENERSERVICECLASS))
-			return "Service";
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_RECEIVER))
-			return "BroadcaseReceiver";
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_PROVIDER))
-			return "ContentProvider";
-		if (har.isSubclass(cls, iccAPICom.COMPONENT_TYPE_APPLICATION))
-			return "Application";
-		return "Unknown";
-	}
+
+	Set<String> coveredAppMethods = new HashSet<String>();
+	Set<String> coveredULMethods = new HashSet<String>();
+	Set<String> coveredSDKMethods = new HashSet<String>();
 	
 	public void traverse() {
 		/* traverse all classes */
-		Iterator<SootClass> clsIt = Scene.v().getClasses().iterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
+		Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator();//.iterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
 			if ( sClass.isPhantom() ) {	continue; }
@@ -236,8 +244,7 @@ public class generalReport implements Extension {
 			}
 			traversedClasses.add(sClass.getName());
 			
-			
-			String ctn = getComponentType(sClass);
+			String ctn = iccAPICom.getComponentType(sClass);
 			if (ctn.compareTo("Unknown")!=0) {
 				sct2cc.get(ctn).add( sClass.getName() );
 				if (allCoveredClasses.contains(sClass.getName())) {
@@ -259,12 +266,14 @@ public class generalReport implements Extension {
 					appMethodCov.incTotal();
 					if (allCoveredMethods.contains(meId)) {
 						appMethodCov.incCovered();
+						coveredAppMethods.add(meId);
 					}
 				}
 				else if (isSDKCls ){
 					sdkMethodCov.incTotal();
 					if (allCoveredMethods.contains(meId)) {
 						sdkMethodCov.incCovered();
+						coveredSDKMethods.add(meId);
 					}
 				}
 				else {
@@ -272,6 +281,7 @@ public class generalReport implements Extension {
 					ulMethodCov.incTotal();
 					if (allCoveredMethods.contains(meId)) {
 						ulMethodCov.incCovered();
+						coveredULMethods.add(meId);
 					}
 				}
 				
@@ -358,6 +368,41 @@ public class generalReport implements Extension {
 				df.format(1.0*dmeTotal/smeTotal));
 	}
 	
+	public void reportIns(PrintStream os) {
+		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
+		for (CGNode n : allCGNodes) {
+			String cls = n.getSootClassName();
+			String me = n.getSootMethodName();
+			if (coveredAppClasses.contains(cls)) {
+				insClsAll[0] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredULClasses.contains(cls)) {
+				insClsAll[1] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredSDKClasses.contains(cls)) {
+				insClsAll[2] += stater.getCG().getTotalInCalls(me);
+			}
+
+			if (coveredAppMethods.contains(me)) {
+				insMethodAll[0] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredULMethods.contains(me)) {
+				insMethodAll[1] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredSDKMethods.contains(me)) {
+				insMethodAll[2] += stater.getCG().getTotalInCalls(me);
+			}
+		}
+		if (opts.debugOut) {
+			os.println("*** total instances of being called *** ");
+			os.println("format: class_app\t class_ul\t class_sdk\t class_all\t method_app\t method_ul\t method_sdk\t method_all");
+		}
+		os.println(insClsAll[0] + "\t" + insClsAll[1] + "\t" + insClsAll[2] + "\t" + (insClsAll[0]+insClsAll[1]+insClsAll[2]) + 
+				"\t"+ 
+				insMethodAll[0] + "\t" + insMethodAll[1] + "\t" + insMethodAll[2] + "\t" + 
+				(insMethodAll[0]+insMethodAll[1]+insMethodAll[2]) ); 
+	}
+	
 	/** rank covered classes/methods by call frequency and out/in degrees */
 	private String getCategory(String nameCls) {
 		if (coveredAppClasses.contains(nameCls)) return "App";
@@ -400,6 +445,30 @@ public class generalReport implements Extension {
 			os.println(stater.getCG().getInternalGraph().inDegreeOf(n) + "\t" + getCategory(n.getSootClassName()));
 		}
 	}
+
+	public void rankingCallerInsByClass(PrintStream os) {
+		List<CGNode> orderedCallers = stater.getCG().listCallerInstances(false);
+		if (opts.debugOut) {
+			os.println("*** caller ranking by outgoing call instances *** ");
+			os.println("format: rank\t class");
+			os.println("[caller]");
+		}
+		for (CGNode n : orderedCallers) {
+			os.println(stater.getCG().getTotalOutCalls(n.getMethodName()) + "\t" + getCategory(n.getSootClassName()));
+		}
+	}
+	public void rankingCalleeInsByClass(PrintStream os) {
+		List<CGNode> orderedCallees = stater.getCG().listCalleeInstances(false);
+		
+		if (opts.debugOut) {
+			os.println("*** callee ranking by incoming call instances *** ");
+			os.println("format: rank\t class");
+			os.println("[callee]");
+		}
+		for (CGNode n : orderedCallees) {
+			os.println(stater.getCG().getTotalInCalls(n.getMethodName()) + "\t" + getCategory(n.getSootClassName()));
+		}
+	}
 	
 	/** distribution regarding the four component types */
 	public void componentTypeDist(PrintStream os) {
@@ -417,6 +486,27 @@ public class generalReport implements Extension {
 		}
 		for (String ctn : iccAPICom.component_type_names) {
 			os.print(dct2cc.get(ctn).size() + "\t ");
+		}
+		os.println();
+		
+		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
+		Map<String, Integer> dct2ins = new HashMap<String, Integer>();
+		for (CGNode n : allCGNodes) {
+			String cls = n.getSootClassName();
+			for (String ct : dct2cc.keySet()) {
+				if (dct2cc.get(ct).contains(cls)) {
+					Integer cct = dct2ins.get(ct);
+					if (cct==null) cct = 0;
+					cct += stater.getCG().getTotalInCalls(n.getSootMethodName());
+					dct2ins.put(ct, cct);
+				}
+			}
+		}
+		if (opts.debugOut) {
+			os.println("[call instances]");
+		}
+		for (String ctn : iccAPICom.component_type_names) {
+			os.print( (dct2ins.containsKey(ctn)?dct2ins.get(ctn):0) + "\t ");
 		}
 		os.println();
 	}

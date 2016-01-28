@@ -4,7 +4,10 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 01/06/16		hcai		created; dealing with options in the statistics reporting
- *
+ * 01/12/16		hcai		added option giving taint source and sink list
+ * 01/15/16		hcai		added option giving categorized taint source and sink list
+ * 01/21/16		hcai		added option giving callback interface list (CallbackClasses.txt)
+ * 01/27/16		hcai		added option giving categorized callback interfaces (events)
 */
 package reporters;
 
@@ -21,6 +24,7 @@ public class reportOpts {
 	// categorized sources and sinks
 	protected String catsrc = null;
 	protected String catsink = null;
+	protected String catCallbackFile = null;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -50,6 +54,10 @@ public class reportOpts {
 			}
 			else if (arg.equals("-callback")) {
 				callbackFile = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-catcallback")) {
+				catCallbackFile = args[i+1];
 				i++;
 			}
 			else if (arg.equals("-nophantom")) {

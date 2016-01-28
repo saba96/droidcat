@@ -6,6 +6,7 @@
  * 12/10/15		hcai		created; for representing dynamic call graph
  * 01/05/16		hcai		the first basic, working version
  * 01/25/16		hcai		added routines counting total outgoing and incoming calls from a node
+ * 01/28/16		hcai		added caller and callee ranking by outgoing/incoming call instances
 */
 package dynCG;
 
@@ -187,7 +188,7 @@ public class callGraph {
 	
 	public CGNode getNodeByName (String mename) {
 		for (CGNode cgn : _graph.vertexSet()) {
-			if (cgn.getMethodName().equalsIgnoreCase(mename)) return cgn;
+			if (cgn.getMethodName().equalsIgnoreCase(mename) || cgn.getSootMethodName().equalsIgnoreCase(mename)) return cgn;
 		}
 		return null;
 	}
@@ -225,7 +226,7 @@ public class callGraph {
 	}
 
 	public int getTotalOutCalls (String caller) {
-		int ret = 0;
+		int ret = 1;
 		
 		CGNode src = getNodeByName (caller);
 		if (null == src) return ret;
@@ -237,7 +238,7 @@ public class callGraph {
 	}
 
 	public int getTotalInCalls (String callee) {
-		int ret = 0;
+		int ret = 1;
 		
 		CGNode tgt = getNodeByName (callee);
 		if (null == tgt) return ret;
@@ -254,10 +255,12 @@ public class callGraph {
 		if (null == src || null == tgt) return new ArrayList<CGEdge>();
 		
 		DijkstraShortestPath<CGNode, CGEdge> finder = new DijkstraShortestPath<CGNode, CGEdge>(_graph, src, tgt);
+		if (null == finder.getPath()) return new ArrayList<CGEdge>();
 		return finder.getPath().getEdgeList();
 	}
 
 	public boolean isReachable (String caller, String callee) {
+		if (caller.equalsIgnoreCase(callee)) return true;
 		return !getPath(caller, callee).isEmpty();
 	}
 	
@@ -322,6 +325,32 @@ public class callGraph {
 		return allNodes;
 	}
 	
+	public List<CGNode> listCallerInstances() { return listCallerInstances(true); }
+	public List<CGNode> listCallerInstances(boolean verbose) {
+		if (verbose) {
+			System.out.println("\n==== caller ranked by non-ascending outgoing call instances  === \n");
+		}
+		List<CGNode> allNodes = new ArrayList<CGNode>();
+		allNodes.addAll(this._graph.vertexSet());
+		Collections.sort(allNodes, new Comparator<CGNode>() {
+			public int compare(CGNode a, CGNode b) {
+				if ( getTotalOutCalls(a.getMethodName()) > getTotalOutCalls(b.getMethodName()) ) {
+					return 1;
+				}
+				else if ( getTotalOutCalls(a.getMethodName()) < getTotalOutCalls(b.getMethodName()) ) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		if (verbose) {
+			for (CGNode n : allNodes) {
+				System.out.println(n+":"+ getTotalOutCalls(n.getMethodName()));
+			}
+		}
+		return allNodes;
+	}
+	
 	public List<CGNode> listCallees() { return listCallees(true); }
 	public List<CGNode> listCallees(boolean verbose) {
 		if (verbose) {
@@ -343,6 +372,32 @@ public class callGraph {
 		if (verbose) {
 			for (CGNode n : allNodes) {
 				System.out.println(n+":"+_graph.inDegreeOf(n));
+			}
+		}
+		return allNodes;
+	}
+	
+	public List<CGNode> listCalleeInstances() { return listCalleeInstances(true); }
+	public List<CGNode> listCalleeInstances(boolean verbose) {
+		if (verbose) {
+			System.out.println("\n==== callee ranked by non-ascending incoming call instances === \n");
+		}
+		List<CGNode> allNodes = new ArrayList<CGNode>();
+		allNodes.addAll(this._graph.vertexSet());
+		Collections.sort(allNodes, new Comparator<CGNode>() {
+			public int compare(CGNode a, CGNode b) {
+				if ( getTotalInCalls(a.getMethodName()) > getTotalInCalls(b.getMethodName()) ) {
+					return 1;
+				}
+				else if ( getTotalInCalls(a.getMethodName()) < getTotalInCalls(b.getMethodName()) ) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		if (verbose) {
+			for (CGNode n : allNodes) {
+				System.out.println(n+":"+ getTotalInCalls(n.getMethodName()));
 			}
 		}
 		return allNodes;
