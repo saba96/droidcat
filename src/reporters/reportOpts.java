@@ -25,6 +25,10 @@ public class reportOpts {
 	protected String catsrc = null;
 	protected String catsink = null;
 	protected String catCallbackFile = null;
+
+	protected String apkdir = null;
+	protected String firstapk = null;
+	protected String secondapk = null;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -58,6 +62,18 @@ public class reportOpts {
 			}
 			else if (arg.equals("-catcallback")) {
 				catCallbackFile = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-apkdir")) {
+				apkdir = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-firstapk")) {
+				firstapk = args[i+1];
+				i++;
+			}
+			else if (arg.equals("-secondapk")) {
+				secondapk = args[i+1];
 				i++;
 			}
 			else if (arg.equals("-nophantom")) {

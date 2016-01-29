@@ -73,14 +73,16 @@ public class traceStat {
 		// mapping from intent field name to field value
 		protected Map<String, String> fields = new HashMap<String, String>();
 		
-		protected String callsite; // the call site that sends or receives this Intent
+		//protected String callsite; // the call site that sends or receives this Intent
+		protected CGEdge callsite; // the call site that sends or receives this Intent
 
 		ICCIntent() {
 			for (String fdname : fdnames) {
 				fields.put(fdname, "null");
 			}
 			ts = -1;
-			callsite = "";
+			//callsite = "";
+			callsite = null;
 		}
 		
 		public String toString() {
@@ -122,8 +124,12 @@ public class traceStat {
 		public void setTS (int _ts) { this.ts = _ts; }
 		public int getTS () { return this.ts; }
 		
+		/*
 		public String getCallsite() { return callsite; }
 		public void setCallsite (String stmt) { callsite = stmt; }
+		*/
+		public CGEdge getCallsite() { return callsite; }
+		public void setCallsite (CGEdge edge) { callsite = edge; }
 		
 		public boolean isExplicit () {
 			return fields.get("Component").compareTo("null")!=0;
@@ -226,7 +232,8 @@ public class traceStat {
 						
 						if (binICC) {
 							if (iccAPICom.is_IntentReceivingAPI(ne.getTarget().getMethodName())) {
-								itn.setCallsite(ne.toString());
+								//itn.setCallsite(ne.toString());
+								itn.setCallsite(ne);
 							}
 							
 							String comp = itn.getFields("Component");
@@ -243,7 +250,8 @@ public class traceStat {
 						}
 						else { // outgoing ICC
 							if (iccAPICom.is_IntentSendingAPI(ne.getTarget().getMethodName())) {
-								itn.setCallsite(ne.getTarget().getSootMethodName());
+								//itn.setCallsite(ne.getTarget().getSootMethodName());
+								itn.setCallsite(ne);
 							}
 						}
 					}

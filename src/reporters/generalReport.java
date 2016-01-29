@@ -70,6 +70,7 @@ public class generalReport implements Extension {
 		
 		if (opts.traceFile==null || opts.traceFile.isEmpty()) {
 			// nothing to do
+			return;
 		}
 
 		generalReport grep = new generalReport();

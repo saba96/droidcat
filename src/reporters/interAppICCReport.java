@@ -1,11 +1,9 @@
 /**
- * File: src/reporter/iccReport.java
+ * File: src/reporter/interAppICCReport.java
  * -------------------------------------------------------------------------------------------
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
- * 01/12/16		hcai		created; for computing ICC related statistics in android app call traces
- * 01/14/16		hcai		done the first version : mainly dynamic ICC statics
- * 01/28/16		hcai		added separate file outputs for different metrics; added metrics on icc links
+ * 01/28/16		hcai		created; inter-app ICC characterization
 */
 package reporters;
 
@@ -16,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -24,14 +23,6 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import dua.Extension;
-import dua.Forensics;
-import dua.global.ProgramFlowGraph;
-import dua.method.CFG;
-import dua.method.CFG.CFGNode;
-import dua.method.CallSite;
-import dua.util.Util;
 
 import soot.*;
 import soot.jimple.*;
@@ -45,7 +36,7 @@ import dynCG.callGraph.CGNode;
 import dynCG.traceStat.ICCIntent;
 
 
-public class iccReport implements Extension {
+public class interAppICCReport {
 	
 	protected static reportOpts opts = new reportOpts();
 	protected final traceStat stater = new traceStat();
@@ -62,57 +53,90 @@ public class iccReport implements Extension {
 	Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
 	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
 	
+	static final Set<SootClass> allSootClasses = new HashSet<SootClass>();
+	static final Map<String, String> cls2comtype = new HashMap<String, String>();
+	
 	protected final Set<String> allCoveredMethods = new HashSet<String>();
 	
 	public static void main(String args[]){
 		args = preProcessArgs(opts, args);
+		for (int i=0; i < args.length; i++) {
+			if (args[i].equalsIgnoreCase("-allowphantom")) args[i] = "-allow-phantom-refs";
+		}
 		
-		if (opts.traceFile==null || opts.traceFile.isEmpty()) {
+		if (opts.traceFile==null || opts.traceFile.isEmpty() || opts.secondapk==null) {
 			// nothing to do
 			return;
 		}
-
-		iccReport grep = new iccReport();
-		// examine catch blocks
-		dua.Options.ignoreCatchBlocks = false;
-		dua.Options.skipDUAAnalysis = true;
-		dua.Options.modelAndroidLC = false;
-		dua.Options.analyzeAndroid = true;
 		
-		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
-		
-		//output as APK, too//-f J
+		// analyze the source apk
+		soot.options.Options.v().parse(args);
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
+		soot.options.Options.v().set_allow_phantom_refs(true);
 		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
+		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
+		soot.options.Options.v().set_process_dir(Collections.singletonList(opts.firstapk));
+
+		//PackManager.v().getPack("wjtp").add(new Transform("wjtp.mt", new firstAPK()));
+		//try { soot.Main.main(args); }catch (Exception e){}
+		Scene.v().loadNecessaryClasses();
 		
-		Forensics.registerExtension(grep);
-		Forensics.main(args);
+		{
+			Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator();
+			while (clsIt.hasNext()) {
+				SootClass sClass = (SootClass) clsIt.next();
+				if ( sClass.isPhantom() ) {	continue; }
+				allSootClasses.add(sClass);
+				//Scene.v().removeClass(sClass);
+				String comt = iccAPICom.getComponentType(sClass);
+				if (!comt.equalsIgnoreCase("Unknown")) {
+					cls2comtype.put(sClass.getName(), comt);
+				}
+			}
+		}
+		
+		// analyze the target apk
+		soot.G.reset();
+		Scene.v().releaseActiveHierarchy();
+		Scene.v().releaseFastHierarchy();
+		soot.options.Options.v().parse(args);
+		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
+		soot.options.Options.v().set_force_overwrite(true);
+		soot.options.Options.v().set_allow_phantom_refs(true);
+		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
+		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
+		soot.options.Options.v().set_process_dir(Collections.singletonList(opts.secondapk));
+		//soot.Main.main(args);
+		Scene.v().loadNecessaryClasses();
+		{
+			Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator();
+			while (clsIt.hasNext()) {
+				SootClass sClass = (SootClass) clsIt.next();
+				if ( sClass.isPhantom() ) {	continue; }
+				allSootClasses.add(sClass);
+				String comt = iccAPICom.getComponentType(sClass);
+				if (!comt.equalsIgnoreCase("Unknown")) {
+					cls2comtype.put(sClass.getName(), comt);
+				}
+			}
+		}
+		
+		new interAppICCReport().run();
 	}
 	
 	protected static String[] preProcessArgs(reportOpts _opts, String[] args) {
 		opts = _opts;
 		args = opts.process(args);
 		
-		String[] argsForDuaF;
-		int offset = 0;
-
-		argsForDuaF = new String[args.length + 2 - offset];
-		System.arraycopy(args, offset, argsForDuaF, 0, args.length-offset);
-		argsForDuaF[args.length+1 - offset] = "-paramdefuses";
-		argsForDuaF[args.length+0 - offset] = "-keeprepbrs";
-		
-		return argsForDuaF;
+		return args;
 	}
 	
 	/**
 	 * Descendants may want to use customized event monitors
 	 */
 	protected void init() {
-		packName = ProgramFlowGraph.appPackageName;
-		
 		// set up the trace stating agent
-		stater.setPackagename(packName);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
@@ -136,15 +160,17 @@ public class iccReport implements Extension {
 			allCoveredMethods.add(n.getSootMethodName());
 			
 			allMethodInCalls += stater.getCG().getTotalInCalls(n.getMethodName());
+
+			meCov.incCovered();
 		}
 	}
 	
 	public void run() {
-		System.out.println("Running static analysis for ICC distribution characterization");
+		System.out.println("Running static analysis for inter-app ICC distribution characterization");
 
 		init();
 		
-		traverse();
+		//traverse();
 		
 		String dir = System.getProperty("user.dir");
 		
@@ -186,7 +212,7 @@ public class iccReport implements Extension {
 	
 	public void traverse() {
 		/* traverse all classes */
-		Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
+		Iterator<SootClass> clsIt = allSootClasses.iterator();
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
 			if ( sClass.isPhantom() ) {	continue; }
@@ -417,17 +443,18 @@ public class iccReport implements Extension {
 		}
 		
 		for (Map.Entry<ICCIntent, ICCIntent> link : ICCPairs.entrySet()) {
-			SootClass incls = null, outcls = null;
+			String incls = null, outcls = null;
 			if (link.getKey().getCallsite()!=null) {
-				incls = Scene.v().getSootClass(link.getKey().getCallsite().getSource().getSootClassName());
+				incls = link.getKey().getCallsite().getSource().getSootClassName();
 			}
 			if (link.getValue().getCallsite()!=null) {
-				outcls = Scene.v().getSootClass(link.getValue().getCallsite().getSource().getSootClassName());
+				outcls = link.getValue().getCallsite().getSource().getSootClassName();
 			}
 			
 			if (incls==null || outcls==null) continue;
+			if (!cls2comtype.containsKey(incls) || !cls2comtype.containsKey(outcls)) continue;
 
-			os.println(iccAPICom.getComponentType(incls) +"->"+iccAPICom.getComponentType(outcls));
+			os.println(cls2comtype.get(incls) +"->"+cls2comtype.get(outcls));
 		}
 	}
 }

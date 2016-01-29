@@ -1,11 +1,10 @@
 /**
- * File: src/reporter/iccReport.java
+ * File: src/reporter/interAppICCSim.java
  * -------------------------------------------------------------------------------------------
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
- * 01/12/16		hcai		created; for computing ICC related statistics in android app call traces
- * 01/14/16		hcai		done the first version : mainly dynamic ICC statics
- * 01/28/16		hcai		added separate file outputs for different metrics; added metrics on icc links
+ * 01/28/16		hcai		created; inter-app ICC characterization --- not fully working (Soot does not 
+ * 							analyze two apks in one process simply with a process-dir including those apks)
 */
 package reporters;
 
@@ -16,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -25,14 +25,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import dua.Extension;
-import dua.Forensics;
-import dua.global.ProgramFlowGraph;
-import dua.method.CFG;
-import dua.method.CFG.CFGNode;
-import dua.method.CallSite;
-import dua.util.Util;
-
 import soot.*;
 import soot.jimple.*;
 import soot.toolkits.graph.Block;
@@ -40,12 +32,13 @@ import soot.toolkits.graph.BlockGraph;
 import soot.toolkits.graph.ExceptionalBlockGraph;
 import soot.util.*;
 
+import dua.Extension;
+import dua.Forensics;
 import dynCG.*;
 import dynCG.callGraph.CGNode;
 import dynCG.traceStat.ICCIntent;
 
-
-public class iccReport implements Extension {
+public class interAppICCSim implements Extension {
 	
 	protected static reportOpts opts = new reportOpts();
 	protected final traceStat stater = new traceStat();
@@ -57,8 +50,6 @@ public class iccReport implements Extension {
 	protected final covStat meCov = new covStat ("method coverage");
 	protected int allMethodInCalls = 0;
 	
-	String packName = "";
-	
 	Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
 	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
 	
@@ -67,24 +58,24 @@ public class iccReport implements Extension {
 	public static void main(String args[]){
 		args = preProcessArgs(opts, args);
 		
-		if (opts.traceFile==null || opts.traceFile.isEmpty()) {
+		if (opts.traceFile==null || opts.traceFile.isEmpty()) { // || opts.apkdir==null) {
 			// nothing to do
 			return;
 		}
-
-		iccReport grep = new iccReport();
+		
+		interAppICCSim grep = new interAppICCSim();
 		// examine catch blocks
 		dua.Options.ignoreCatchBlocks = false;
 		dua.Options.skipDUAAnalysis = true;
 		dua.Options.modelAndroidLC = false;
 		dua.Options.analyzeAndroid = true;
 		
-		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
-		
-		//output as APK, too//-f J
+		// analyze the source apk
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
 		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
+		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
+		soot.options.Options.v().set_process_dir(Collections.singletonList(opts.apkdir));
 		
 		Forensics.registerExtension(grep);
 		Forensics.main(args);
@@ -109,10 +100,7 @@ public class iccReport implements Extension {
 	 * Descendants may want to use customized event monitors
 	 */
 	protected void init() {
-		packName = ProgramFlowGraph.appPackageName;
-		
 		// set up the trace stating agent
-		stater.setPackagename(packName);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
@@ -186,31 +174,16 @@ public class iccReport implements Extension {
 	
 	public void traverse() {
 		/* traverse all classes */
-		Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator(); //ProgramFlowGraph.inst().getAppClasses().iterator();
+		Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator(); 
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
 			if ( sClass.isPhantom() ) {	continue; }
-			boolean isAppCls = false, isSDKCls = false, isULCls = false;
-			//if ( sClass.isApplicationClass() ) {
-			if (sClass.getName().contains(packName)) {	
-				isAppCls = true;
-			}
-			else {
-				// differentiate user library from SDK library
-				if (sClass.getName().matches(generalReport.AndroidClassPattern) || sClass.getName().matches(generalReport.OtherSDKClassPattern)) {
-					isSDKCls = true;
-				}
-				//else if (!sClass.getName().contains(packName)) {
-				else {	
-					isULCls = true;
-				}
-			}
-			
 			/*
 			if (!sClass.isApplicationClass()) {
 				continue;
 			}
 			*/
+			System.out.println(sClass.getName());
 			
 			/* traverse all methods of the class */
 			Iterator<SootMethod> meIt = sClass.getMethods().iterator();
