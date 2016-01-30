@@ -4,6 +4,8 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 01/28/16		hcai		created; inter-app ICC characterization
+ * 01/29/16		hcai		debugged away the inconsistent analysis results between different orders of 
+ * 							analyzing the two APKs
 */
 package reporters;
 
@@ -70,6 +72,7 @@ public class interAppICCReport {
 		}
 		
 		// analyze the source apk
+		System.out.println("\n\n Analyzing the first APK " + opts.firstapk);
 		soot.options.Options.v().parse(args);
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
@@ -81,6 +84,7 @@ public class interAppICCReport {
 		//PackManager.v().getPack("wjtp").add(new Transform("wjtp.mt", new firstAPK()));
 		//try { soot.Main.main(args); }catch (Exception e){}
 		Scene.v().loadNecessaryClasses();
+		//PackManager.v().runPacks();
 		
 		{
 			Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator();
@@ -95,10 +99,13 @@ public class interAppICCReport {
 				}
 			}
 		}
+		//System.out.println("number of sootClasses found so far: " + allSootClasses.size() + "; number of components: " + cls2comtype.size());
+
+		System.out.println("\n\n Analyzing the second APK " + opts.secondapk);
 		
 		// analyze the target apk
 		soot.G.reset();
-		Scene.v().releaseActiveHierarchy();
+		iccAPICom.fhar = null;
 		Scene.v().releaseFastHierarchy();
 		soot.options.Options.v().parse(args);
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
@@ -109,6 +116,8 @@ public class interAppICCReport {
 		soot.options.Options.v().set_process_dir(Collections.singletonList(opts.secondapk));
 		//soot.Main.main(args);
 		Scene.v().loadNecessaryClasses();
+		//PackManager.v().runPacks();
+		iccAPICom.reInitializeComponentTypeClasses();
 		{
 			Iterator<SootClass> clsIt = Scene.v().getClasses().snapshotIterator();
 			while (clsIt.hasNext()) {
@@ -121,6 +130,8 @@ public class interAppICCReport {
 				}
 			}
 		}
+		//System.out.println("#sootclasses: " + allSootClasses.size());
+		//System.out.println("#components: " + cls2comtype.size());
 		
 		new interAppICCReport().run();
 	}

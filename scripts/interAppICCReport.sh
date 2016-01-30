@@ -30,8 +30,8 @@ java -Xmx4g -ea -cp ${MAINCP} reporters.interAppICCReport \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \
-	-process-dir $apkdir/s.apk \
-	-process-dir $apkdir/t.apk \
+	-firstapk $apkdir/s.apk \
+	-secondapk $apkdir/t.apk \
 	-trace $tracefile
 
 stoptime=`date +%s%N | cut -b1-13`

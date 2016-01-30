@@ -5,6 +5,8 @@
  * -------------------------------------------------------------------------------------------
  * 09/28/15		hcai		common Android ICC API resources and relevant functionalities 
  * 10/14/15		hcai		add monitoring of intent receipts
+ * 01/29/16		hcai		added the routine for initializing the component classes (needed for analyzing two or more APKs
+ * 							in one Soot process)
 */
 package iacUtil;
 
@@ -92,15 +94,28 @@ public class iccAPICom {
 			return false;
 		}
 		
-		public static final SootClass COMPONENT_TYPE_ACTIVITY = Scene.v().getSootClass("android.app.Activity");
-		public static final SootClass COMPONENT_TYPE_SERVICE = Scene.v().getSootClass("android.app.Service");
-		public static final SootClass COMPONENT_TYPE_RECEIVER = Scene.v().getSootClass("android.content.BroadcastReceiver");
-		public static final SootClass COMPONENT_TYPE_PROVIDER = Scene.v().getSootClass("android.content.ContentProvider");
-		public static final SootClass COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object");
+		public static SootClass COMPONENT_TYPE_ACTIVITY = Scene.v().getSootClass("android.app.Activity");
+		public static SootClass COMPONENT_TYPE_SERVICE = Scene.v().getSootClass("android.app.Service");
+		public static SootClass COMPONENT_TYPE_RECEIVER = Scene.v().getSootClass("android.content.BroadcastReceiver");
+		public static SootClass COMPONENT_TYPE_PROVIDER = Scene.v().getSootClass("android.content.ContentProvider");
+		public static SootClass COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object");
 		
-		public static final SootClass COMPONENT_TYPE_APPLICATION = Scene.v().getSootClass("android.app.Application");
-		public static final SootClass COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS = Scene.v().getSootClass("com.google.android.gcm.GCMBaseIntentService");
-		public static final SootClass COMPONENT_TYPE_GCMLISTENERSERVICECLASS = Scene.v().getSootClass("com.google.android.gms.gcm.GcmListenerService");
+		public static SootClass COMPONENT_TYPE_APPLICATION = Scene.v().getSootClass("android.app.Application");
+		public static SootClass COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS = Scene.v().getSootClass("com.google.android.gcm.GCMBaseIntentService");
+		public static SootClass COMPONENT_TYPE_GCMLISTENERSERVICECLASS = Scene.v().getSootClass("com.google.android.gms.gcm.GcmListenerService");
+		
+		// necessary for cases in which more than one Soot analysis session is needed
+		public static void reInitializeComponentTypeClasses() {
+			COMPONENT_TYPE_ACTIVITY = Scene.v().getSootClass("android.app.Activity");
+			COMPONENT_TYPE_SERVICE = Scene.v().getSootClass("android.app.Service");
+			COMPONENT_TYPE_RECEIVER = Scene.v().getSootClass("android.content.BroadcastReceiver");
+			COMPONENT_TYPE_PROVIDER = Scene.v().getSootClass("android.content.ContentProvider");
+			COMPONENT_TYPE_UNKNOWN = Scene.v().getSootClass("java.lang.Object");
+			
+			COMPONENT_TYPE_APPLICATION = Scene.v().getSootClass("android.app.Application");
+			COMPONENT_TYPE_GCMBASEINTENTSERVICECLASS = Scene.v().getSootClass("com.google.android.gcm.GCMBaseIntentService");
+			COMPONENT_TYPE_GCMLISTENERSERVICECLASS = Scene.v().getSootClass("com.google.android.gms.gcm.GcmListenerService");
+		}
 		
 		public static final SootClass[] component_type_classes = 
 			{COMPONENT_TYPE_ACTIVITY, COMPONENT_TYPE_SERVICE,  COMPONENT_TYPE_RECEIVER, COMPONENT_TYPE_PROVIDER, 
@@ -108,9 +123,12 @@ public class iccAPICom {
 			COMPONENT_TYPE_UNKNOWN};
 		public static final String[] component_type_names = {"Activity", "Service", "BroadcastReceiver", "ContentProvider", "Application"};
 
+		public static FastHierarchy fhar = null;
 		public static String getComponentType(SootClass cls) {
 			try {
-				final FastHierarchy fhar = Scene.v().getOrMakeFastHierarchy();
+				if (fhar==null) {
+					fhar = Scene.v().getOrMakeFastHierarchy();
+				}
 				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_ACTIVITY))
 					return "Activity";
 				if (fhar.isSubclass(cls, iccAPICom.COMPONENT_TYPE_SERVICE) ||
@@ -126,6 +144,7 @@ public class iccAPICom {
 				return "Unknown";
 			}
 			catch (Exception e) {
+				e.printStackTrace();
 				return "Unknown";
 			}
 		}
