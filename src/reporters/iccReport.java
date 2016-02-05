@@ -6,6 +6,10 @@
  * 01/12/16		hcai		created; for computing ICC related statistics in android app call traces
  * 01/14/16		hcai		done the first version : mainly dynamic ICC statics
  * 01/28/16		hcai		added separate file outputs for different metrics; added metrics on icc links
+ * 02/02/16		hcai		added intent filter parsing; 
+ * 							divided icc metrics into three subcategories: having standard data only, having extras only, 
+ * 							and having both data and extras
+ * 02/04/16		hcai		added one more data into over icc metric report to facilitate post-processing and tabulation
 */
 package reporters;
 
@@ -35,6 +39,7 @@ import dua.util.Util;
 
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.infoflow.android.axml.AXmlNode;
 import soot.toolkits.graph.Block;
 import soot.toolkits.graph.BlockGraph;
 import soot.toolkits.graph.ExceptionalBlockGraph;
@@ -105,6 +110,73 @@ public class iccReport implements Extension {
 		return argsForDuaF;
 	}
 	
+	static final Set<IntentFilter> intentfilters = new HashSet<IntentFilter>();
+	private void parseComponentIntentfilters(String compType, List<AXmlNode> nodelist) {
+		for (AXmlNode node : nodelist) {
+			boolean exported = false;
+			if (node.hasAttribute("android:exported")) {
+				exported = node.getAttribute("android:exported").getValue().toString().equals("true");
+			}
+			else {
+				exported = node.getChildrenWithTag("intent-filter").size()>0; 
+			}
+			
+			if (!exported) {
+				// if this component is closed, no point to look further at the intent filter at all
+				continue;
+			}
+			
+			String attval = node.getAttribute( "android:name" ).getValue().toString();
+			String componentName = null;
+			String packageName = ProgramFlowGraph.appPackageName;
+			if (attval.startsWith(".") ) {                                                        
+				componentName = packageName + attval;
+			}
+			else if ( ! attval.contains(packageName) && ! attval.startsWith(".")  && ! attval.contains(".")){
+				componentName = packageName + "." + attval;
+			}  
+			else {
+				componentName = attval;
+			}
+			for (AXmlNode child : node.getChildrenWithTag("intent-filter")) {
+				IntentFilter itf = new IntentFilter();
+				itf.setType(compType);
+				itf.setComponentName(componentName);
+				
+				for (AXmlNode cact : child.getChildrenWithTag("action")) {
+					if (cact.hasAttribute("android:name")) {
+						itf.addAction(cact.getAttribute("android:name").getValue().toString());
+					}
+				}
+				for (AXmlNode cact : child.getChildrenWithTag("category")) {
+					if (cact.hasAttribute("android:name")) {
+						itf.addCategory(cact.getAttribute("android:name").getValue().toString());
+					}
+				}
+				for (AXmlNode cd: child.getChildrenWithTag("data")) {
+						IntentData InD=new IntentData();
+						InD.setmimeType(cd.getAttribute("android:mimeType").getValue().toString()+
+								cd.getAttribute("android:type").getValue());
+						InD.setscheme(cd.getAttribute("android:scheme").getValue().toString());
+						InD.sethost(cd.getAttribute("android:host").getValue().toString());
+						InD.setpath(cd.getAttribute("android:path").getValue().toString());
+						InD.setpathPattern(cd.getAttribute("android:pathPattern").getValue().toString());
+						InD.setpathPrefix(cd.getAttribute("android:pathPrefix").getValue().toString());
+						InD.setport(cd.getAttribute("android:port").getValue().toString());
+						itf.addData(InD);
+				}
+				
+				intentfilters.add(itf);
+			}
+		}
+	}
+	
+	protected void getIntentfilters() {
+		parseComponentIntentfilters("Activity", ProgramFlowGraph.processMan.getActivities());
+		parseComponentIntentfilters("Receiver", ProgramFlowGraph.processMan.getReceivers());
+		parseComponentIntentfilters("Service", ProgramFlowGraph.processMan.getServices());
+	}
+	
 	/**
 	 * Descendants may want to use customized event monitors
 	 */
@@ -153,6 +225,7 @@ public class iccReport implements Extension {
 				reportICC(System.out);
 				reportICCWithData(System.out);
 				reportICCHasExtras(System.out);
+				reportICCHasDataAndExtras(System.out);
 				reportICCLinks(System.out);
 			}
 			else {
@@ -168,12 +241,16 @@ public class iccReport implements Extension {
 				PrintStream psextraicc = new PrintStream (new FileOutputStream(fnextraicc,true));
 				reportICCHasExtras(psextraicc);
 
+				String fnbothdataicc = dir + File.separator + "bothdataicc.txt";
+				PrintStream psbothdataicc = new PrintStream (new FileOutputStream(fnbothdataicc,true));
+				reportICCHasExtras(psbothdataicc);
+
 				String fnicclink = dir + File.separator + "icclink.txt";
 				PrintStream psicclink = new PrintStream (new FileOutputStream(fnicclink,true));
 				reportICCLinks(psicclink);
 			}
 		}
-		catch (Exception e) {e.printStackTrace();}	
+		catch (Exception e) {e.printStackTrace();}
 
 		System.exit(0);
 	}
@@ -274,7 +351,7 @@ public class iccReport implements Extension {
 		
 		// dynamic
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
-		int all_data = 0, all_extra = 0;
+		int all_dataonly = 0, all_extraonly = 0, all_both = 0;
 		for (ICCIntent itn : coveredInICCs) {
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
@@ -284,8 +361,9 @@ public class iccReport implements Extension {
 				if (itn.isExternal()) ext_im_inc ++;
 				else int_im_inc ++;
 			}
-			if (itn.hasData()) all_data++;
-			if (itn.hasExtras()) all_extra++;
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
 		}
 		for (ICCIntent itn : coveredOutICCs) {
 			if (itn.isExplicit()) {
@@ -296,20 +374,21 @@ public class iccReport implements Extension {
 				if (itn.isExternal()) ext_im_out ++;
 				else int_im_out ++;
 			}
-			if (itn.hasData()) all_data++;
-			if (itn.hasExtras()) all_extra++;
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
 		}
 		//os.println("[ALL]");
 		//os.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		if (opts.debugOut) {
 			os.println("*** tabulation ***");
-			os.print("format: s_all\t d_all\t d_allInCalls\t s_in\t s_out\t d_in\t d_out\t d_alldata\t d_allextra\t ");
+			os.print("format: s_all\t d_all\t d_allInCalls\t s_in\t s_out\t d_in\t d_out\t d_alldata\t d_allextra\t d_allboth\t ");
 			os.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		}
 		os.print(meCov.getTotal() + "\t" + meCov.getCovered() + "\t" + allMethodInCalls + "\t" +
 				inIccCov.getTotal() + "\t " + outIccCov.getTotal() + "\t " + 
 				inIccCov.getCovered() + "\t " + outIccCov.getCovered() + "\t" + 
-				all_data + "\t" + all_extra + "\t");
+				all_dataonly + "\t" + all_extraonly + "\t" + all_both + "\t");
 		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
 				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
 	}
@@ -319,7 +398,8 @@ public class iccReport implements Extension {
 		//int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
 		for (ICCIntent itn : coveredInICCs) {
-			if (!itn.hasData()) continue;
+			// count those that have data only (without extraData)
+			if (!itn.hasData() || itn.hasExtras()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
 				else int_ex_inc ++;
@@ -330,7 +410,8 @@ public class iccReport implements Extension {
 			}
 		}
 		for (ICCIntent itn : coveredOutICCs) {
-			if (!itn.hasData()) continue;
+			// count those that have data only (without extraData)
+			if (!itn.hasData() || itn.hasExtras()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_out ++;
 				else int_ex_out ++;
@@ -353,7 +434,8 @@ public class iccReport implements Extension {
 		// int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
 		for (ICCIntent itn : coveredInICCs) {
-			if (!itn.hasExtras()) continue;
+			// count those that have extraData only (without 'standard' data)
+			if (!itn.hasExtras() || itn.hasData()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
 				else int_ex_inc ++;
@@ -364,7 +446,8 @@ public class iccReport implements Extension {
 			}
 		}
 		for (ICCIntent itn : coveredOutICCs) {
-			if (!itn.hasExtras()) continue;
+			// count those that have extraData only (without 'standard' data)
+			if (!itn.hasExtras() || itn.hasData()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_out ++;
 				else int_ex_out ++;
@@ -376,6 +459,40 @@ public class iccReport implements Extension {
 		}
 		if (opts.debugOut) {
 			os.println("[hasExtras]");
+			os.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		}
+		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
+				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
+	}
+	
+	public void reportICCHasDataAndExtras(PrintStream os) {
+		//// for ICC carrying both data and extraData 
+		// int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
+		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (!itn.hasExtras() || !itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (!itn.hasExtras() || !itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+		}
+		if (opts.debugOut) {
+			os.println("[hasDataAndExtras]");
 			os.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		}
 		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 

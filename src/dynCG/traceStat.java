@@ -6,6 +6,8 @@
  * 12/10/15		hcai		created; for parsing traces and calculating statistics 
  * 01/05/16		hcai		the first basic, working version
  * 01/13/16		hcai		added call site tracking for each ICC instance
+ * 02/02/16		hcai		added calibration of the types of ICCs that are internal, implicit
+ * 02/04/16		hcai		extended to support app-pair traces
 */
 package dynCG;
 
@@ -33,6 +35,7 @@ import iacUtil.iccAPICom;
 public class traceStat {
 	
 	private String appPackname=""; // package name set in the Manifest file
+	private String appPacknameOther=""; // package name set in the Manifest file for the other APK
 	traceStat (String _traceFn, String packname) {
 		appPackname = packname;
 		this.traceFn = _traceFn;
@@ -46,6 +49,7 @@ public class traceStat {
 	public traceStat () {
 		traceFn = null;
 	}
+	public void setPackagenameOther (String packname) { this.appPacknameOther = packname; }
 	public void setPackagename (String packname) { this.appPackname = packname; }
 	public void setTracefile (String tfname) { this.traceFn = tfname; }
 	
@@ -157,9 +161,11 @@ public class traceStat {
 	
 	private callGraph cg = new callGraph();
 	private List<ICCIntent> allIntents = new ArrayList<ICCIntent>();
+	private List<Set<ICCIntent>> allInterAppIntents = new ArrayList<Set<ICCIntent>>();
 	
 	public callGraph getCG () { return cg; }
 	public List<ICCIntent> getAllICCs () { return allIntents; }
+	public List<Set<ICCIntent>> getInterAppICCs () { return allInterAppIntents; }
 	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		List<String> infolines = new ArrayList<String>();
@@ -207,6 +213,17 @@ public class traceStat {
 		}
 		br.reset();
 		
+		/*
+		boolean yes = false;
+		for (String l: infolines)
+		if (l.contains("Component")) {
+			yes = true;
+		}
+		if (!yes) 
+			System.out.println("stop here");
+		*/
+		if (infolines.size()<3) return null;
+		
 		return new ICCIntent (infolines);
 	}
 	
@@ -221,9 +238,12 @@ public class traceStat {
 				boolean binICC = line.contains(ICCIntent.INTENT_RECV_DELIMIT);
 				if (boutICC || binICC) {
 					ICCIntent itn = readIntentBlock(br);
+					if (itn==null) {
+						line = br.readLine().trim();
+						continue;
+					}
 					itn.setIncoming(binICC);
 					
-					//if (comp != null && comp.contains(appPackname)) {
 					// look ahead one more line to find the receiver component
 					line = br.readLine().trim();
 					if (line.contains(callGraph.CALL_DELIMIT)) {
@@ -237,14 +257,21 @@ public class traceStat {
 							}
 							
 							String comp = itn.getFields("Component");
-							if (comp != null) {
+							if (comp.compareTo("null")!=0) {
 								//String recvCls = line.substring(line.indexOf('<')+1, line.indexOf(": "));
 								String recvCls = ne.getSource().getSootClassName();
 								if (!this.appPackname.isEmpty()) {
 									recvCls = this.appPackname;
 								}
-								if (comp.contains(recvCls)) {
-									itn.setExternal(false);
+								// in case of single APK trace
+								if (this.appPacknameOther.isEmpty()) {
+									if (comp.contains(recvCls)) {
+										itn.setExternal(false);
+									}
+								}
+								else {
+									// in case of app-pair trace
+									// leave for discretion through src-target matching later
 								}
 							}
 						}
@@ -291,6 +318,10 @@ public class traceStat {
 		for (int k = 0; k < allIntents.size(); k++) {
 			System.out.println(allIntents.get(k));
 		}
+		System.out.println("=== " + allInterAppIntents.size() + " Inter-App Intents === ");
+		for (int k = 0; k < allInterAppIntents.size(); k++) {
+			System.out.println(allInterAppIntents.get(k));
+		}
 		System.out.println(this.cg);
 		this.cg.listEdgeByFrequency();
 		this.cg.listCallers();
@@ -300,6 +331,60 @@ public class traceStat {
 	public void stat() {
 		if (this.traceFn == null) return;
 		parseTrace (this.traceFn);
+		
+		/** now, look at all ICCs to find out whether each of the implicit ICCs is indeed internal --- it is internal
+		 * if a paired ICC can be found in the same trace
+		 */
+		for (ICCIntent out : allIntents) {
+			if (out.isIncoming()) continue;
+			//if (out.isExplicit()) continue;
+			for (ICCIntent in : allIntents) {
+				if (!in.isIncoming()) continue;
+				//if (in.isExplicit()) continue;
+
+				if (in.getFields("Action").compareToIgnoreCase(out.getFields("Action"))==0 && 
+					in.getFields("Categories").compareToIgnoreCase(out.getFields("Categories"))==0 && 
+					in.getFields("DataString").compareToIgnoreCase(out.getFields("DataString"))==0) {
+					
+					// single-app trace
+					if (this.appPacknameOther.isEmpty()) {
+						in.setExternal(false);
+						out.setExternal(false);
+					}
+					else {
+						// app-pair trace
+						if (out.getCallsite()!=null && in.getCallsite()!=null) {
+							String senderCls = out.getCallsite().getSource().getSootClassName();
+							String recverCls = in.getCallsite().getSource().getSootClassName();
+							if (senderCls.equalsIgnoreCase(recverCls)) {
+								in.setExternal(false);
+								out.setExternal(false);
+							}
+							if (senderCls.contains(appPackname) && recverCls.contains(appPackname)) {
+								in.setExternal(false);
+								out.setExternal(false);
+							}
+							if (senderCls.contains(appPacknameOther) && recverCls.contains(appPacknameOther)) {
+								in.setExternal(false);
+								out.setExternal(false);
+							}
+							
+							if ((senderCls.contains(appPackname) && recverCls.contains(appPacknameOther)) || 
+								(senderCls.contains(appPacknameOther) && recverCls.contains(appPackname)) ) {
+								in.setExternal(true);
+								out.setExternal(true);
+								// okay, these pairs communicate indeed, can be used as inter-app analysis benchmark
+
+								Set<ICCIntent> pair = new HashSet<ICCIntent>();
+								pair.add(out);
+								pair.add(in);
+								this.allInterAppIntents.add(pair);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) {

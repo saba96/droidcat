@@ -6,6 +6,7 @@
  * 01/28/16		hcai		created; inter-app ICC characterization
  * 01/29/16		hcai		debugged away the inconsistent analysis results between different orders of 
  * 							analyzing the two APKs
+ * 02/04/16		hcai		added one more result: inter-app ICC actually exercised between the two given apps
 */
 package reporters;
 
@@ -13,9 +14,11 @@ import iacUtil.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +29,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.infoflow.android.manifest.ProcessManifest;
 import soot.toolkits.graph.Block;
 import soot.toolkits.graph.BlockGraph;
 import soot.toolkits.graph.ExceptionalBlockGraph;
@@ -50,7 +56,8 @@ public class interAppICCReport {
 	protected final covStat meCov = new covStat ("method coverage");
 	protected int allMethodInCalls = 0;
 	
-	String packName = "";
+	static String packName = "";
+	static String packNameOther = "";
 	
 	Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
 	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
@@ -60,7 +67,7 @@ public class interAppICCReport {
 	
 	protected final Set<String> allCoveredMethods = new HashSet<String>();
 	
-	public static void main(String args[]){
+	public static void main(String args[]) throws IOException, XmlPullParserException{
 		args = preProcessArgs(opts, args);
 		for (int i=0; i < args.length; i++) {
 			if (args[i].equalsIgnoreCase("-allowphantom")) args[i] = "-allow-phantom-refs";
@@ -100,6 +107,7 @@ public class interAppICCReport {
 			}
 		}
 		//System.out.println("number of sootClasses found so far: " + allSootClasses.size() + "; number of components: " + cls2comtype.size());
+		packName = new ProcessManifest(opts.firstapk).getPackageName();
 
 		System.out.println("\n\n Analyzing the second APK " + opts.secondapk);
 		
@@ -130,8 +138,9 @@ public class interAppICCReport {
 				}
 			}
 		}
-		//System.out.println("#sootclasses: " + allSootClasses.size());
-		//System.out.println("#components: " + cls2comtype.size());
+		System.out.println("#sootclasses: " + allSootClasses.size());
+		System.out.println("#components: " + cls2comtype.size());
+		packNameOther = new ProcessManifest(opts.secondapk).getPackageName();
 		
 		new interAppICCReport().run();
 	}
@@ -148,6 +157,8 @@ public class interAppICCReport {
 	 */
 	protected void init() {
 		// set up the trace stating agent
+		stater.setPackagename(packName);
+		stater.setPackagenameOther(packNameOther);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
@@ -191,6 +202,7 @@ public class interAppICCReport {
 				reportICCWithData(System.out);
 				reportICCHasExtras(System.out);
 				reportICCLinks(System.out);
+				reportInterAppPairs(System.out);
 			}
 			else {
 				String fngicc = dir + File.separator + "gicc.txt";
@@ -204,10 +216,18 @@ public class interAppICCReport {
 				String fnextraicc = dir + File.separator + "extraicc.txt";
 				PrintStream psextraicc = new PrintStream (new FileOutputStream(fnextraicc,true));
 				reportICCHasExtras(psextraicc);
+				
+				String fnbothdataicc = dir + File.separator + "bothdataicc.txt";
+				PrintStream psbothdataicc = new PrintStream (new FileOutputStream(fnbothdataicc,true));
+				reportICCHasExtras(psbothdataicc);
 
 				String fnicclink = dir + File.separator + "icclink.txt";
 				PrintStream psicclink = new PrintStream (new FileOutputStream(fnicclink,true));
 				reportICCLinks(psicclink);
+
+				String fnpairicc = dir + File.separator + "pairicc.txt";
+				PrintStream pspairicc = new PrintStream (new FileOutputStream(fnpairicc,true));
+				reportInterAppPairs(pspairicc);
 			}
 		}
 		catch (Exception e) {e.printStackTrace();}	
@@ -311,7 +331,7 @@ public class interAppICCReport {
 		
 		// dynamic
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
-		int all_data = 0, all_extra = 0;
+		int all_dataonly = 0, all_extraonly = 0, all_both = 0;
 		for (ICCIntent itn : coveredInICCs) {
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
@@ -321,8 +341,9 @@ public class interAppICCReport {
 				if (itn.isExternal()) ext_im_inc ++;
 				else int_im_inc ++;
 			}
-			if (itn.hasData()) all_data++;
-			if (itn.hasExtras()) all_extra++;
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
 		}
 		for (ICCIntent itn : coveredOutICCs) {
 			if (itn.isExplicit()) {
@@ -333,20 +354,21 @@ public class interAppICCReport {
 				if (itn.isExternal()) ext_im_out ++;
 				else int_im_out ++;
 			}
-			if (itn.hasData()) all_data++;
-			if (itn.hasExtras()) all_extra++;
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
 		}
 		//os.println("[ALL]");
 		//os.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		if (opts.debugOut) {
 			os.println("*** tabulation ***");
-			os.print("format: s_all\t d_all\t d_allInCalls\t s_in\t s_out\t d_in\t d_out\t d_alldata\t d_allextra\t ");
+			os.print("format: s_all\t d_all\t d_allInCalls\t s_in\t s_out\t d_in\t d_out\t d_alldata\t d_allextra\t d_allboth\t ");
 			os.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		}
 		os.print(meCov.getTotal() + "\t" + meCov.getCovered() + "\t" + allMethodInCalls + "\t" +
 				inIccCov.getTotal() + "\t " + outIccCov.getTotal() + "\t " + 
 				inIccCov.getCovered() + "\t " + outIccCov.getCovered() + "\t" + 
-				all_data + "\t" + all_extra + "\t");
+				all_dataonly + "\t" + all_extraonly + "\t" + all_both + "\t");
 		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
 				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
 	}
@@ -356,7 +378,8 @@ public class interAppICCReport {
 		//int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
 		for (ICCIntent itn : coveredInICCs) {
-			if (!itn.hasData()) continue;
+			// count those that have data only (without extraData)
+			if (!itn.hasData() || itn.hasExtras()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
 				else int_ex_inc ++;
@@ -367,7 +390,8 @@ public class interAppICCReport {
 			}
 		}
 		for (ICCIntent itn : coveredOutICCs) {
-			if (!itn.hasData()) continue;
+			// count those that have data only (without extraData)
+			if (!itn.hasData() || itn.hasExtras()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_out ++;
 				else int_ex_out ++;
@@ -390,7 +414,8 @@ public class interAppICCReport {
 		// int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
 		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
 		for (ICCIntent itn : coveredInICCs) {
-			if (!itn.hasExtras()) continue;
+			// count those that have extraData only (without 'standard' data)
+			if (!itn.hasExtras() || itn.hasData()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_inc ++;
 				else int_ex_inc ++;
@@ -401,7 +426,8 @@ public class interAppICCReport {
 			}
 		}
 		for (ICCIntent itn : coveredOutICCs) {
-			if (!itn.hasExtras()) continue;
+			// count those that have extraData only (without 'standard' data)
+			if (!itn.hasExtras() || itn.hasData()) continue;
 			if (itn.isExplicit()) {
 				if (itn.isExternal()) ext_ex_out ++;
 				else int_ex_out ++;
@@ -413,6 +439,40 @@ public class interAppICCReport {
 		}
 		if (opts.debugOut) {
 			os.println("[hasExtras]");
+			os.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		}
+		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
+				+ ext_ex_out+ "\t " + ext_im_inc+ "\t " + ext_im_out);
+	}
+	
+	public void reportICCHasDataAndExtras(PrintStream os) {
+		//// for ICC carrying both data and extraData 
+		// int_ex_inc=0; int_ex_out=0; int_im_inc=0; int_im_out=0; ext_ex_inc=0; ext_ex_out=0; ext_im_inc=0; ext_im_out=0;
+		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (!itn.hasExtras() || !itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (!itn.hasExtras() || !itn.hasData()) continue;
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+		}
+		if (opts.debugOut) {
+			os.println("[hasDataAndExtras]");
 			os.println("format: int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
 		}
 		os.println(int_ex_inc+ "\t " + int_ex_out+ "\t " + int_im_inc+ "\t " + int_im_out+ "\t " + ext_ex_inc+ "\t " 
@@ -450,6 +510,7 @@ public class interAppICCReport {
 
 		if (opts.debugOut) {
 			os.println("*** tabulation ***");
+			os.println("totally " + cntLinks + " ICC pairs found!");
 			os.print("format: srcICC_component\t tgtICC_component");
 		}
 		
@@ -467,6 +528,31 @@ public class interAppICCReport {
 
 			os.println(cls2comtype.get(incls) +"->"+cls2comtype.get(outcls));
 		}
+	}
+	
+	// report how many external ICCs occurred actually connecting the two given apps
+	public void reportInterAppPairs(PrintStream os) {
+		int ex1 = 0, im1 = 0, ex2 = 0, im2 = 0; // break down explicit vs implicit ICCs 
+		for (Set<ICCIntent> itnpair : stater.getInterAppICCs()) {
+			ICCIntent outicc = (ICCIntent) Arrays.asList(itnpair).get(0);
+			ICCIntent inicc = (ICCIntent) Arrays.asList(itnpair).get(1);
+			if (outicc.getCallsite().getSource().getSootClassName().contains(packName) && 
+				inicc.getCallsite().getSource().getSootClassName().contains(packNameOther))
+			{
+				if (outicc.isExplicit()) ex1 ++; else im1 ++;
+				if (inicc.isExplicit()) ex1 ++; else im1 ++;
+			}
+			else {
+				if (outicc.isExplicit()) ex2 ++; else im2 ++;
+				if (inicc.isExplicit()) ex2 ++; else im2 ++;
+			}
+		}
+		if (opts.debugOut) {
+			os.println("*** tabulation ***");
+			os.print("format: srcAPK\t tgtAPK\t exicc\t imicc");
+		}
+		os.println(packName + "\t" + packNameOther + "\t" + ex1 + "\t" + im1);
+		os.println(packNameOther + "\t" + packName + "\t" + ex2 + "\t" + im2);
 	}
 }
 
