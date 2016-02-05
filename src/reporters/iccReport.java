@@ -10,6 +10,7 @@
  * 							divided icc metrics into three subcategories: having standard data only, having extras only, 
  * 							and having both data and extras
  * 02/04/16		hcai		added one more data into over icc metric report to facilitate post-processing and tabulation
+ * 02/05/16		hcai		fixed the bug in ICC classification and result reporting
 */
 package reporters;
 
@@ -243,7 +244,7 @@ public class iccReport implements Extension {
 
 				String fnbothdataicc = dir + File.separator + "bothdataicc.txt";
 				PrintStream psbothdataicc = new PrintStream (new FileOutputStream(fnbothdataicc,true));
-				reportICCHasExtras(psbothdataicc);
+				reportICCHasDataAndExtras(psbothdataicc);
 
 				String fnicclink = dir + File.separator + "icclink.txt";
 				PrintStream psicclink = new PrintStream (new FileOutputStream(fnicclink,true));

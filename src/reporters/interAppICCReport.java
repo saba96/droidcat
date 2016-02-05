@@ -7,6 +7,7 @@
  * 01/29/16		hcai		debugged away the inconsistent analysis results between different orders of 
  * 							analyzing the two APKs
  * 02/04/16		hcai		added one more result: inter-app ICC actually exercised between the two given apps
+ * 02/05/16		hcai		fixed the bug in ICC classification and result reporting
 */
 package reporters;
 
@@ -63,6 +64,10 @@ public class interAppICCReport {
 	Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
 	
 	static final Set<SootClass> allSootClasses = new HashSet<SootClass>();
+
+	static final Set<String> clsNames = new HashSet<String>();
+	static final Set<String> clsNamesOther = new HashSet<String>();
+
 	static final Map<String, String> cls2comtype = new HashMap<String, String>();
 	
 	protected final Set<String> allCoveredMethods = new HashSet<String>();
@@ -99,6 +104,7 @@ public class interAppICCReport {
 				SootClass sClass = (SootClass) clsIt.next();
 				if ( sClass.isPhantom() ) {	continue; }
 				allSootClasses.add(sClass);
+				clsNames.add(sClass.getName());
 				//Scene.v().removeClass(sClass);
 				String comt = iccAPICom.getComponentType(sClass);
 				if (!comt.equalsIgnoreCase("Unknown")) {
@@ -132,6 +138,7 @@ public class interAppICCReport {
 				SootClass sClass = (SootClass) clsIt.next();
 				if ( sClass.isPhantom() ) {	continue; }
 				allSootClasses.add(sClass);
+				clsNamesOther.add(sClass.getName());
 				String comt = iccAPICom.getComponentType(sClass);
 				if (!comt.equalsIgnoreCase("Unknown")) {
 					cls2comtype.put(sClass.getName(), comt);
@@ -159,6 +166,8 @@ public class interAppICCReport {
 		// set up the trace stating agent
 		stater.setPackagename(packName);
 		stater.setPackagenameOther(packNameOther);
+		stater.setClassNames(clsNames);
+		stater.setClassNamesOther(clsNamesOther);
 		stater.setTracefile(opts.traceFile);
 		
 		// parse the trace
@@ -201,6 +210,7 @@ public class interAppICCReport {
 				reportICC(System.out);
 				reportICCWithData(System.out);
 				reportICCHasExtras(System.out);
+				reportICCHasDataAndExtras(System.out);
 				reportICCLinks(System.out);
 				reportInterAppPairs(System.out);
 			}
@@ -219,7 +229,7 @@ public class interAppICCReport {
 				
 				String fnbothdataicc = dir + File.separator + "bothdataicc.txt";
 				PrintStream psbothdataicc = new PrintStream (new FileOutputStream(fnbothdataicc,true));
-				reportICCHasExtras(psbothdataicc);
+				reportICCHasDataAndExtras(psbothdataicc);
 
 				String fnicclink = dir + File.separator + "icclink.txt";
 				PrintStream psicclink = new PrintStream (new FileOutputStream(fnicclink,true));
@@ -532,27 +542,54 @@ public class interAppICCReport {
 	
 	// report how many external ICCs occurred actually connecting the two given apps
 	public void reportInterAppPairs(PrintStream os) {
-		int ex1 = 0, im1 = 0, ex2 = 0, im2 = 0; // break down explicit vs implicit ICCs 
+		int lex1 = 0, lim1 = 0, lex2 = 0, lim2 = 0; // break down explicit vs implicit ICC links
 		for (Set<ICCIntent> itnpair : stater.getInterAppICCs()) {
-			ICCIntent outicc = (ICCIntent) Arrays.asList(itnpair).get(0);
-			ICCIntent inicc = (ICCIntent) Arrays.asList(itnpair).get(1);
-			if (outicc.getCallsite().getSource().getSootClassName().contains(packName) && 
-				inicc.getCallsite().getSource().getSootClassName().contains(packNameOther))
+			Iterator<ICCIntent> iter = itnpair.iterator();
+			ICCIntent outicc = iter.next();
+			ICCIntent inicc = iter.next();
+			String senderCls = outicc.getCallsite().getSource().getSootClassName();
+			//String recverCls = inicc.getCallsite().getSource().getSootClassName();
+			if ((senderCls.contains(packName) || traceStat.isInList(senderCls, clsNames))) 
 			{
-				if (outicc.isExplicit()) ex1 ++; else im1 ++;
-				if (inicc.isExplicit()) ex1 ++; else im1 ++;
+				if (outicc.isExplicit()) lex1 ++; else lim1 ++;
+				if (inicc.isExplicit()) lex1 ++; else lim1 ++;
 			}
 			else {
-				if (outicc.isExplicit()) ex2 ++; else im2 ++;
-				if (inicc.isExplicit()) ex2 ++; else im2 ++;
+				if (outicc.isExplicit()) lex2 ++; else lim2 ++;
+				if (inicc.isExplicit()) lex2 ++; else lim2 ++;
+			}
+		}
+		int ex1 = 0, im1 = 0, ex2 = 0, im2 = 0; // break down explicit vs implicit ICCs 
+		for (ICCIntent itn : coveredInICCs) {
+			if (!itn.isExternal()) continue;
+			if (itn.getCallsite()!=null) {
+				String recvCls = itn.getCallsite().getSource().getSootClassName();
+				if (recvCls.contains(packNameOther)||traceStat.isInList(recvCls, clsNamesOther)) {
+					if (itn.isExplicit()) ex1++; else im1++;
+				}
+				if (recvCls.contains(packName)||traceStat.isInList(recvCls, clsNames)) {
+					if (itn.isExplicit()) ex2++; else im2++;
+				}
+			}
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (!itn.isExternal()) continue;
+			if (itn.getCallsite()!=null) {
+				String senderCls = itn.getCallsite().getSource().getSootClassName();
+				if (senderCls.contains(packNameOther)||traceStat.isInList(senderCls, clsNamesOther)) {
+					if (itn.isExplicit()) ex2++; else im2++;
+				}
+				if (senderCls.contains(packName)||traceStat.isInList(senderCls, clsNames)) {
+					if (itn.isExplicit()) ex1++; else im1++;
+				}
 			}
 		}
 		if (opts.debugOut) {
 			os.println("*** tabulation ***");
-			os.print("format: srcAPK\t tgtAPK\t exicc\t imicc");
+			os.print("format: srcAPK\t tgtAPK\t exicc\t imicc\t exlink\t imlink");
 		}
-		os.println(packName + "\t" + packNameOther + "\t" + ex1 + "\t" + im1);
-		os.println(packNameOther + "\t" + packName + "\t" + ex2 + "\t" + im2);
+		os.println(packName + "\t" + packNameOther + "\t" + ex1 + "\t" + im1 + "\t" + lex1 + "\t" + lim1);
+		os.println(packNameOther + "\t" + packName + "\t" + ex2 + "\t" + im2 + "\t" + lex2 + "\t" + lim2);
 	}
 }
 

@@ -8,6 +8,7 @@
  * 01/13/16		hcai		added call site tracking for each ICC instance
  * 02/02/16		hcai		added calibration of the types of ICCs that are internal, implicit
  * 02/04/16		hcai		extended to support app-pair traces
+ * 02/05/16		hcai		improved the classification of iccs into external vs internal
 */
 package dynCG;
 
@@ -36,6 +37,10 @@ public class traceStat {
 	
 	private String appPackname=""; // package name set in the Manifest file
 	private String appPacknameOther=""; // package name set in the Manifest file for the other APK
+	
+	private Set<String> clsNames = new HashSet<String>();
+	private Set<String> clsNamesOther = new HashSet<String>();
+	
 	traceStat (String _traceFn, String packname) {
 		appPackname = packname;
 		this.traceFn = _traceFn;
@@ -51,6 +56,8 @@ public class traceStat {
 	}
 	public void setPackagenameOther (String packname) { this.appPacknameOther = packname; }
 	public void setPackagename (String packname) { this.appPackname = packname; }
+	public void setClassNames (Set<String> clsnames) { this.clsNames = clsnames; }
+	public void setClassNamesOther (Set<String> clsnames) { this.clsNamesOther = clsnames; }
 	public void setTracefile (String tfname) { this.traceFn = tfname; }
 	
 	public static class ICCIntent { //extends Intent {
@@ -227,6 +234,13 @@ public class traceStat {
 		return new ICCIntent (infolines);
 	}
 	
+	public static boolean isInList(String s, Set<String> strlst) {
+		for (String str : strlst) {
+			if (s.contains(str) || str.contains(s)) return true;
+		}
+		return false;
+	}
+	
 	protected int parseTrace (String fnTrace) {
 		try {
 			BufferedReader br = new BufferedReader (new FileReader(fnTrace));
@@ -265,7 +279,7 @@ public class traceStat {
 								}
 								// in case of single APK trace
 								if (this.appPacknameOther.isEmpty()) {
-									if (comp.contains(recvCls)) {
+									if (comp.contains(recvCls) || isInList(recvCls, clsNames)) {
 										itn.setExternal(false);
 									}
 								}
@@ -360,17 +374,21 @@ public class traceStat {
 								in.setExternal(false);
 								out.setExternal(false);
 							}
-							if (senderCls.contains(appPackname) && recverCls.contains(appPackname)) {
+							if ((senderCls.contains(appPackname) || isInList(senderCls, clsNames)) && 
+									(recverCls.contains(appPackname) || isInList(recverCls, clsNames))) {
 								in.setExternal(false);
 								out.setExternal(false);
 							}
-							if (senderCls.contains(appPacknameOther) && recverCls.contains(appPacknameOther)) {
+							if (senderCls.contains(appPacknameOther) || isInList(senderCls, clsNamesOther) && 
+								(recverCls.contains(appPacknameOther) || isInList(recverCls, clsNamesOther))) {
 								in.setExternal(false);
 								out.setExternal(false);
 							}
 							
-							if ((senderCls.contains(appPackname) && recverCls.contains(appPacknameOther)) || 
-								(senderCls.contains(appPacknameOther) && recverCls.contains(appPackname)) ) {
+							if ( ((senderCls.contains(appPackname) || isInList(senderCls, clsNames)) && 
+								(recverCls.contains(appPacknameOther) || isInList(recverCls, clsNamesOther))) || 
+								((senderCls.contains(appPacknameOther)||isInList(senderCls, clsNamesOther)) && 
+								(recverCls.contains(appPackname)||isInList(recverCls, clsNames))) ) {
 								in.setExternal(true);
 								out.setExternal(true);
 								// okay, these pairs communicate indeed, can be used as inter-app analysis benchmark
