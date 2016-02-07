@@ -3,8 +3,7 @@
 root=`pwd`
 outdir=$root/overall
 mkdir -p $outdir
-#for file in gicc dataicc extraicc icclink
-for file in bothdataicc
+for file in gicc dataicc extraicc icclink bothdataicc
 do
 	> $outdir/${file}.txt
 	for rep in first_rep second_rep third_rep 
