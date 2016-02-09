@@ -45,25 +45,24 @@ for(i in seq(1,nrow(tdata),3)) {
 
 print(paste(inv," invalid data points ignored."))
 
-colors<-c("red","green","blue","darkorange") #,"black","darkorange","darkorchid","gold4","darkgrey")
+#colors<-c("red","green","blue","darkorange") #,"black","darkorange","darkorchid","gold4","darkgrey")
+colors<-c("black","black","black","black") #,"black","darkorange","darkorchid","gold4","darkgrey")
 xnames<-c("Activity", "Service", "Receiver", "ContentProvider")
 pches<-c(0:8)
 
-pdf("./compdist-uniq-s.pdf")
-boxplot(spm, names=xnames,col=colors,ylab="percentage")
+pdf("./compdist-uniq-s.pdf",width=2.50,height=3.0)
+boxplot(spm, names=xnames,col=colors,ylab="percentage (unique view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
 meanspm <- (colMeans(spm, na.rm=TRUE))
-points(meanspm, col="gold", pch=18, cex=1.5)
+points(meanspm, col="gold", pch=18, cex=0.5)
 
-pdf("./compdist-uniq-d.pdf")
-boxplot(dpm, names=xnames,col=colors,ylab="percentage")
+pdf("./compdist-uniq-d.pdf",width=2.50,height=3.0)
+boxplot(dpm, names=xnames,col=colors,ylab="percentage (unique view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
 meandpm <- (colMeans(dpm, na.rm=TRUE))
-points(meandpm, col="gold", pch=18, cex=1.5)
+points(meandpm, col="gold", pch=18, cex=0.5)
 
-pdf("./compdist-ins-d.pdf")
-boxplot(dpmins, names=xnames,col=colors,ylab="percentage")
+pdf("./compdist-ins-d.pdf",width=2.50,height=3.0)
+boxplot(dpmins, names=xnames,col=colors,ylab="percentage (instance view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
 meandpmins <- (colMeans(dpmins, na.rm=TRUE))
-points(meandpmins, col="gold", pch=18, cex=1.5)
+points(meandpmins, col="gold", pch=18, cex=0.5)
 
 #dev.off
-
-

@@ -26,7 +26,7 @@ for(i in 1:nrow(tdata)) {
 	#length(catdata[[mykey]])
 }
 
-pdf("./edgeFreq-scatter.pdf")
+pdf("./edgeFreq-scatter.pdf",width=4.0,height=3.0)
 i=1
 colors<-c("red","blue","black","green","yellow","darkorange","darkorchid","gold4","darkgrey")
 pches<-c(0:8)
@@ -37,16 +37,15 @@ for (key in ls(catdata)) {
 	#summary(vdata)
 	if (i==1) {
 		#plot (x=c(1:length(vdata)), y=order(vdata), col=colors[i], log="xy", xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
-		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.3)
-		legend("topleft", legend=ls(catdata), cex=.6, col=colors, lwd=2, bty="n",pch=pches)
+		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.1, cex.axis=.3, lwd=0.3, cex.lab=0.3)
+		legend("topleft", legend=ls(catdata), cex=.3, col=colors, lwd=1.0, bty="n",pch=pches)
 	}
 	else {
 		#points(x=c(1:length(vdata)), y=order(vdata), col=colors[i], xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
-		points(sort(vdata), col=colors[i],pch=pches[i], cex=.3)
+		points(sort(vdata), col=colors[i],pch=pches[i], cex=.1)
 	}
 	i <- i+1
 }
 
 #dev.off
-
 
