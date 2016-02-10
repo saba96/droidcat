@@ -37,8 +37,14 @@ for (key in ls(catdata)) {
 	#summary(vdata)
 	if (i==1) {
 		#plot (x=c(1:length(vdata)), y=order(vdata), col=colors[i], log="xy", xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
-		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.1, cex.axis=.3, lwd=0.3, cex.lab=0.3)
-		legend("topleft", legend=ls(catdata), cex=.3, col=colors, lwd=1.0, bty="n",pch=pches)
+		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
+		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
+		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i], xlim=c(1,100000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
+		legend("topleft", legend=ls(catdata), cex=.3, col=colors, lwd=0.5, bty="n",pch=pches)
+		mtext(side = 1, text = "Call", line = .5, cex=.4)
+		mtext(side = 2, text = "Frequency", line = 1.0, cex=.4)
+		#axis(1, line=0.2)
+		#axis(2, line=0.2)
 	}
 	else {
 		#points(x=c(1:length(vdata)), y=order(vdata), col=colors[i], xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
