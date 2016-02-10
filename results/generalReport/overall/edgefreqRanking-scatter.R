@@ -39,7 +39,7 @@ for (key in ls(catdata)) {
 		#plot (x=c(1:length(vdata)), y=order(vdata), col=colors[i], log="xy", xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
 		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
 		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
-		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i], xlim=c(1,100000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
+		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i], xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
 		legend("topleft", legend=ls(catdata), cex=.3, col=colors, lwd=0.5, bty="n",pch=pches)
 		mtext(side = 1, text = "Call", line = .5, cex=.4)
 		mtext(side = 2, text = "Frequency", line = 1.0, cex=.4)
