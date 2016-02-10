@@ -51,17 +51,17 @@ xnames<-c("Activity", "Service", "Receiver", "ContentProvider")
 pches<-c(0:8)
 
 pdf("./compdist-uniq-s.pdf",width=2.50,height=3.0)
-boxplot(spm, names=xnames,col=colors,ylab="percentage (unique view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
+boxplot(spm, names=xnames,col=colors,ylab="percentage (unique view)",range=0,cex.axis=0.29,lwd=0.3,cex.lab=0.5)
 meanspm <- (colMeans(spm, na.rm=TRUE))
 points(meanspm, col="gold", pch=18, cex=0.5)
 
 pdf("./compdist-uniq-d.pdf",width=2.50,height=3.0)
-boxplot(dpm, names=xnames,col=colors,ylab="percentage (unique view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
+boxplot(dpm, names=xnames,col=colors,ylab="percentage (unique view)",range=0,cex.axis=0.29,lwd=0.3,cex.lab=0.5)
 meandpm <- (colMeans(dpm, na.rm=TRUE))
 points(meandpm, col="gold", pch=18, cex=0.5)
 
 pdf("./compdist-ins-d.pdf",width=2.50,height=3.0)
-boxplot(dpmins, names=xnames,col=colors,ylab="percentage (instance view)",xlab="component type",range=0,cex.axis=0.28,lwd=0.3,cex.lab=0.3)
+boxplot(dpmins, names=xnames,col=colors,ylab="percentage (instance view)",range=0,cex.axis=0.29,lwd=0.3,cex.lab=0.5)
 meandpmins <- (colMeans(dpmins, na.rm=TRUE))
 points(meandpmins, col="gold", pch=18, cex=0.5)
 
