@@ -36,10 +36,11 @@ for(i in 1:nrow(tdata)) {
 }
 
 pches<-c(0:8)
-colors<-c("red","green","blue","darkorange","darkorchid","gold4","darkgrey","yellow")
+#colors<-c("red","green","blue","darkorange","darkorchid","gold4","darkgrey","yellow")
+colors<-rep("gray",20)
 #print(colors)
 #par(mar = c(1,1,1,1))
-pdf("./eventhandler-s.pdf")
+pdf("./eventhandler-s.pdf",width=2.5,height=3.0)
 r=1
 alls<- matrix(NA, ncol=366, nrow=length(ls(scatdata)))
 snames  <- c()
@@ -53,12 +54,12 @@ for (key in ls(scatdata)) {
 	r <- r+1
 }
 alls<-alls[rowSums(is.na(alls)) != ncol(alls),]
-boxplot( t(alls), names=snames, ylab="percentage", horizontal=FALSE, las=1, cex.axis=0.36, cex.names=0.1, col=colors)
+boxplot( t(alls), names=snames, ylab="percentage (unique view)", horizontal=FALSE, las=1, cex.names=0.1, range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5, col=colors)
 #boxplot( t(alld), xlab="percentage", horizontal=TRUE, las=1, cex.axis=.5, cex.names=.5)
 meanalls <- (colMeans(t(alls)))
-points( meanalls, col='gold', pch=18, cex=1.5 )
+points( meanalls, col='gold', pch=18, cex=0.5 )
 
-pdf("./eventhandler-d.pdf")
+pdf("./eventhandler-d.pdf",width=2.5,height=3.0)
 r=1
 alld<- matrix(NA, ncol=366, nrow=length(ls(catdata)))
 dnames  <- c()
@@ -74,12 +75,12 @@ for (key in ls(catdata)) {
 #print(dnames)
 #alld<-alld[rowSums(is.na(alld)) == 0,]
 alld<-alld[rowSums(is.na(alld)) != ncol(alld),]
-boxplot( t(alld), names=dnames, ylab="percentage", horizontal=FALSE, las=1, cex.axis=0.36, cex.names=0.1, col=colors)
+boxplot( t(alld), names=dnames, ylab="percentage (unique view)", horizontal=FALSE, las=1, cex.names=0.1, range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5, col=colors)
 #boxplot( t(alld), xlab="percentage", horizontal=TRUE, las=1, cex.axis=.5, cex.names=.5)
 meanalld <- (colMeans(t(alld)))
-points( meanalld, col='gold', pch=18, cex=1.5 )
+points( meanalld, col='gold', pch=18, cex=0.5 )
 
-pdf("./eventhandler-dins.pdf")
+pdf("./eventhandler-dins.pdf",width=2.5,height=3.0)
 r=1
 alldIns<- matrix(NA, ncol=366, nrow=length(ls(catdataIns)))
 dnamesIns  <- c()
@@ -95,11 +96,10 @@ for (key in ls(catdataIns)) {
 #print(dnames)
 #alld<-alld[rowSums(is.na(alld)) == 0,]
 alldIns<-alldIns[rowSums(is.na(alldIns)) != ncol(alldIns),]
-boxplot( t(alldIns), names=dnamesIns, ylab="percentage", horizontal=FALSE, las=1, cex.axis=0.36, cex.names=0.1, col=colors)
+boxplot( t(alldIns), names=dnamesIns, ylab="percentage (instance view)", horizontal=FALSE, las=1, cex.names=0.1, range=0,cex.axis=0.2,lwd=0.3,cex.lab=0.5, col=colors)
 #boxplot( t(alld), xlab="percentage", horizontal=TRUE, las=1, cex.axis=.5, cex.names=.5)
 meanalldIns <- (colMeans(t(alldIns)))
-points( meanalldIns, col='gold', pch=18, cex=1.5 )
+points( meanalldIns, col='gold', pch=18, cex=0.5 )
 
 #dev.off
-
 

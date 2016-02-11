@@ -42,24 +42,24 @@ for(i in seq(1,nrow(tdata),1)) {
 
 print(paste(inv," invalid data points ignored."))
 
-colors2<-c("red","green") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
+#colors2<-c("red","green") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
+colors2<-c("gray","gray") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
 colors4<-c("red","green","blue","darkorange") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
 
-pdf("./callback-s.pdf")
-boxplot(scb, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage")
+pdf("./callback-s.pdf",width=2.5,height=3.0)
+boxplot(scb, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meanscb <- (colMeans(scb, na.rm=TRUE))
-points(meanscb, col="gold", pch=18, cex=1.5)
+points(meanscb, col="gold", pch=18, cex=0.5)
 
-pdf("./callback-d.pdf")
-boxplot(dcb, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage")
+pdf("./callback-d.pdf",width=2.5,height=3.0)
+boxplot(dcb, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandcb <- (colMeans(dcb, na.rm=TRUE))
-points(meandcb, col="gold", pch=18, cex=1.5)
+points(meandcb, col="gold", pch=18, cex=0.5)
 
-pdf("./callback-dins.pdf")
-boxplot(dcbins, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage")
+pdf("./callback-dins.pdf",width=2.5,height=3.0)
+boxplot(dcbins, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandcbins <- (colMeans(dcbins, na.rm=TRUE))
-points(meandcbins, col="gold", pch=18, cex=1.5)
+points(meandcbins, col="gold", pch=18, cex=0.5)
 
 #dev.off
-
 
