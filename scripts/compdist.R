@@ -46,7 +46,7 @@ for(i in seq(1,nrow(tdata),3)) {
 print(paste(inv," invalid data points ignored."))
 
 #colors<-c("red","green","blue","darkorange") #,"black","darkorange","darkorchid","gold4","darkgrey")
-colors<-c("black","black","black","black") #,"black","darkorange","darkorchid","gold4","darkgrey")
+colors<-c("gray","gray","gray","gray") #,"black","darkorange","darkorchid","gold4","darkgrey")
 xnames<-c("Activity", "Service", "Receiver", "ContentProvider")
 pches<-c(0:8)
 
