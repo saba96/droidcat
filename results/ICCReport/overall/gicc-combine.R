@@ -91,14 +91,14 @@ dataextraboth <- cbind ( dataextra[,1],dataextrainter[,1], dataextra[,2],dataext
 boxplot(dataextraboth, names=c("data only","","extras only","","both",""),col=colors3,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandataextraboth <- (colMeans(dataextraboth, na.rm=TRUE))
 points(meandataextraboth, col="gold", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n")
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n",horiz=TRUE)
 
 pdf("./gicc-iccboth.pdf",width=4.1,height=3.0)
 giccboth <- cbind ( gicc[,1],ginterICC[,1], gicc[,2],ginterICC[,2], gicc[,3],ginterICC[,3], gicc[,4],ginterICC[,4] )
 boxplot(giccboth, names=c("int_ex","","int_im","","ext_ex","","ex_im",""),col=colors4,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meangiccboth <- (colMeans(giccboth, na.rm=TRUE))
 points(meangiccboth, col="gold", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n")
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n",horiz=TRUE)
 
 #dev.off
 

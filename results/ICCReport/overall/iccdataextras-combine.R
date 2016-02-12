@@ -63,7 +63,7 @@ deiccboth <- cbind ( deicc[,1],deinterICC[,1], deicc[,2],deinterICC[,2], deicc[,
 boxplot(deiccboth, names=c("int_ex","","int_im","","ext_ex","","ex_im",""),col=colors,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandeiccboth <- (colMeans(deiccboth, na.rm=TRUE))
 points(meandeiccboth, col="gold", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n")
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n",horiz=TRUE)
 
 #dev.off
 
