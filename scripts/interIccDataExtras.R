@@ -11,7 +11,7 @@ if (length(args)<1) {
 fndata=args[1]
 tdata=read.table(file=fndata)
 
-deicc<- matrix(NA, nrow=nrow(tdata), ncol=ncol(tdata)/2)
+deinterICC<- matrix(NA, nrow=nrow(tdata), ncol=ncol(tdata)/2)
 #print(paste("row=",nrow(tdata),"col=",ncol(tdata)))
 
 f.per <- function (x,y) {
@@ -22,14 +22,14 @@ f.per <- function (x,y) {
 r=1
 inv=1
 for(i in seq(1,nrow(tdata),1)) {
-	dicc=sum(tdata[i,1:8])
-	if (dicc<1e-10) {
+	dinterICC=sum(tdata[i,1:8])
+	if (dinterICC<1e-10) {
 		inv<-inv+1
 		next
 	}
 
-	curdeicc<- c(f.per(tdata[i,1]+tdata[i,2],dicc), f.per(tdata[i,3]+tdata[i,4],dicc), f.per(tdata[i,5]+tdata[i,6],dicc), f.per(tdata[i,7]+tdata[i,8],dicc))
-	deicc[r,] <- curdeicc
+	curdeinterICC<- c(f.per(tdata[i,1]+tdata[i,2],dinterICC), f.per(tdata[i,3]+tdata[i,4],dinterICC), f.per(tdata[i,5]+tdata[i,6],dinterICC), f.per(tdata[i,7]+tdata[i,8],dinterICC))
+	deinterICC[r,] <- curdeinterICC
 
 	r <- r+1
 }
@@ -38,10 +38,10 @@ print(paste(inv," invalid data points ignored."))
 
 colors<-c("red","green","blue","darkorange") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
 
-pdf("./deicc.pdf")
-boxplot(deicc, names=c("int_ex","int_im","ext_ex","ex_im"),col=colors,ylab="percentage")
-meandeicc <- (colMeans(deicc, na.rm=TRUE))
-points(meandeicc, col="gold", pch=18, cex=1.5)
+pdf("./deinterICC.pdf")
+boxplot(deinterICC, names=c("int_ex","int_im","ext_ex","ex_im"),col=colors,ylab="percentage")
+meandeinterICC <- (colMeans(deinterICC, na.rm=TRUE))
+points(meandeinterICC, col="gold", pch=18, cex=1.5)
 
 #dev.off
 
