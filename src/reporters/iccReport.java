@@ -531,6 +531,7 @@ public class iccReport implements Extension {
 
 		if (opts.debugOut) {
 			os.println("*** tabulation ***");
+			os.println("totally " + cntLinks + " ICC pairs found!");
 			os.print("format: srcICC_component\t tgtICC_component");
 		}
 		
@@ -544,8 +545,8 @@ public class iccReport implements Extension {
 			}
 			
 			if (incls==null || outcls==null) continue;
-
-			os.println(iccAPICom.getComponentType(incls) +"->"+iccAPICom.getComponentType(outcls));
+			
+			os.println(iccAPICom.getComponentType(outcls) +"->"+iccAPICom.getComponentType(incls));
 		}
 	}
 }

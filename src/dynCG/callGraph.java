@@ -128,7 +128,7 @@ public class callGraph {
 	
 	public DirectedGraph<CGNode, CGEdge> getInternalGraph() { return _graph; }
 	
-	private CGEdge addEdge(CGNode src, CGNode tgt, int ts) {
+	public CGEdge addEdge(CGNode src, CGNode tgt, int ts) {
 		_graph.addVertex(src);
 		_graph.addVertex(tgt);
 		if (!_graph.containsEdge(src, tgt)) {

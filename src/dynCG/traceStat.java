@@ -9,6 +9,8 @@
  * 02/02/16		hcai		added calibration of the types of ICCs that are internal, implicit
  * 02/04/16		hcai		extended to support app-pair traces
  * 02/05/16		hcai		improved the classification of iccs into external vs internal
+ * 02/15/16		hcai		added call edges from ICC sender to ICC receiver to the dynamic call graph (to make the 
+ * 							src-sink reachability analysis more complete
 */
 package dynCG;
 
@@ -29,8 +31,12 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.alg.*;
 import org.jgrapht.traverse.*;
 
+import soot.Scene;
+import soot.SootClass;
+
 import android.content.Intent;
 import dynCG.callGraph.CGEdge;
+import dynCG.callGraph.CGNode;
 import iacUtil.iccAPICom;
 
 public class traceStat {
@@ -349,13 +355,31 @@ public class traceStat {
 		/** now, look at all ICCs to find out whether each of the implicit ICCs is indeed internal --- it is internal
 		 * if a paired ICC can be found in the same trace
 		 */
+		calibrateICCTypes();
+		addICCToCG();
+	}
+
+	private void calibrateICCTypes() {
+		/*
 		for (ICCIntent out : allIntents) {
 			if (out.isIncoming()) continue;
 			//if (out.isExplicit()) continue;
 			for (ICCIntent in : allIntents) {
 				if (!in.isIncoming()) continue;
 				//if (in.isExplicit()) continue;
-
+		 */
+		Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
+		Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
+		for (ICCIntent iit : getAllICCs()) {
+			if (iit.isIncoming()) {
+				coveredInICCs.add(iit);
+			}
+			else {
+				coveredOutICCs.add(iit);
+			}
+		}
+		for (ICCIntent in : coveredInICCs) {
+			for (ICCIntent out : coveredOutICCs) {
 				if (in.getFields("Action").compareToIgnoreCase(out.getFields("Action"))==0 && 
 					in.getFields("Categories").compareToIgnoreCase(out.getFields("Categories"))==0 && 
 					in.getFields("DataString").compareToIgnoreCase(out.getFields("DataString"))==0) {
@@ -403,6 +427,69 @@ public class traceStat {
 				}
 			}
 		}
+	}
+	
+	public Map<ICCIntent, ICCIntent> getICCPairs() {
+		Map<ICCIntent, ICCIntent> ICCPairs = new HashMap<ICCIntent, ICCIntent>();
+		if (this.traceFn == null) return ICCPairs;
+		if (this.allIntents.isEmpty()) return ICCPairs;
+		
+		Set<ICCIntent> coveredInICCs = new HashSet<ICCIntent>();
+		Set<ICCIntent> coveredOutICCs = new HashSet<ICCIntent>();
+		for (ICCIntent iit : getAllICCs()) {
+			if (iit.isIncoming()) {
+				coveredInICCs.add(iit);
+			}
+			else {
+				coveredOutICCs.add(iit);
+			}
+		}
+		/** pairing Intent sender and receiver, and adding call edges between them
+		 */
+		for (ICCIntent in : coveredInICCs) {
+			for (ICCIntent out : coveredOutICCs) {
+				// two ICCs should be either both explicit or both implicit to be linked
+				if ( (in.isExplicit() && !out.isExplicit()) ||
+					 (!in.isExplicit() && out.isExplicit()) ) continue;
+				
+				// for explicit ICCs, link by target component
+				if (in.isExplicit()) {
+					if (in.getFields("Component").equalsIgnoreCase(out.getFields("Component"))) {
+						ICCPairs.put(in, out);
+					}
+				}
+				
+				// for implicit ICCs, match by the triple test "action, category, and data"
+				if (!in.isExplicit()) {
+					if (in.getFields("Action").compareToIgnoreCase(out.getFields("Action"))==0 && 
+						in.getFields("Categories").compareToIgnoreCase(out.getFields("Categories"))==0 && 
+						in.getFields("DataString").compareToIgnoreCase(out.getFields("DataString"))==0) {
+						ICCPairs.put(in, out);
+					}
+				}
+			}
+		}	
+		return ICCPairs;
+	}
+	
+	public int addICCToCG() {
+		Map<ICCIntent, ICCIntent> ICCPairs = getICCPairs();
+
+		int cnticcedge = 0;
+		for (Map.Entry<ICCIntent, ICCIntent> link : ICCPairs.entrySet()) {
+			CGNode innode = null, outnode = null;
+			if (link.getKey().getCallsite()==null || link.getValue().getCallsite()==null) {
+				continue;
+			}
+			innode = cg.getNodeByName(link.getKey().getCallsite().getSource().getSootMethodName());
+			outnode = cg.getNodeByName(link.getValue().getCallsite().getSource().getSootMethodName());
+			
+			if (innode==null || outnode==null) continue;
+			cg.addEdge(outnode, innode, link.getKey().getTS());
+			cnticcedge ++;
+		}
+		
+		return cnticcedge;
 	}
 
 	public static void main(String[] args) {

@@ -536,7 +536,7 @@ public class interAppICCReport {
 			if (incls==null || outcls==null) continue;
 			if (!cls2comtype.containsKey(incls) || !cls2comtype.containsKey(outcls)) continue;
 
-			os.println(cls2comtype.get(incls) +"->"+cls2comtype.get(outcls));
+			os.println(cls2comtype.get(outcls) +"->"+cls2comtype.get(incls));
 		}
 	}
 	
