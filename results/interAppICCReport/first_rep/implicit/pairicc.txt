@@ -4,8 +4,8 @@ com.jb.gokeyboard.theme.twkeyboardforhtconem8	com.erkanyilmaz.namazvakitleri	0	0
 com.erkanyilmaz.namazvakitleri	com.jb.gokeyboard.theme.twkeyboardforhtconem8	0	64	0	0
 com.jb.gokeyboard.theme.twkeyboardforsonyxperiaz	pl.trojmiasto.mobile	64	0	0	0
 pl.trojmiasto.mobile	com.jb.gokeyboard.theme.twkeyboardforsonyxperiaz	77	0	0	0
-com.monsta.imagenscomfrasesdecarinho	ch.switchdrive.androidclient	515	0	954	0
-ch.switchdrive.androidclient	com.monsta.imagenscomfrasesdecarinho	64	0	614	0
+com.monsta.imagenscomfrasesdecarinho	ch.switchdrive.androidclient	515	0	716	0
+ch.switchdrive.androidclient	com.monsta.imagenscomfrasesdecarinho	64	0	852	0
 ru.eeteam.sendcontactsfree	com.druva.inSync_android	18	0	0	0
 com.druva.inSync_android	ru.eeteam.sendcontactsfree	6	0	0	0
 com.aob	hu.webvalto.bkkfutar	0	5	0	0
@@ -30,8 +30,8 @@ br.com.mobizze	goko.gcs	0	0	0	0
 goko.gcs	br.com.mobizze	0	0	0	0
 com.callbotapp.callbot	ru.evgajukov.mobile.circassian.activity	0	0	0	0
 ru.evgajukov.mobile.circassian.activity	com.callbotapp.callbot	270	0	0	0
-sg.mof.sgbudget	com.texterity.android.HumanResourceExecutive	0	39	582	0
-com.texterity.android.HumanResourceExecutive	sg.mof.sgbudget	53	0	738	0
+sg.mof.sgbudget	com.texterity.android.HumanResourceExecutive	0	39	912	0
+com.texterity.android.HumanResourceExecutive	sg.mof.sgbudget	20	0	408	0
 de.leatherwallpaper	ch.mydrive.webdav	3	52	0	0
 ch.mydrive.webdav	de.leatherwallpaper	0	78	0	0
 be.vantslot.voetbal.kalender	fi.android.takealot	0	0	0	0
@@ -60,8 +60,8 @@ com.allied.comfortsync.root	jitdesign.icsimport	2	0	0	0
 jitdesign.icsimport	com.allied.comfortsync.root	0	46	0	0
 com.couchsurfing.mobile.android	com.jb.gokeyboard.theme.fungreenpower	0	0	0	0
 com.jb.gokeyboard.theme.fungreenpower	com.couchsurfing.mobile.android	0	0	0	0
-com.milan.novine	ro.mying	2	23	2	0
-ro.mying	com.milan.novine	1	45	0	0
+com.milan.novine	ro.mying	2	23	0	0
+ro.mying	com.milan.novine	1	45	2	0
 com.telerik.GoogleLinks	com.tobykurien.webapps	10	67	0	0
 com.tobykurien.webapps	com.telerik.GoogleLinks	1	43	0	0
 com.kitapps.android.builder.bpm_dj_electronic_music_production_event	com.idl.apptitudeBook	0	0	0	0

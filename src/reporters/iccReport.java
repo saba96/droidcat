@@ -11,6 +11,7 @@
  * 							and having both data and extras
  * 02/04/16		hcai		added one more data into over icc metric report to facilitate post-processing and tabulation
  * 02/05/16		hcai		fixed the bug in ICC classification and result reporting
+ * 02/19/16		hcai		added statistics on ICC coverage
 */
 package reporters;
 
@@ -228,6 +229,7 @@ public class iccReport implements Extension {
 				reportICCHasExtras(System.out);
 				reportICCHasDataAndExtras(System.out);
 				reportICCLinks(System.out);
+				ICCCoverage(System.out);
 			}
 			else {
 				String fngicc = dir + File.separator + "gicc.txt";
@@ -249,6 +251,10 @@ public class iccReport implements Extension {
 				String fnicclink = dir + File.separator + "icclink.txt";
 				PrintStream psicclink = new PrintStream (new FileOutputStream(fnicclink,true));
 				reportICCLinks(psicclink);
+
+				String fnicccov = dir + File.separator + "icccov.txt";
+				PrintStream psicccov = new PrintStream (new FileOutputStream(fnicccov,true));
+				ICCCoverage(psicccov);
 			}
 		}
 		catch (Exception e) {e.printStackTrace();}
@@ -261,6 +267,7 @@ public class iccReport implements Extension {
 	//Set<ICCIntent> traversedOutICCs = new HashSet<ICCIntent>();
 	Map<SootMethod, Set<Stmt>> traversedInICCs = new HashMap<SootMethod, Set<Stmt>>();
 	Map<SootMethod, Set<Stmt>> traversedOutICCs = new HashMap<SootMethod, Set<Stmt>>();
+	
 	
 	public void traverse() {
 		/* traverse all classes */
@@ -548,6 +555,56 @@ public class iccReport implements Extension {
 			
 			os.println(iccAPICom.getComponentType(outcls) +"->"+iccAPICom.getComponentType(incls));
 		}
+	}
+	
+	static String percentage(int a, int b) {
+		DecimalFormat df = new DecimalFormat("#.####");
+		if (b==0) return df.format(0); 
+		return df.format(a*1.0/b);
+	}
+	
+	public void ICCCoverage(PrintStream os) {
+		int inICCCovered = 0, outICCCovered = 0;
+		
+		for (SootMethod sm : traversedInICCs.keySet()) {
+			for (Stmt st : traversedInICCs.get(sm)) {
+				InvokeExpr inv = st.getInvokeExpr();
+				String calleename = inv.getMethod().getName();
+				for (ICCIntent iit : coveredInICCs) {
+					if (iit.getCallsite()!=null) {
+						if (iit.getCallsite().getSource().getSootMethodName().contains(sm.getName()) && 
+							iit.getCallsite().getTarget().getSootMethodName().contains(calleename)) {
+							inICCCovered ++;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		for (SootMethod sm : traversedOutICCs.keySet()) {
+			for (Stmt st : traversedOutICCs.get(sm)) {
+				InvokeExpr inv = st.getInvokeExpr();
+				String calleename = inv.getMethod().getName();
+				for (ICCIntent iit : coveredOutICCs) {
+					if (iit.getCallsite()!=null) {
+						if (iit.getCallsite().getSource().getSootMethodName().contains(sm.getName()) && 
+							iit.getCallsite().getTarget().getSootMethodName().contains(calleename)) {
+							outICCCovered ++;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if (opts.debugOut) {
+			os.println("*** tabulation ***");
+			os.print("format: inICC-coverage\t outICC-coverage\t allICC-coverage");
+		}
+		
+		os.println(percentage(inICCCovered, inIccCov.getTotal()) + "\t" + percentage(outICCCovered, outIccCov.getTotal())
+				+ "\t" + percentage(inICCCovered+outICCCovered, inIccCov.getTotal()+outIccCov.getTotal()));
 	}
 }
 
