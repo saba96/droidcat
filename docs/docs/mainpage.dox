@@ -1,0 +1,37 @@
+/** 
+\mainpage Dynamic Study of Android Application Programming Paradigms and their Security Implications
+
+A plethora of research on Android have been exclusively focused on security and privacy issues in the Android software 
+ecosystem, especially Android app security, yet there are very little insights into how Android applications have been
+commonly built and into the environments in which those applications execute. With the proliferation of its user base
+and popularity in the mobile and personal computing arena, Android apps need to be dissected and characterized with 
+respect to a general understanding of their programming paradigms and runtime behaviours. Gaining such understandings
+is critical as it will enable more effective development of both Android apps themselves and better security defense 
+solutions for securing them.
+
+DroidFax is a toolkit dedicated to offering an experimental framework for the dynamic characterization of Android 
+apps. To help deliver a characterization more representative of the latest Android framework features, DroidFax targets 
+the latest release of the Android SDK (version 6.0 / API level 23 / Marshmallow). Its core consists of a lightweight 
+static analysis that mainly instruments the Dalvik bytecode of a given app for call profiling and ICC monitoring, and 
+a lightweight dynamic analysis that collects and then analyzes generated call and ICC traces. It also includes a 
+pre-processing phase taking charge of benchmark apps downloading and ICC-based app pairing based on the ICC resolution
+results obtained using a third-party tool. The last part of DroidFax computes three categories of metrics from the 
+traces: general metrics, ICC metrics, and security metrics. 
+
+This is the project homepage for DroidFax, where you can find the usage information and downloads of source code and 
+all other inputs needed by the toolkit. DroidFax is implemented on top of our Android data-flow analysis and
+instrumentation library <span style="color:blue;font-weight:bold"><a href="https://bitbucket.org/haipeng_cai/duaf/src/d193ac3faaf0d1b76a22668170b3ccb6915be971/duafdroid/?at=master/">duafdroid</a></span>, which is based on the <span style="color:blue;font-weight:bold"><a href="http://www.sable.mcgill.ca/soot/">Soot byte-code analysis and optimization framework</a></span>. 
+Both duafdroid and Soot on which DroidFax depends can be downloaded on this page as well, using the 
+links as follows.
+_
+
+\section droidfax_use How to use DroidFax
+- \subpage page_usage
+
+\section droidfax_downloads Downloads
+- <a href="../droidfax.jar"> Download DroidFax </a><br>
+- <a href="../DUA-forensics.jar"> Download duafdroid </a><br>
+- <a href="../libs.jar"> Download Soot and its libraries required </a><br>
+
+*/
+
