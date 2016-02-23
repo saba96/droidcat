@@ -20,18 +20,31 @@ traces: general metrics, ICC metrics, and security metrics.
 
 This is the project homepage for DroidFax, where you can find the usage information and downloads of source code and 
 all other inputs needed by the toolkit. DroidFax is implemented on top of our Android data-flow analysis and
-instrumentation library <span style="color:blue;font-weight:bold"><a href="https://bitbucket.org/haipeng_cai/duaf/src/d193ac3faaf0d1b76a22668170b3ccb6915be971/duafdroid/?at=master/">duafdroid</a></span>, which is based on the <span style="color:blue;font-weight:bold"><a href="http://www.sable.mcgill.ca/soot/">Soot byte-code analysis and optimization framework</a></span>. 
+instrumentation library <span style="color:blue;font-weight:bold"><a href="https://bitbucket.org/haipeng_cai/duaf/src/d193ac3faaf0d1b76a22668170b3ccb6915be971/duafdroid">duafdroid</a></span>, which is based on the <span style="color:blue;font-weight:bold"><a href="http://www.sable.mcgill.ca/soot/">Soot byte-code analysis and optimization framework</a></span>. 
 Both duafdroid and Soot on which DroidFax depends can be downloaded on this page as well, using the 
 links as follows.
-_
 
 \section droidfax_use How to use DroidFax
 - \subpage page_usage
 
-\section droidfax_downloads Downloads
+\section droidfax_downloads Release Downloads
 - <a href="../droidfax.jar"> Download DroidFax </a><br>
-- <a href="../DUA-forensics.jar"> Download duafdroid </a><br>
+- <a href="../duafdroid.jar"> Download duafdroid </a><br>
 - <a href="../libs.jar"> Download Soot and its libraries required </a><br>
+
+\section droidfax_src Source Code
+You can obtain the source code on <a href="https://bitbucket.org/haipeng_cai/droidfax/src">DroidFax source repository</a>, where all necessary inputs to DroidFax are hosted too (e.g., our manual callback categorization and our manually improved source and sink categorization).
+
+\section droidfax_results Study Results
+- <a href="results.tar.gz"> Download original experimental results </a><br>
+
+\section droidfax_benchmakr Inter-App Benchmark Suite
+As a result of our study, we obtained a suite of Android app pairs in which the two apps have been confirmed to have 
+inter-app ICCs that can be easily exercised with random inputs. We list the package names of each two apps and exercised 
+inter-app ICC statistics.
+
+- <a href="validpairs.html"> View benchmark suite statistics </a><br>
+- <a href="benchapks.tar.gz"> Download benchmark suite (APKs) </a><br>
 
 */
 
