@@ -46,8 +46,8 @@ for(i in seq(1,nrow(tdata),3)) {
 
 print(paste(inv," invalid data points ignored."))
 
-#colors<-c("red","green","blue") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
-colors<-c("red","green", "red","green", "red","green") #,"black","yellow","darkorange","darkorchid","gold4","darkgrey")
+#colors<-c("gray50","gray80","gray50") #,"gray50","red","gray50orange","gray50orchid","red4","gray50grey")
+colors<-c("gray50","gray80", "gray50","gray80", "gray50","gray80") #,"gray50","red","gray50orange","gray50orchid","red4","gray50grey")
 xnames<-c("UserCode", "", "3rdLib", "", "SDK", "")
 pches<-c(0:8)
 
@@ -60,13 +60,13 @@ boxplot(s, names=xnames,col=colors,range=0,ylab="percentage (unique view)",cex.a
 #boxplot(s, names=xnames,col=colors,ylab="percentage",at=c(1,2,5,6,9,10),range=0)
 #boxplot(s, names=xnames,col=colors,ylab="percentage",at=c(1,2,4,5,7,8),range=0)
 means <- (colMeans(s, na.rm=TRUE))
-#points(means, col="gold", pch=18, cex=1.0,xaxp=c(1,2,4,5,7,8,6))
-points(means, col="gold", pch=18, cex=0.5)
-legend("topleft", legend=c("class", "method"), cex=.5, col=c("red","green"), lwd=.8, bty="n")
+#points(means, col="red", pch=18, cex=1.0,xaxp=c(1,2,4,5,7,8,6))
+points(means, col="red", pch=18, cex=0.5)
+legend("topleft", legend=c("class", "method"), cex=.5, col=c("gray50","gray80"), lwd=.8, bty="n")
 
 pdf("./gdist-uniq-d.pdf",width=2.5,height=3.0)
 d <- cbind( dpmcls[,1], dpmme[,1], dpmcls[,2], dpmme[,2], dpmcls[,3], dpmme[,3] )
 boxplot(d, names=xnames,col=colors,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meand <- (colMeans(d, na.rm=TRUE))
-points(meand, col="gold", pch=18, cex=0.5)
-legend("topleft", legend=c("class", "method"), cex=.5, col=c("red","green"), lwd=.8, bty="n")
+points(meand, col="red", pch=18, cex=0.5)
+legend("topleft", legend=c("class", "method"), cex=.5, col=c("gray50","gray80"), lwd=4.5, bty="n")

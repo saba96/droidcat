@@ -26,10 +26,9 @@ for(i in 1:nrow(tdata)) {
 	#length(catdata[[mykey]])
 }
 
-pdf("./edgeFreq-scatter.pdf",width=4.0,height=3.5)
+pdf("./edgeFreq-scatter.pdf",width=4.0,height=4.0)
 i=1
-#colors<-c("red","blue","black","green","yellow","darkorange","darkorchid","gold4","darkgrey")
-colors<-c("gray0","gray10","gray20","gray30","gray40","gray50","gray60","gray70","gray80")
+colors<-c("red","blue","black","green","yellow","darkorange","darkorchid","gold4","darkgrey")
 pches<-c(0:8)
 
 #3rdLib -> 3rdLib 
@@ -56,18 +55,15 @@ for (key in rev(allkeys)) {
 		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,1000000), ylim=c(1,1000000), xlab="Call",ylab="Frequency", cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
 		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i],xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
 		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch=pches[i], xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5)
-		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch='.', xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.2, cex.axis=.4, lwd=0.3, cex.lab=0.5, type='p')
-		#legend("topleft", legend=ls(catdata), cex=.3, col=colors, lwd=0.5, bty="n",pch=pches)
-		legend("topleft", legend=rev(allkeys), cex=.4, col=colors, lwd=1.0, bty="n")
+		plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch='.', xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5, type='h')
 		mtext(side = 1, text = "Call", line = .5, cex=.5)
 		mtext(side = 2, text = "Frequency", line = 1.0, cex=.5)
-		#axis(1, line=0.2)
-		#axis(2, line=0.2)
 	}
 	else {
-		#points(x=c(1:length(vdata)), y=order(vdata), col=colors[i], xlim=c(1,length(vdata)),ylim=c(1,max(vdata)))
-		#points(sort(vdata), col=colors[i],pch=pches[i], cex=.1)
-		points(sort(vdata), col=colors[i],pch='.', cex=.2, type='p')
+		#plot (c(1:length(vdata)), sort(vdata), col=colors[i], log="xy",pch='.', xlim=c(1,700000), ylim=c(1,900000), ann=FALSE, cex=.1, cex.axis=.4, lwd=0.3, cex.lab=0.5, type='h')
+		#mtext(side = 1, text = "Call", line = .5, cex=.5)
+		#mtext(side = 2, text = "Frequency", line = 1.0, cex=.5)
+		points(sort(vdata), col=colors[i],pch='.', cex=.1, type='h')
 	}
 	i <- i+1
 }
