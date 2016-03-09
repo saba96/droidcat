@@ -41,7 +41,7 @@ for(i in seq(1,nrow(tdata),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid data points ignored."))
+print(paste(inv," invalid data points ignogray50."))
 
 fndatainter=args[2]
 tdatainter=read.table(file=fndatainter)
@@ -71,17 +71,17 @@ for(i in seq(1,nrow(tdatainter),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid inter data points ignored."))
+print(paste(inv," invalid inter data points ignogray50."))
 
-colors2<-c("gray","gray")
-colors3<-c("red","green","red","green","red","green") 
-colors4<-c("red","green","red","green","red","green","red","green") 
+colors2<-c("gray80","gray80")
+colors3<-c("gray50","gray80","gray50","gray80","gray50","gray80") 
+colors4<-c("gray50","gray80","gray50","gray80","gray50","gray80","gray50","gray80") 
 
 pdf("./gicc-dboth.pdf",width=2.5,height=3.0)
 dboth <- cbind ( sdoverall[,2], sdoverallinter[,2] )
 boxplot(dboth, names=c("single-app","inter-app"),col=colors2,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandboth <- (colMeans(dboth, na.rm=TRUE))
-points(meandboth, col="gold", pch=18, cex=0.5)
+points(meandboth, col="red", pch=18, cex=0.5)
 stddboth <- apply( dboth, 2, sd )
 print(meandboth)
 print(stddboth)
@@ -90,15 +90,15 @@ pdf("./gicc-databoth.pdf",width=2.5,height=3.0)
 dataextraboth <- cbind ( dataextra[,1],dataextrainter[,1], dataextra[,2],dataextrainter[,2], dataextra[,3],dataextrainter[,3] )
 boxplot(dataextraboth, names=c("data only","","extras only","","both",""),col=colors3,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandataextraboth <- (colMeans(dataextraboth, na.rm=TRUE))
-points(meandataextraboth, col="gold", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n",horiz=TRUE)
+points(meandataextraboth, col="red", pch=18, cex=0.5)
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("gray50","gray80"), lwd=4.5, bty="n",horiz=TRUE)
 
 pdf("./gicc-iccboth.pdf",width=4.1,height=3.0)
 giccboth <- cbind ( gicc[,1],ginterICC[,1], gicc[,2],ginterICC[,2], gicc[,3],ginterICC[,3], gicc[,4],ginterICC[,4] )
 boxplot(giccboth, names=c("int_ex","","int_im","","ext_ex","","ex_im",""),col=colors4,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meangiccboth <- (colMeans(giccboth, na.rm=TRUE))
-points(meangiccboth, col="gold", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("red","green"), lwd=.8, bty="n",horiz=TRUE)
+points(meangiccboth, col="red", pch=18, cex=0.5)
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("gray50","gray80"), lwd=4.5, bty="n",horiz=TRUE)
 
 #dev.off
 
