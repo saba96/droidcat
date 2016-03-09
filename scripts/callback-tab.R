@@ -56,10 +56,30 @@ boxplot(dcb, names=c("lifecycle method","event handler"),col=colors2,ylab="perce
 meandcb <- (colMeans(dcb, na.rm=TRUE))
 points(meandcb, col="red", pch=18, cex=0.5)
 
+dnames<-c("lifecycle method","event handler")
+stddcb <- apply( dcb, 2, sd, na.rm=TRUE )
+meddcb <- apply( dcb, 2, median , na.rm=TRUE)
+maxdcb <- apply( dcb, 2, max, na.rm=TRUE )
+mindcb <- apply( dcb, 2, min, na.rm=TRUE )
+for (k in 1:ncol(dcb)) {
+	#print( paste(snames[k], meanalls[k], "% (", stdalls[k], "%)") )
+	cat(sprintf("%s\t%.2f%% (%.2f%%)\t%.2f%%\t%.2f%%\t%.2f%%\n", dnames[k], as.numeric(meandcb[k]), as.numeric(stddcb[k]),as.numeric(mindcb[k]),as.numeric(maxdcb[k]),as.numeric(meddcb[k])))
+}
+cat("\n")
+
 pdf("./callback-dins.pdf",width=2.5,height=3.0)
 boxplot(dcbins, names=c("lifecycle method","event handler"),col=colors2,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandcbins <- (colMeans(dcbins, na.rm=TRUE))
 points(meandcbins, col="red", pch=18, cex=0.5)
+
+stddcbins <- apply( dcbins, 2, sd, na.rm=TRUE )
+meddcbins <- apply( dcbins, 2, median, na.rm=TRUE )
+maxdcbins <- apply( dcbins, 2, max, na.rm=TRUE)
+mindcbins <- apply( dcbins, 2, min, na.rm=TRUE)
+for (k in 1:ncol((dcbins))) {
+	#print( paste(snames[k], meanalls[k], "% (", stdalls[k], "%)") )
+	cat(sprintf("%s\t%.2f%% (%.2f%%)\t%.2f%%\t%.2f%%\t%.2f%%\n", dnames[k], as.numeric(meandcbins[k]), as.numeric(stddcbins[k]),as.numeric(mindcbins[k]),as.numeric(maxdcbins[k]),as.numeric(meddcbins[k])))
+}
 
 #dev.off
 
