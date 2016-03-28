@@ -1,0 +1,4 @@
+color=red
+size=2
+icon=/root/a.gif
+parent="none"
