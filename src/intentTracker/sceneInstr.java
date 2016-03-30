@@ -6,6 +6,7 @@
  * 09/21/15		hcai		instrument for monitoring runtime resolution of implicit ICC targets
  * 09/27/15		hcai		reached the first working version
  * 10/14/15		hcai		added intent receiving monitoring
+ * 3/30/16		hcai		instrument to monitor caller and callsite for each ICC API call additionally to ease trace analysis
 */
 package intentTracker;
 
@@ -32,6 +33,7 @@ import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Jimple;
 import soot.jimple.Stmt;
+import soot.jimple.StringConstant;
 
 public class sceneInstr implements Extension {
 	protected SootClass clsMonitor = null;
@@ -116,7 +118,7 @@ public class sceneInstr implements Extension {
     public void instMonitors() {
         /* traverse all classes */
         //Iterator<SootClass> clsIt = ProgramFlowGraph.inst().getAppClasses().iterator();// Scene.v().getApplicationClasses().iterator(); //.getClasses().iterator();
-		Iterator<SootClass> clsIt = (g_instr3rdparty?Scene.v().getClasses().iterator():ProgramFlowGraph.inst().getAppClasses().iterator());
+		Iterator<SootClass> clsIt = (g_instr3rdparty?Scene.v().getClasses().snapshotIterator():ProgramFlowGraph.inst().getAppClasses().iterator());
         while (clsIt.hasNext()) {
             SootClass sClass = (SootClass) clsIt.next();
             //System.out.println("class visited: " + sClass.getName());
@@ -124,6 +126,8 @@ public class sceneInstr implements Extension {
                 // skip phantom classes
                 continue;
             }
+            if (sClass.isInterface()) continue;
+            if (sClass.isInnerClass()) continue;
             if ( !sClass.isApplicationClass() ) {
                 // skip library classes
                 continue;
@@ -213,6 +217,9 @@ public class sceneInstr implements Extension {
     						continue;
     					}
     					
+    					itnArgs.add(StringConstant.v(meId));
+    					itnArgs.add(StringConstant.v(s.toString()));
+    					
     					Stmt sitnCall = Jimple.v().newInvokeStmt( Jimple.v().newStaticInvokeExpr(mSendTracker.makeRef(), itnArgs));
     					itnProbes.add(sitnCall);
                     	
@@ -226,7 +233,7 @@ public class sceneInstr implements Extension {
                     }
                     else if (iccAPICom.is_IntentReceivingAPI(s)) {
                     	List<Object> itnProbes = new ArrayList<Object>();
-    					List<Value> itnArgs = new ArrayList<Value>();
+    					List itnArgs = new ArrayList();
     					AssignStmt as = (AssignStmt)s;
     					Value lv = as.getLeftOp();
     					if (lv!=null && lv.getType().equals(Scene.v().getRefType("android.content.Intent"))) {
@@ -240,6 +247,10 @@ public class sceneInstr implements Extension {
     						}
 							continue;
     					}
+
+    					itnArgs.add(StringConstant.v(meId));
+    					itnArgs.add(StringConstant.v(s.toString()));
+
     					Stmt sitnCall = Jimple.v().newInvokeStmt( Jimple.v().newStaticInvokeExpr(mRecvTracker.makeRef(), itnArgs));
     					itnProbes.add(sitnCall);
                     	

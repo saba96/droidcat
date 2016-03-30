@@ -6,6 +6,7 @@
  * 09/22/15		hcai			Created; for monitoring implicit intent target resolution
  * 10/14/15		hcai			separate monitors for events of sending an intent from those for receiving
  * 								an intent
+ * 3/30/16		hcai			monitor caller and callsite for each ICC API call additionally to ease trace analysis
 */
 package intentTracker;
 
@@ -24,38 +25,45 @@ public class Monitor {
 		g_lgclock = lgclock;
 	}
 	
-	public synchronized static void onSendIntent(Intent itn) {
+	public synchronized static void onSendIntent(Intent itn, String caller, String callsite) {
 		if (active) return;
 		active = true;
-		try { onSendIntent_impl(itn); }
+		try { onSendIntent_impl(itn,caller,callsite); }
 		finally { active = false; }
 	}
-	private synchronized static void onSendIntent_impl(Intent itn) {
+	private synchronized static void onSendIntent_impl(Intent itn, String caller, String callsite) {
 		try {
             //System.out.println("from iacMonitor:" + itn);
             //android.util.Log.w("hcai-intent-monitor", itn.toString());
 			android.util.Log.e("hcai-intent-monitor", "[ Intent sent ]");
+			android.util.Log.e("hcai-intent-monitor", "caller=" + caller);
+			android.util.Log.e("hcai-intent-monitor", "callsite=" + callsite);
             dumpIntent(itn);
             if (g_lgclock != null) {
             	g_lgclock.packClock(itn);
             }
             //itn.resolveActivity(android.app.Fragment.getActivity().getPackageManager());
+            // piggyback sender information for precise determination of the Intent being internal/external at runtime
+            /** just use the caller in the log immediately preceding this Intent instead */
+            //itn.putExtra("sender", caller);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public synchronized static void onRecvIntent(Intent itn) {
+	public synchronized static void onRecvIntent(Intent itn, String caller, String callsite) {
 		if (active) return;
 		active = true;
-		try { onRecvIntent_impl(itn); }
+		try { onRecvIntent_impl(itn,caller,callsite); }
 		finally { active = false; }
 	}
-	private synchronized static void onRecvIntent_impl(Intent itn) {
+	private synchronized static void onRecvIntent_impl(Intent itn, String caller, String callsite) {
 		try {
             //System.out.println("from iacMonitor:" + itn);
             //android.util.Log.w("hcai-intent-monitor", itn.toString());
 			android.util.Log.e("hcai-intent-monitor", "[ Intent received ]");
+			android.util.Log.e("hcai-intent-monitor", "caller=" + caller);
+			android.util.Log.e("hcai-intent-monitor", "callsite=" + callsite);
             if (g_lgclock != null) {
             	g_lgclock.retrieveClock(itn);
             }

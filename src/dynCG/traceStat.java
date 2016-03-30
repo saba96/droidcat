@@ -11,6 +11,7 @@
  * 02/05/16		hcai		improved the classification of iccs into external vs internal
  * 02/15/16		hcai		added call edges from ICC sender to ICC receiver to the dynamic call graph (to make the 
  * 							src-sink reachability analysis more complete
+ * 03/30/16		hcai		parse the caller info newly added to Intent tracing and use it to improve ICC categorization 
 */
 package dynCG;
 
@@ -92,14 +93,18 @@ public class traceStat {
 		
 		//protected String callsite; // the call site that sends or receives this Intent
 		protected CGEdge callsite; // the call site that sends or receives this Intent
+		
+		protected String caller;
+		protected String callstmt;
 
 		ICCIntent() {
 			for (String fdname : fdnames) {
 				fields.put(fdname, "null");
 			}
 			ts = -1;
-			//callsite = "";
 			callsite = null;
+			caller = "";
+			callstmt = "";
 		}
 		
 		public String toString() {
@@ -110,6 +115,7 @@ public class traceStat {
 			ret += "Explicit ICC: " + isExplicit() + "\n";
 			ret += "HasExtras: " + hasExtras() + "\n";
 			ret += "call site: " + callsite + "\n";
+			ret += "caller: " + caller + ", callStmt: " + callstmt;
 			return ret;
 		}
 		
@@ -181,6 +187,15 @@ public class traceStat {
 	public List<Set<ICCIntent>> getInterAppICCs () { return allInterAppIntents; }
 	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
+		// read the caller and callstmt first
+		String caller = br.readLine().trim();
+		assert caller.startsWith("caller=");
+		caller.replaceFirst("caller=","");
+		
+		String callstmt = br.readLine().trim();
+		assert callstmt.startsWith("callsite=");
+		callstmt.replaceFirst("callsite=", "");
+
 		List<String> infolines = new ArrayList<String>();
 		/*
 		int i = 1;
@@ -237,7 +252,10 @@ public class traceStat {
 		*/
 		if (infolines.size()<3) return null;
 		
-		return new ICCIntent (infolines);
+		ICCIntent ret = new ICCIntent (infolines);
+		ret.caller = caller;
+		ret.callstmt = callstmt;
+		return ret;
 	}
 	
 	public static boolean isInList(String s, Set<String> strlst) {
@@ -388,12 +406,26 @@ public class traceStat {
 					if (this.appPacknameOther.isEmpty()) {
 						in.setExternal(false);
 						out.setExternal(false);
+						if (!clsNames.isEmpty()) { 
+							if ((isInList(in.caller,clsNames) && !isInList(out.caller,clsNames)) ||
+								 (!isInList(in.caller,clsNames) && isInList(out.caller, clsNames)) ) {
+								in.setExternal(true);
+								out.setExternal(true);
+							}
+						}
 					}
 					else {
 						// app-pair trace
-						if (out.getCallsite()!=null && in.getCallsite()!=null) {
+						/*
+						if (out.getCallsite()!=null && in.getCallsite()!=null) 
+						{
 							String senderCls = out.getCallsite().getSource().getSootClassName();
 							String recverCls = in.getCallsite().getSource().getSootClassName();
+						*/
+						{
+							// use the caller info for each Intent to further calibrate
+							String senderCls = out.caller.substring(out.caller.indexOf('<')+1, out.caller.indexOf(':'));
+							String recverCls = in.caller.substring(in.caller.indexOf('<')+1, in.caller.indexOf(':'));
 							if (senderCls.equalsIgnoreCase(recverCls)) {
 								in.setExternal(false);
 								out.setExternal(false);
@@ -479,10 +511,13 @@ public class traceStat {
 		for (Map.Entry<ICCIntent, ICCIntent> link : ICCPairs.entrySet()) {
 			CGNode innode = null, outnode = null;
 			if (link.getKey().getCallsite()==null || link.getValue().getCallsite()==null) {
-				continue;
+				innode = cg.getNodeByName(link.getKey().caller);
+				outnode = cg.getNodeByName(link.getValue().caller);
 			}
-			innode = cg.getNodeByName(link.getKey().getCallsite().getSource().getSootMethodName());
-			outnode = cg.getNodeByName(link.getValue().getCallsite().getSource().getSootMethodName());
+			else {
+				innode = cg.getNodeByName(link.getKey().getCallsite().getSource().getSootMethodName());
+				outnode = cg.getNodeByName(link.getValue().getCallsite().getSource().getSootMethodName());
+			}
 			
 			if (innode==null || outnode==null) continue;
 			cg.addEdge(outnode, innode, link.getKey().getTS());

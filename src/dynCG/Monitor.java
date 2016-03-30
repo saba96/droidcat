@@ -131,7 +131,8 @@ public class Monitor {
 			S.put(""+android.os.Process.myUid(), Integer.MAX_VALUE);
 		}
 		
-		intentTracker.Monitor.installClock(g_lgclock);
+		// we are now only care about apps running on the same device
+		//intentTracker.Monitor.installClock(g_lgclock);
 	}
 	
 	public synchronized static void enter(String methodname) throws Exception {

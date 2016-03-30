@@ -123,6 +123,8 @@ public class sceneInstr implements Extension {
 		//StmtMapper.getCreateInverseMap();
 
 		g_instr3rdparty = opts.instr3rdparty();
+
+		System.out.println("instrument 3rd party libraries as well: " + g_instr3rdparty);
 		instrument();
 		
 		if (opts.monitorICC()) {
@@ -165,7 +167,7 @@ public class sceneInstr implements Extension {
 		}
 		
 		/* traverse all classes */
-		Iterator<SootClass> clsIt = (g_instr3rdparty?Scene.v().getClasses().iterator():ProgramFlowGraph.inst().getAppClasses().iterator());
+		Iterator<SootClass> clsIt = (g_instr3rdparty?Scene.v().getClasses().snapshotIterator():ProgramFlowGraph.inst().getAppClasses().iterator());
 		while (clsIt.hasNext()) {
 			SootClass sClass = (SootClass) clsIt.next();
 			if ( sClass.isPhantom() ) {
@@ -176,6 +178,9 @@ public class sceneInstr implements Extension {
 				// skip library classes
 				continue;
 			}
+
+            if (sClass.isInterface()) continue;
+            if (sClass.isInnerClass()) continue;
 			
 			// when there is a static initializer in the entry class, we will instrument the monitor initialize in there instead of the entry method
 			boolean hasCLINIT = false;
