@@ -36,7 +36,9 @@ links as follows.
 You can obtain the source code on <a href="https://bitbucket.org/haipeng_cai/droidfax/src">DroidFax source repository</a>, where all necessary inputs to DroidFax are hosted too (e.g., our manual callback categorization and our manually improved source and sink categorization).
 
 \section droidfax_results Study Results
+- <a href="https://bitbucket.org/haipeng_cai/droidfax/src/96e62f090542968427e87e9f5434a4e61719f49c/results/"> View the original experimental results </a><br>
 - <a href="results.tar.gz"> Download original experimental results </a><br>
+- \subpage page_resultformat
 
 \section droidfax_benchmakr Inter-App Benchmark Suite
 As a result of our study, we obtained a suite of Android app pairs in which the two apps have been confirmed to have 
@@ -45,6 +47,20 @@ inter-app ICC statistics.
 
 - <a href="validpairs.html"> View benchmark suite statistics </a><br>
 - <a href="benchapks.tar.gz"> Download benchmark suite (APKs) </a><br>
+- <b>Usage of this benchmark suite</b>
+	- These app pairs can be used as experimental subjects in <i>inter-app</i> static/dynamic analyses. 
+	- Each pair has been identified through static ICC analysis to potentially communicate with each other 
+	- Each pair also has been verified to be readily triggered by randomly generated inputs to <i>actually communicate</i> at runtime 
+	- The statistics inform the strength of inter-app communication in each pair
+	- Some different pairs share the same individual apps, potentially giving long (length>2) app chains to be used as benchmarks
+		for multi-app analyses
+	- The individual apps covered in these pairs can be used as benchmarks in single-app analyses with the benefit of knowing 
+	  for sure not only that each app has potential communicating peers but also that the communication has been verified to 
+	  actually happen during app executions
+	- The suite is most desirable for developing/evaluating dynamic analysis, but also useful for developing/evaluating static
+	  analysis (esp. those involving/analyzing ICCs), with the actually exercised communication between the pairs used directly as, or to help build, relevant ground truth 
+	- All apps in the suite were built on SDK 5.0 or above, thus they are particularly useful for techniques and/or experimental studies targeting newer SDKs
+	- All apps in the suite were among the top 3000 most popular free apps on GooglePlay by the end of 2015 and covered over 20 app categories (as listed on GooglePlay), thus they are reasonably representative (of apps on the official market at least).
 
 */
 
