@@ -12,6 +12,7 @@
  * 02/15/16		hcai		added call edges from ICC sender to ICC receiver to the dynamic call graph (to make the 
  * 							src-sink reachability analysis more complete
  * 03/30/16		hcai		parse the caller info newly added to Intent tracing and use it to improve ICC categorization 
+ * 05/05/16		hcai		fixed a bug in parsing the caller and callstmt from Intent traces
 */
 package dynCG;
 
@@ -152,7 +153,7 @@ public class traceStat {
 		public void setCallsite (String stmt) { callsite = stmt; }
 		*/
 		public CGEdge getCallsite() { return callsite; }
-		public void setCallsite (CGEdge edge) { callsite = edge; }
+		public void setCallsite (CGEdge edge) { /*callsite = edge;*/ }
 		
 		public boolean isExplicit () {
 			return fields.get("Component").compareTo("null")!=0;
@@ -190,11 +191,11 @@ public class traceStat {
 		// read the caller and callstmt first
 		String caller = br.readLine().trim();
 		assert caller.startsWith("caller=");
-		caller.replaceFirst("caller=","");
+		caller=caller.replaceFirst("caller=","");
 		
 		String callstmt = br.readLine().trim();
 		assert callstmt.startsWith("callsite=");
-		callstmt.replaceFirst("callsite=", "");
+		callstmt=callstmt.replaceFirst("callsite=", "");
 
 		List<String> infolines = new ArrayList<String>();
 		/*
@@ -512,6 +513,11 @@ public class traceStat {
 			CGNode innode = null, outnode = null;
 			if (link.getKey().getCallsite()==null || link.getValue().getCallsite()==null) {
 				innode = cg.getNodeByName(link.getKey().caller);
+				/* debug only
+				if (innode==null) {
+					System.out.println("node for " + link.getKey().caller + " not found!");
+				}
+				*/
 				outnode = cg.getNodeByName(link.getValue().caller);
 			}
 			else {
@@ -523,6 +529,8 @@ public class traceStat {
 			cg.addEdge(outnode, innode, link.getKey().getTS());
 			cnticcedge ++;
 		}
+		
+		System.out.println(ICCPairs.size() + " ICC links found and " + cnticcedge + " cg edges added due to ICC links");
 		
 		return cnticcedge;
 	}

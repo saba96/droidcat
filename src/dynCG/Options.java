@@ -57,8 +57,8 @@ public class Options {
 			else if (arg.equals("-dumpFunctionList")) {
 				dumpFunctionList = true;
 			}
-			else if (arg.equals("-monitorICC")) {
-				monitorICC = true;
+			else if (arg.equals("-noMonitorICC")) {
+				monitorICC = false; 
 			}
 			else if (arg.equals("-instr3rdparty")) {
 				instr3rdparty = true;

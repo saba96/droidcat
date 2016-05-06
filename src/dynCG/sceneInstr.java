@@ -214,6 +214,12 @@ public class sceneInstr implements Extension {
 				if ( !sMethod.hasActiveBody() ) {
 					continue;
 				}
+				/*
+				if (sMethod.isJavaLibraryMethod() || !sMethod.isDeclared() || sMethod.isNative()) {
+					continue;
+				}
+				*/
+				//if (sMethod.isConstructor() || sMethod.isStaticInitializer()) continue;
 				
 				//Body body = sMethod.getActiveBody();
 				Body body = sMethod.retrieveActiveBody();

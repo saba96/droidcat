@@ -112,6 +112,10 @@ public class callGraph {
 		public String toString() {
 			return "["+g_idx2me.get(src.getIndex()) + "->" + g_idx2me.get(tgt.getIndex())+"]:" + getFrequency();
 		}
+		
+		public boolean equals (Object other) {
+			return src.equals(((CGEdge)other).src) && tgt.equals(((CGEdge)other).tgt);
+		}
 	}
 	
 	public static class CGEdgeFactory implements EdgeFactory<CGNode,CGEdge> {
@@ -250,13 +254,49 @@ public class callGraph {
 	}
 	
 	public List<CGEdge> getPath(String caller, String callee) {
+		/* debug only
+		System.out.println("reachability from " + caller + " to " + callee + " in " + this);
+		for (CGNode n1 : this._graph.vertexSet()) {
+			for (CGNode n2 : this._graph.vertexSet()) {
+				//System.out.println(n);
+				if (n1==n2) continue;
+				List<CGEdge> edges = DijkstraShortestPath.findPathBetween(_graph, n1, n2);
+				if (edges==null || edges.size()<=5) continue;
+				System.out.println(n1 + "->" + n2 + " with length of " + edges.size());
+			}
+		}
+		//System.exit(-1);
+		*/
+
 		CGNode src = getNodeByName (caller);
 		CGNode tgt = getNodeByName (callee);
-		if (null == src || null == tgt) return new ArrayList<CGEdge>();
+		List<CGEdge> pathedges = new ArrayList<CGEdge>();
+		if (null != src && null != tgt) {
+			List<CGEdge> edges = DijkstraShortestPath.findPathBetween(_graph, src, tgt);
+			if (edges==null) {
+				//System.out.println("\t really no path is found");
+				return pathedges;
+			}
+			else pathedges.addAll(edges);
+		}
+		else {
+			System.out.println("\t failed to locate nodes for " + caller + " and " + callee);
+		}
+		if (pathedges.isEmpty()) {
+			//System.out.println("\t really no path is found");
+		}
+
+		return pathedges;
 		
+		/*
 		DijkstraShortestPath<CGNode, CGEdge> finder = new DijkstraShortestPath<CGNode, CGEdge>(_graph, src, tgt);
-		if (null == finder.getPath()) return new ArrayList<CGEdge>();
+		if (null == finder.getPath()) {
+			System.out.println("\t really no path is found");
+			return new ArrayList<CGEdge>();
+		}
+
 		return finder.getPath().getEdgeList();
+		*/
 	}
 
 	public boolean isReachable (String caller, String callee) {
