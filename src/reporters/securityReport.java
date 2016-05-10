@@ -12,6 +12,7 @@
  * 01/27/16		hcai		added categorized statistics of lifecycle methods and event handlers, the latter based on 
  * 							a manually curated classification of the CallbackClasses.txt in Flowdroid;
  * 							also added statistics on instances of being called for all metrics
+ * 05/09/16		hcai		fix the method-level taint flow reachability 
 */
 package reporters;
 
@@ -413,20 +414,26 @@ public class securityReport implements Extension {
 		
 		for (String src : coveredSources) {
 			for (String sink : coveredSinks) {
-				if (stater.getCG().isReachable(src, sink)) {
+				//if (stater.getCG().isReachable(src, sink)) {
+				int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				if (nflows>=1) {
 					allEscapeSrcs ++;
 					
-					allEscapeSrcInCalls += stater.getCG().getTotalInCalls(src);
+					//allEscapeSrcInCalls += stater.getCG().getTotalInCalls(src);
+					allEscapeSrcInCalls += nflows;
 					break;
 				}
 			}
 		}
 		for (String sink : coveredSinks) {
 			for (String src : coveredSources) {
-				if (stater.getCG().isReachable(src, sink)) {
+				//if (stater.getCG().isReachable(src, sink)) {
+				int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				if (nflows>=1) {
 					allReachableSinks ++;
 					
-					allReachableSinkInCalls += stater.getCG().getTotalInCalls(sink);
+					//allReachableSinkInCalls += stater.getCG().getTotalInCalls(sink);
+					allReachableSinkInCalls += nflows;
 					break;
 				}
 			}
@@ -535,6 +542,7 @@ public class securityReport implements Extension {
 				boolean bbreak = false;
 				for (CATEGORY catsink : coveredCatSinks.keySet()) {
 					for (String sink : coveredCatSinks.get(catsink)) {
+						/*
 						if (stater.getCG().isReachable(src, sink)) {
 							Integer cct = allEscapeCatSrcs.get(catsrc);
 							if (null==cct) cct = 0;
@@ -550,6 +558,24 @@ public class securityReport implements Extension {
 							bbreak = true;
 							break;
 						}
+						*/
+						int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+						if (nflows >= 1) {
+							Integer cct = allEscapeCatSrcs.get(catsrc);
+							if (null==cct) cct = 0;
+							cct ++;
+							allEscapeCatSrcs.put(catsrc, cct);
+							
+							allEscapeSrcs ++;
+							
+							allEscapeCatSrcInCalls.put(catsrc, allEscapeCatSrcInCalls.get(catsrc)+nflows);
+							allEscapeSrcInCalls += nflows;
+
+							System.out.println(nflows + " taint flow paths FOUND from " + src + " to " + sink);
+							bbreak = true;
+							break;
+							
+						}
 					}
 					if (bbreak) break;
 				}
@@ -561,6 +587,7 @@ public class securityReport implements Extension {
 				boolean bbreak = false;
 				for (CATEGORY catsrc : coveredCatSrcs.keySet()) {
 					for (String src : coveredCatSrcs.get(catsrc)) {
+						/*
 						if (stater.getCG().isReachable(src, sink)) {
 							Integer cct = allReachableCatSinks.get(catsink);
 							if (null==cct) cct = 0;
@@ -575,6 +602,24 @@ public class securityReport implements Extension {
 
 							bbreak = true;
 							break;
+						}
+						*/
+						int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+						if (nflows >= 1) {
+							Integer cct = allReachableCatSinks.get(catsink);
+							if (null==cct) cct = 0;
+							cct ++;
+							allReachableCatSinks.put(catsink, cct);
+							
+							allReachableSinks ++;
+							
+							allReachableCatSinkInCalls.put(catsink, allReachableCatSinkInCalls.get(catsink)+nflows);
+							allReachableSinkInCalls += nflows;
+
+							System.out.println(nflows + " taint flow paths FOUND from " + src + " to " + sink);
+							bbreak = true;
+							break;
+							
 						}
 					}
 					if (bbreak) break;

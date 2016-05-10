@@ -13,6 +13,7 @@
  * 							src-sink reachability analysis more complete
  * 03/30/16		hcai		parse the caller info newly added to Intent tracing and use it to improve ICC categorization 
  * 05/05/16		hcai		fixed a bug in parsing the caller and callstmt from Intent traces
+ * 05/09/16		hcai		fix the method-level taint flow reachability 
 */
 package dynCG;
 
@@ -153,7 +154,7 @@ public class traceStat {
 		public void setCallsite (String stmt) { callsite = stmt; }
 		*/
 		public CGEdge getCallsite() { return callsite; }
-		public void setCallsite (CGEdge edge) { /*callsite = edge;*/ }
+		public void setCallsite (CGEdge edge) { callsite = edge; }
 		
 		public boolean isExplicit () {
 			return fields.get("Component").compareTo("null")!=0;
@@ -189,13 +190,18 @@ public class traceStat {
 	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		// read the caller and callstmt first
+		br.mark(1000);
 		String caller = br.readLine().trim();
-		assert caller.startsWith("caller=");
-		caller=caller.replaceFirst("caller=","");
-		
 		String callstmt = br.readLine().trim();
-		assert callstmt.startsWith("callsite=");
-		callstmt=callstmt.replaceFirst("callsite=", "");
+		if (!caller.startsWith("caller=") || !callstmt.startsWith("callsite=")) {
+			br.reset();
+			caller="";
+			callstmt="";
+		}
+		else {
+			caller=caller.replaceFirst("caller=","");
+			callstmt=callstmt.replaceFirst("callsite=", "");
+		}
 
 		List<String> infolines = new ArrayList<String>();
 		/*
@@ -213,7 +219,7 @@ public class traceStat {
 			i++;
 		}
 		*/
-		br.mark(1000);
+		br.mark(2000);
 		String line = br.readLine().trim();
 		
 		while (line != null) {
@@ -232,7 +238,7 @@ public class traceStat {
 				}
 			}
 			if (stop) break;
-			br.mark(1000);
+			br.mark(2000);
 			line = br.readLine().trim();
 		}
 		
@@ -375,7 +381,9 @@ public class traceStat {
 		 * if a paired ICC can be found in the same trace
 		 */
 		calibrateICCTypes();
-		addICCToCG();
+		//addICCToCG();
+		
+		//this.cg.sanityCheck();
 	}
 
 	private void calibrateICCTypes() {
@@ -509,24 +517,32 @@ public class traceStat {
 		Map<ICCIntent, ICCIntent> ICCPairs = getICCPairs();
 
 		int cnticcedge = 0;
+		Set<CGEdge> addededges = new HashSet<CGEdge>();
 		for (Map.Entry<ICCIntent, ICCIntent> link : ICCPairs.entrySet()) {
 			CGNode innode = null, outnode = null;
+			/*
 			if (link.getKey().getCallsite()==null || link.getValue().getCallsite()==null) {
 				innode = cg.getNodeByName(link.getKey().caller);
-				/* debug only
-				if (innode==null) {
-					System.out.println("node for " + link.getKey().caller + " not found!");
-				}
-				*/
 				outnode = cg.getNodeByName(link.getValue().caller);
 			}
 			else {
 				innode = cg.getNodeByName(link.getKey().getCallsite().getSource().getSootMethodName());
 				outnode = cg.getNodeByName(link.getValue().getCallsite().getSource().getSootMethodName());
 			}
-			
-			if (innode==null || outnode==null) continue;
-			cg.addEdge(outnode, innode, link.getKey().getTS());
+			*/
+			innode = cg.getNodeByName(link.getKey().caller);
+			outnode = cg.getNodeByName(link.getValue().caller);
+			if (innode == null || outnode==null) {
+				if (link.getKey().getCallsite()!=null && link.getValue().getCallsite()!=null) {
+					innode = cg.getNodeByName(link.getKey().getCallsite().getSource().getSootMethodName());
+					outnode = cg.getNodeByName(link.getValue().getCallsite().getSource().getSootMethodName());
+				}
+			}
+
+			if (innode==null || outnode==null || innode.equals(outnode)) continue;
+			CGEdge e = cg.addEdge(outnode, innode, link.getKey().getTS());
+			if (!addededges.add(e)) continue;
+			//System.out.println("added edge due to icc: " + outnode + " -> " + innode);
 			cnticcedge ++;
 		}
 		
