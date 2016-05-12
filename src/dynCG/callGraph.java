@@ -8,6 +8,8 @@
  * 01/25/16		hcai		added routines counting total outgoing and incoming calls from a node
  * 01/28/16		hcai		added caller and callee ranking by outgoing/incoming call instances
  * 05/09/16		hcai		fix the method-level taint flow reachability 
+ * 05/10/16		hcai		fixed a few minor issues in getNumberofFlowPaths
+ * 05/11/16		hcai		debugging continued: benign apps got even much higher sensitive info reachability than malware
 */
 package dynCG;
 
@@ -381,79 +383,87 @@ public class callGraph {
 				//System.out.println("FOUND ONE TAINT FLOW from " + src + " to " + tgt);
 				List<CGEdge> edges2src = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, src));
 				List<CGEdge> edges2sink = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, tgt));
-				assert edges2src.size()>=1 && edges2sink.size()>=1;
+				//assert edges2src.size()>=1 && edges2sink.size()>=1;
 				
 				// remove instances of a call edge happened earlier than any instance of its ancestor edge
-				int thinnestEdge2src = edges2src.get(0).getAllTS().size();
-				Set<Integer> toremovesrc = new HashSet<Integer>();
-				for (int i = 1; i < edges2src.size(); i++) {
-					int mints = Collections.min(edges2src.get(i-1).getAllTS());
-					Set<Integer> tss = edges2src.get(i).getAllTS();
-					/*
-					Set<Integer> toremove = new HashSet<Integer>();
-					for (Integer ts : tss) {
-						if (ts <= mints) toremove.add(ts);
-					}
-					tss.removeAll(toremove);
-					if (tss.size() < thinnestEdge2src) {
-						thinnestEdge2src = tss.size();
-					}
-					*/
-					int nremove = 0;
-					for (Integer ts : tss) {
-						if (ts <= mints) nremove++;
-						else if (i==edges2src.size()-1) toremovesrc.add(ts);
-					}
-					if (tss.size()-nremove < thinnestEdge2src) {
-						thinnestEdge2src = tss.size()-nremove;
-					}
-				}
-
-				assert edges2src.get(edges2src.size()-1).getTarget().equals(src);
-				Set<Integer> tses = toremovesrc; // edges2src.get(edges2src.size()-1).getAllTS();
+				int thinnestEdge2src = Integer.MAX_VALUE;
 				int mints2src = 0;
-				if (tses.isEmpty()) {
-					/*
-					this.sanityCheck();
-					System.out.println("target edge's tses" + tses);
-					System.out.println("problematic edge: " + edges2src.get(edges2src.size()-1));
-					System.exit(-1);
-					*/
-					mints2src = Integer.MAX_VALUE;
-					// there is no feasible flow path then
-					return 0;
-				}
-				else {
-					mints2src = Collections.min(tses);
+				if (edges2src.size()>=1) {
+					thinnestEdge2src = edges2src.get(0).getAllTS().size();
+					Set<Integer> toremovesrc = new HashSet<Integer>();
+					for (int i = 1; i < edges2src.size(); i++) {
+						int mints = Collections.min(edges2src.get(i-1).getAllTS());
+						Set<Integer> tss = edges2src.get(i).getAllTS();
+						/*
+						Set<Integer> toremove = new HashSet<Integer>();
+						for (Integer ts : tss) {
+							if (ts <= mints) toremove.add(ts);
+						}
+						tss.removeAll(toremove);
+						if (tss.size() < thinnestEdge2src) {
+							thinnestEdge2src = tss.size();
+						}
+						*/
+						int nremove = 0;
+						for (Integer ts : tss) {
+							if (ts <= mints) nremove++;
+							else if (i==edges2src.size()-1) toremovesrc.add(ts);
+						}
+						if (tss.size()-nremove < thinnestEdge2src) {
+							thinnestEdge2src = tss.size()-nremove;
+						}
+					}
+
+					assert edges2src.get(edges2src.size()-1).getTarget().equals(src);
+					Set<Integer> tses = new HashSet<Integer>(edges2src.get(edges2src.size()-1).getAllTS());
+					tses.removeAll(toremovesrc); // edges2src.get(edges2src.size()-1).getAllTS();
+					if (tses.isEmpty()) {
+						/*
+						this.sanityCheck();
+						System.out.println("target edge's tses" + tses);
+						System.out.println("problematic edge: " + edges2src.get(edges2src.size()-1));
+						System.exit(-1);
+						*/
+						mints2src = Integer.MAX_VALUE;
+						// there is no feasible flow path then
+						return 0;
+					}
+					else {
+						mints2src = Collections.min(tses);
+					}
 				}
 				
-				int thinnestEdge2sink = edges2sink.get(0).getAllTS().size();
-				Set<Integer> toremovesink = new HashSet<Integer>();
-				for (int i = 1; i < edges2sink.size(); i++) {
-					int mints = Collections.min(edges2sink.get(i-1).getAllTS());
-					Set<Integer> tss = edges2sink.get(i).getAllTS();
-					/*
-					Set<Integer> toremove = new HashSet<Integer>();
-					for (Integer ts : tss) {
-						if (ts <= mints || ts <= mints2src) toremove.add(ts);
+				int thinnestEdge2sink = Integer.MAX_VALUE;
+				if (edges2sink.size()>=1) {
+					thinnestEdge2sink = edges2sink.get(0).getAllTS().size();
+					Set<Integer> toremovesink = new HashSet<Integer>();
+					for (int i = 1; i < edges2sink.size(); i++) {
+						int mints = Collections.min(edges2sink.get(i-1).getAllTS());
+						Set<Integer> tss = edges2sink.get(i).getAllTS();
+						/*
+						Set<Integer> toremove = new HashSet<Integer>();
+						for (Integer ts : tss) {
+							if (ts <= mints || ts <= mints2src) toremove.add(ts);
+						}
+						tss.removeAll(toremove);
+						if (tss.size() < thinnestEdge2sink) {
+							thinnestEdge2sink = tss.size();
+						}
+						*/
+						int nremove = 0;
+						for (Integer ts : tss) {
+							if (ts <= mints || ts <= mints2src) nremove++;
+							else if (i == edges2sink.size()-1) toremovesink.add(ts);
+						}
+						if (tss.size()-nremove < thinnestEdge2sink) {
+							thinnestEdge2sink = tss.size()-nremove;
+						}
 					}
-					tss.removeAll(toremove);
-					if (tss.size() < thinnestEdge2sink) {
-						thinnestEdge2sink = tss.size();
+					//if (edges2sink.get(edges2sink.size()-1).getAllTS().isEmpty()) {
+					//if (toremovesink.isEmpty()) {
+					if (edges2sink.get(edges2sink.size()-1).getAllTS().size()-toremovesink.size()==0) {
+						return 0;
 					}
-					*/
-					int nremove = 0;
-					for (Integer ts : tss) {
-						if (ts <= mints || ts <= mints2src) nremove++;
-						else if (i == edges2sink.size()-1) toremovesink.add(ts);
-					}
-					if (tss.size()-nremove < thinnestEdge2sink) {
-						thinnestEdge2sink = tss.size()-nremove;
-					}
-				}
-				//if (edges2sink.get(edges2sink.size()-1).getAllTS().isEmpty()) {
-				if (toremovesink.isEmpty()) {
-					return 0;
 				}
 				
 				return (thinnestEdge2src > thinnestEdge2sink ? thinnestEdge2sink : thinnestEdge2src);

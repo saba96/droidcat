@@ -191,7 +191,7 @@ public class traceStat {
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		// read the caller and callstmt first
 		br.mark(1000);
-		String caller = br.readLine().trim();
+		String caller = br.readLine();
 		String callstmt = br.readLine().trim();
 		if (!caller.startsWith("caller=") || !callstmt.startsWith("callsite=")) {
 			br.reset();
@@ -220,9 +220,10 @@ public class traceStat {
 		}
 		*/
 		br.mark(2000);
-		String line = br.readLine().trim();
+		String line = br.readLine();
 		
 		while (line != null) {
+			line = line.trim();
 			boolean stop = true;;
 			for (String fdname : ICCIntent.fdnames) {
 				if (line.startsWith(fdname)) {
@@ -239,7 +240,7 @@ public class traceStat {
 			}
 			if (stop) break;
 			br.mark(2000);
-			line = br.readLine().trim();
+			line = br.readLine();
 		}
 		
 		// not enough lines read for an expected intent block
@@ -275,22 +276,29 @@ public class traceStat {
 	protected int parseTrace (String fnTrace) {
 		try {
 			BufferedReader br = new BufferedReader (new FileReader(fnTrace));
-			String line = br.readLine().trim();
+			String line = br.readLine();
 			int ts = 0; // time stamp, for ordering all the method and ICC calls
 			while (line != null) {
+				line = line.trim();
 				// try to retrieve a block of intent info
 				boolean boutICC = line.contains(ICCIntent.INTENT_SENT_DELIMIT);
 				boolean binICC = line.contains(ICCIntent.INTENT_RECV_DELIMIT);
 				if (boutICC || binICC) {
-					ICCIntent itn = readIntentBlock(br);
+					ICCIntent itn = null;
+					try {
+						itn = readIntentBlock(br);
+					}
+					catch (Exception e) { itn = null; }
 					if (itn==null) {
-						line = br.readLine().trim();
+						line = br.readLine();
 						continue;
 					}
 					itn.setIncoming(binICC);
 					
 					// look ahead one more line to find the receiver component
-					line = br.readLine().trim();
+					line = br.readLine();
+					if (line==null) continue;
+					line = line.trim();
 					if (line.contains(callGraph.CALL_DELIMIT)) {
 						CGEdge ne = cg.addCall(line,ts);
 						ts ++;
@@ -332,7 +340,7 @@ public class traceStat {
 					ts ++;
 					allIntents.add(itn);
 					
-					line = br.readLine().trim();
+					line = br.readLine();
 					continue;
 				}
 				
