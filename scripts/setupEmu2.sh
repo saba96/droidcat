@@ -1,9 +1,9 @@
 #!/bin/bash
 
-did=${2:-"emulator-5554"}
+did=${2:-"emulator-5556"}
 echo "- Killing All Emulators"
-killall emulator64-x86
-adb -s $did kill-server
+adb2 -s $did kill-server
+killall -9 emulator2
 
 echo "- Deleting Emulator" $1
 android delete avd -n $1
@@ -13,14 +13,14 @@ cp -r ~/.android/avd/template/$1.* ~/.android/avd/
 
 echo "- Starting emulator"
 #emulator -avd $1 -scale .3 -no-boot-anim &
-emulator -avd $1 -scale .3 -ports 5237,5555 &
+emulator2 -avd $1 -scale .3 -ports 5359,5557 &
 
 date1=$(date +"%s")
 
 echo "- Waiting for emulator to boot"
-OUT=`adb -s $did shell getprop init.svc.bootanim` 
+OUT=`adb2 -s $did shell getprop init.svc.bootanim` 
 while [[ ${OUT:0:7}  != 'stopped' ]]; do
-  OUT=`adb -s $did shell getprop init.svc.bootanim`
+  OUT=`adb2 -s $did shell getprop init.svc.bootanim`
   echo '   Waiting for emulator to fully boot...'
   sleep 5
 done

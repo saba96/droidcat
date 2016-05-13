@@ -25,7 +25,7 @@ do
 		/home/hcai/testbed/input/pairs/$cat/$i \
 		/home/hcai/testbed/$rep/monkeyLogs_$cat/$i.logcat >> $resultlog 2>&1
 done
-mv /home/hcai/testbed/{gicc.txt,dataicc.txt,extraicc.txt,icclink.txt} \
+mv /home/hcai/testbed/{gicc.txt,dataicc.txt,extraicc.txt,icclink.txt,bothdataicc.txt,pairicc.txt} \
 	/home/hcai/testbed/results/interAppICCReport/$rep/$cat/
 
 exit 0

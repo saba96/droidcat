@@ -68,9 +68,12 @@ starttime=`date +%s%N | cut -b1-13`
 	#-validate \
 	#-force-android-jar /home/hcai/Android/Sdk/platforms/android-22/android.jar \
 	#-dumpJimple \
+	#-instr3rdparty \
+	#-noMonitorICC \
 cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
+	-dumpJimple \
 	-d $OUTDIR \
 	-process-dir $apkfile"
 

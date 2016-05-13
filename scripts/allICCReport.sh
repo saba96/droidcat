@@ -30,7 +30,7 @@ do
 		/home/hcai/testbed/input/pairs/$cat/$i/t.apk \
 		/home/hcai/testbed/$rep/singleAppLogs_$cat/$i-t.logcat >> $resultlog 2>&1
 done
-mv /home/hcai/testbed/{gicc.txt,dataicc.txt,extraicc.txt,icclink.txt} \
+mv /home/hcai/testbed/{gicc.txt,dataicc.txt,extraicc.txt,icclink.txt,icccov.txt,bothdataicc.txt} \
 	/home/hcai/testbed/results/ICCReport/$rep/$cat/
 
 exit 0
