@@ -10,6 +10,8 @@
  * 05/09/16		hcai		fix the method-level taint flow reachability 
  * 05/10/16		hcai		fixed a few minor issues in getNumberofFlowPaths
  * 05/11/16		hcai		debugging continued: benign apps got even much higher sensitive info reachability than malware
+ * 05/12/16		hcai		confirmed that above bug seemed working already
+ * 05/12/16		hcai		implement the variant that considers all paths rather than just shortest paths from lca to source/sink
 */
 package dynCG;
 
@@ -367,8 +369,8 @@ public class callGraph {
 	 * happen before the sink call for the flow to possibly happen
 	 * @return number of flow paths
 	 */
-	public int getNumberOfReachableFlows (String caller, String callee) {
-		if (caller.equalsIgnoreCase(callee)) return 1;
+	public int getNumberOfReachableFlowsConservative (String caller, String callee) {
+		if (caller.equalsIgnoreCase(callee)) return 0;
 
 		CGNode src = getNodeByName (caller);
 		CGNode tgt = getNodeByName (callee);
@@ -390,7 +392,7 @@ public class callGraph {
 				int mints2src = 0;
 				if (edges2src.size()>=1) {
 					thinnestEdge2src = edges2src.get(0).getAllTS().size();
-					Set<Integer> toremovesrc = new HashSet<Integer>();
+					Set<Integer> remainedsrc = new HashSet<Integer>();
 					for (int i = 1; i < edges2src.size(); i++) {
 						int mints = Collections.min(edges2src.get(i-1).getAllTS());
 						Set<Integer> tss = edges2src.get(i).getAllTS();
@@ -407,7 +409,7 @@ public class callGraph {
 						int nremove = 0;
 						for (Integer ts : tss) {
 							if (ts <= mints) nremove++;
-							else if (i==edges2src.size()-1) toremovesrc.add(ts);
+							else if (i==edges2src.size()-1) remainedsrc.add(ts);
 						}
 						if (tss.size()-nremove < thinnestEdge2src) {
 							thinnestEdge2src = tss.size()-nremove;
@@ -415,8 +417,9 @@ public class callGraph {
 					}
 
 					assert edges2src.get(edges2src.size()-1).getTarget().equals(src);
-					Set<Integer> tses = new HashSet<Integer>(edges2src.get(edges2src.size()-1).getAllTS());
-					tses.removeAll(toremovesrc); // edges2src.get(edges2src.size()-1).getAllTS();
+					//Set<Integer> tses = new HashSet<Integer>(edges2src.get(edges2src.size()-1).getAllTS());
+					//tses.removeAll(remainedsrc); // edges2src.get(edges2src.size()-1).getAllTS();
+					Set<Integer> tses = remainedsrc;
 					if (tses.isEmpty()) {
 						/*
 						this.sanityCheck();
@@ -436,7 +439,7 @@ public class callGraph {
 				int thinnestEdge2sink = Integer.MAX_VALUE;
 				if (edges2sink.size()>=1) {
 					thinnestEdge2sink = edges2sink.get(0).getAllTS().size();
-					Set<Integer> toremovesink = new HashSet<Integer>();
+					Set<Integer> remainedsink = new HashSet<Integer>();
 					for (int i = 1; i < edges2sink.size(); i++) {
 						int mints = Collections.min(edges2sink.get(i-1).getAllTS());
 						Set<Integer> tss = edges2sink.get(i).getAllTS();
@@ -453,7 +456,7 @@ public class callGraph {
 						int nremove = 0;
 						for (Integer ts : tss) {
 							if (ts <= mints || ts <= mints2src) nremove++;
-							else if (i == edges2sink.size()-1) toremovesink.add(ts);
+							else if (i == edges2sink.size()-1) remainedsink.add(ts);
 						}
 						if (tss.size()-nremove < thinnestEdge2sink) {
 							thinnestEdge2sink = tss.size()-nremove;
@@ -461,7 +464,7 @@ public class callGraph {
 					}
 					//if (edges2sink.get(edges2sink.size()-1).getAllTS().isEmpty()) {
 					//if (toremovesink.isEmpty()) {
-					if (edges2sink.get(edges2sink.size()-1).getAllTS().size()-toremovesink.size()==0) {
+					if (edges2sink.get(edges2sink.size()-1).getAllTS().size()-remainedsink.size()==0) {
 						return 0;
 					}
 				}
@@ -475,9 +478,190 @@ public class callGraph {
 		return 0;
 	}
 	
-	/** assume that the sensitive info retrieved by the direct caller of the source can propagate one back-edge away */
+	public int getNumberOfReachableFlowsShortest (String caller, String callee) {
+		if (caller.equalsIgnoreCase(callee)) return 0;
+
+		CGNode src = getNodeByName (caller);
+		CGNode tgt = getNodeByName (callee);
+		
+		if (null != src && null != tgt) {
+			NaiveLcaFinder<CGNode, CGEdge> lcafinder = new NaiveLcaFinder<CGNode, CGEdge>( this._graph );
+			CGNode lca = lcafinder.findLca(src, tgt);
+			if (null==lca) {
+				return 0;
+			}
+
+			//System.out.println("FOUND ONE TAINT FLOW from " + src + " to " + tgt);
+			List<CGEdge> edges2src = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, src));
+			List<CGEdge> edges2sink = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, tgt));
+			
+			if (!(edges2src.size()>=1 && edges2sink.size()>=1)) return 0;
+			
+			Set<Integer> srcedgesizes = new HashSet<Integer>();
+			for (int k = 0; k < edges2src.size(); k++) {
+				srcedgesizes.add(edges2src.get(k).getAllTS().size());
+			}
+			int maxpossibleFlows = Collections.min(srcedgesizes);
+			
+			Set<Integer> sinkedgesizes = new HashSet<Integer>();
+			for (int k = 0; k < edges2sink.size(); k++) {
+				sinkedgesizes.add(edges2sink.get(k).getAllTS().size());
+			}
+			maxpossibleFlows = Math.min(maxpossibleFlows, Collections.min(sinkedgesizes));
+			
+			System.out.println("maxpossibleFlows=" + maxpossibleFlows);
+
+			int nflows = 0;
+			// as per the order instance timestamps were put into the TS set, the timestamps are ordered non-descendingly 
+			List<Integer> srctss = new ArrayList<Integer>(edges2src.get(edges2src.size()-1).getAllTS());
+			List<Integer> tgttss = new ArrayList<Integer>(edges2sink.get(0).getAllTS());
+			for (int k=0; k < maxpossibleFlows; k++) {
+				Integer sts = srctss.get(k);
+
+				int sinc=1;
+				int i = edges2src.size()-2;
+				for (; i >= 0 ;i--) {
+					List<Integer> curtss = new ArrayList<Integer>(edges2src.get(i).getAllTS());			
+					//if (!edges2src.get(i).getAllTS().contains(sts-sinc)) break;
+					if (curtss.get(k)!=(sts-sinc)) break;
+					sinc++;
+				}
+				if (i!=-1) continue; // no actual flow path reaching the instance of src at time sts
+				
+				Integer tts = tgttss.get(k);
+				if (tts <= sts) continue;
+				
+				int tinc=1;
+				int j = 1;
+				for (; j < edges2sink.size(); j++) {
+					List<Integer> curtss = new ArrayList<Integer>(edges2sink.get(j).getAllTS());			
+					//if (!edges2sink.get(j).getAllTS().contains(tts+tinc)) break;
+					if (curtss.get(k)!=(tts+tinc)) break;
+					tinc++;
+				}
+				if (j!=edges2sink.size()) continue;
+				
+				nflows ++;
+			}
+			
+			return nflows;
+		}
+		else {
+			System.out.println("\t failed to locate nodes for " + caller + " and " + callee);
+		}
+		return 0;
+	}
+	
+	// a variant of getNumberofReachableFlows that considers all paths from lca to source/sink instead of the shortest one
+	private int findFeasibleFlows(List<CGEdge> edges2src, List<CGEdge> edges2sink) {
+		if (!(edges2src.size()>=1 && edges2sink.size()>=1)) return 0;
+		
+		Set<Integer> srcedgesizes = new HashSet<Integer>();
+		for (int k = 0; k < edges2src.size(); k++) {
+			srcedgesizes.add(edges2src.get(k).getAllTS().size());
+		}
+		int maxpossibleFlows = Collections.min(srcedgesizes);
+		
+		Set<Integer> sinkedgesizes = new HashSet<Integer>();
+		for (int k = 0; k < edges2sink.size(); k++) {
+			sinkedgesizes.add(edges2sink.get(k).getAllTS().size());
+		}
+		maxpossibleFlows = Math.min(maxpossibleFlows, Collections.min(sinkedgesizes));
+		
+		System.out.println("maxpossibleFlows=" + maxpossibleFlows);
+
+		int nflows = 0;
+		// as per the order instance timestamps were put into the TS set, the timestamps are ordered non-descendingly 
+		List<Integer> srctss = new ArrayList<Integer>(edges2src.get(edges2src.size()-1).getAllTS());
+		List<Integer> tgttss = new ArrayList<Integer>(edges2sink.get(0).getAllTS());
+		for (int k=0; k < maxpossibleFlows; k++) {
+			Integer sts = srctss.get(k);
+
+			int sinc=1;
+			int i = edges2src.size()-2;
+			for (; i >= 0 ;i--) {
+				List<Integer> curtss = new ArrayList<Integer>(edges2src.get(i).getAllTS());			
+				//if (!edges2src.get(i).getAllTS().contains(sts-sinc)) break;
+				if (curtss.get(k)!=(sts-sinc)) break;
+				sinc++;
+			}
+			if (i!=-1) continue; // no actual flow path reaching the instance of src at time sts
+			
+			Integer tts = tgttss.get(k);
+			if (tts <= sts) continue;
+			
+			int tinc=1;
+			int j = 1;
+			for (; j < edges2sink.size(); j++) {
+				List<Integer> curtss = new ArrayList<Integer>(edges2sink.get(j).getAllTS());			
+				//if (!edges2sink.get(j).getAllTS().contains(tts+tinc)) break;
+				if (curtss.get(k)!=(tts+tinc)) break;
+				tinc++;
+			}
+			if (j!=edges2sink.size()) continue;
+			
+			nflows ++;
+		}
+		
+		return nflows;
+	}
+	public int getNumberOfReachableFlows (String caller, String callee) {
+		if (caller.equalsIgnoreCase(callee)) return 0;
+
+		CGNode src = getNodeByName (caller);
+		CGNode tgt = getNodeByName (callee);
+		
+		if (null != src && null != tgt) {
+			NaiveLcaFinder<CGNode, CGEdge> lcafinder = new NaiveLcaFinder<CGNode, CGEdge>( this._graph );
+			CGNode lca = lcafinder.findLca(src, tgt);
+			if (null==lca) {
+				return 0;
+			}
+			
+			List<List<CGEdge>> allsrcedges = new ArrayList<List<CGEdge>>();
+			List<List<CGEdge>> allsinkedges = new ArrayList<List<CGEdge>>();
+
+			// AllDirectedPaths right now may miss paths of length < 2, so just to be safe
+			List<CGEdge> edges2src_shortest = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, src));
+			List<CGEdge> edges2sink_shortest = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, tgt));
+			// no shortest paths, no need to search other paths either
+			if (edges2src_shortest.size()<1 || edges2sink_shortest.size()<1) return 0;
+			allsrcedges.add(edges2src_shortest);
+			allsinkedges.add(edges2sink_shortest);
+			
+			AllDirectedPaths<CGNode, CGEdge> pathfinder = new AllDirectedPaths<CGNode, CGEdge>(_graph);
+			List<GraphPath<CGNode, CGEdge>> lca2srcpaths = pathfinder.getAllPaths(lca, src, true, 15);
+			List<GraphPath<CGNode, CGEdge>> lca2sinkpaths = pathfinder.getAllPaths(lca, tgt, true, 15);
+			for (GraphPath<CGNode, CGEdge> path : lca2srcpaths) {
+				if (path.getEdgeList()==null || path.getEdgeList().isEmpty()) continue;
+				allsrcedges.add(path.getEdgeList());
+			}
+			for (GraphPath<CGNode, CGEdge> path : lca2sinkpaths) {
+				if (path.getEdgeList()==null || path.getEdgeList().isEmpty()) continue;
+				allsinkedges.add(path.getEdgeList());
+			}
+			
+			System.out.println("#paths from LCA to src: " + allsrcedges.size() + ", #paths from LCA to sink: " + allsinkedges.size());
+
+			int nflows = 0;
+			
+			for (List<CGEdge> edges2src : allsrcedges) {
+				for (List<CGEdge> edges2sink : allsinkedges) {
+					nflows += findFeasibleFlows(edges2src, edges2sink);
+				}
+			}
+			return nflows;
+		}
+		else {
+			System.out.println("\t failed to locate nodes for " + caller + " and " + callee);
+		}
+		return 0;
+	}
+	
+	/** assume that the sensitive info retrieved by the direct caller of the source can propagate 
+	 * one back-edge away only (to that direct caller) */
 	public int getNumberOfReachableFlowsEx (String srcname, String sinkname) {
-		if (srcname.equalsIgnoreCase(sinkname)) return 1;
+		if (srcname.equalsIgnoreCase(sinkname)) return 0;
 
 		CGNode src = getNodeByName (srcname);
 		CGNode tgt = getNodeByName (sinkname);
