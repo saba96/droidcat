@@ -13,6 +13,7 @@
  * 							a manually curated classification of the CallbackClasses.txt in Flowdroid;
  * 							also added statistics on instances of being called for all metrics
  * 05/09/16		hcai		fix the method-level taint flow reachability 
+ * 05/13/16		hcai		applied the calltree component using it for detailed src/sink reachability computation
 */
 package reporters;
 
@@ -262,6 +263,8 @@ public class securityReport implements Extension {
 		stater.setPackagename(packName);
 		stater.setTracefile(opts.traceFile);
 		
+		stater.useCallTree = opts.calltree;
+		
 		// parse the trace
 		stater.stat();
 		
@@ -416,6 +419,21 @@ public class securityReport implements Extension {
 			for (String sink : coveredSinks) {
 				//if (stater.getCG().isReachable(src, sink)) {
 				int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				if (nflows >= 1) {
+					// perform detailed inspection 
+					if (stater.useCallTree) {
+						nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+					}
+				}
+				/*
+				int nflows = 0;
+				if (stater.useCallTree) {
+					nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+				}
+				else {
+					nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				}
+				*/
 				if (nflows>=1) {
 					allEscapeSrcs ++;
 					
@@ -429,6 +447,21 @@ public class securityReport implements Extension {
 			for (String src : coveredSources) {
 				//if (stater.getCG().isReachable(src, sink)) {
 				int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				if (nflows >= 1) {
+					// perform detailed inspection 
+					if (stater.useCallTree) {
+						nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+					}
+				}
+				/*
+				int nflows = 0;
+				if (stater.useCallTree) {
+					nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+				}
+				else {
+					nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+				}
+				*/
 				if (nflows>=1) {
 					allReachableSinks ++;
 					
@@ -561,6 +594,22 @@ public class securityReport implements Extension {
 						*/
 						int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
 						if (nflows >= 1) {
+							// perform detailed inspection 
+							if (stater.useCallTree) {
+								nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+							}
+						}
+						/*
+						int nflows = 0;
+
+						if (stater.useCallTree) {
+							nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+						}
+						else {
+							nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+						}
+						*/
+						if (nflows >= 1) {
 							Integer cct = allEscapeCatSrcs.get(catsrc);
 							if (null==cct) cct = 0;
 							cct ++;
@@ -605,6 +654,21 @@ public class securityReport implements Extension {
 						}
 						*/
 						int nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+						if (nflows >= 1) {
+							// perform detailed inspection 
+							if (stater.useCallTree) {
+								nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+							}
+						}
+						/*
+						int nflows = 0;
+						if (stater.useCallTree) {
+							nflows = stater.getCT().getNumberOfReachableFlows(src, sink);
+						}
+						else {
+							nflows = stater.getCG().getNumberOfReachableFlows(src, sink);
+						}
+						*/
 						if (nflows >= 1) {
 							Integer cct = allReachableCatSinks.get(catsink);
 							if (null==cct) cct = 0;

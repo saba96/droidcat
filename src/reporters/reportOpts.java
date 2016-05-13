@@ -8,6 +8,7 @@
  * 01/15/16		hcai		added option giving categorized taint source and sink list
  * 01/21/16		hcai		added option giving callback interface list (CallbackClasses.txt)
  * 01/27/16		hcai		added option giving categorized callback interfaces (events)
+ * 05/13/16		hcai		added the 'calltree' option enabling which will lead to the construction of call tree from traces
 */
 package reporters;
 
@@ -29,6 +30,9 @@ public class reportOpts {
 	protected String apkdir = null;
 	protected String firstapk = null;
 	protected String secondapk = null;
+
+	// whether build dynamic calltree in addition to dynamic callgraph (always build)
+	protected boolean calltree = false; 
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -78,6 +82,9 @@ public class reportOpts {
 			}
 			else if (arg.equals("-nophantom")) {
 				allowPhantom = false;
+			}
+			else if (arg.equals("-calltree")) {
+				calltree = true;
 			}
 			else {
 				argsFiltered.add(arg);

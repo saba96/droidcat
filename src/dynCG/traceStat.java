@@ -188,6 +188,10 @@ public class traceStat {
 	public List<ICCIntent> getAllICCs () { return allIntents; }
 	public List<Set<ICCIntent>> getInterAppICCs () { return allInterAppIntents; }
 	
+	private callTree ct = new callTree();
+	public callTree getCT() { return ct; }
+	public boolean useCallTree = false;
+	
 	protected ICCIntent readIntentBlock(BufferedReader br) throws IOException {
 		// read the caller and callstmt first
 		br.mark(1000);
@@ -301,6 +305,7 @@ public class traceStat {
 					line = line.trim();
 					if (line.contains(callGraph.CALL_DELIMIT)) {
 						CGEdge ne = cg.addCall(line,ts);
+						if (useCallTree) ct.addCall(line, ts);
 						ts ++;
 						
 						if (binICC) {
@@ -347,6 +352,7 @@ public class traceStat {
 				// try to retrieve a call line
 				if (line.contains(callGraph.CALL_DELIMIT)) {
 					cg.addCall(line,ts);
+					if (useCallTree) ct.addCall(line, ts);
 					ts ++;
 				}
 				
@@ -392,6 +398,9 @@ public class traceStat {
 		//addICCToCG();
 		
 		//this.cg.sanityCheck();
+		
+		System.out.println(this.getCG());
+		System.out.println(this.getCT());
 	}
 
 	private void calibrateICCTypes() {

@@ -4,6 +4,7 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 05/11/16		hcai		created; for representing dynamic call tree
+ * 05/13/16		hcai		reached the first working version
 */
 package dynCG;
 
@@ -21,6 +22,8 @@ import org.jgrapht.*;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.alg.*;
 import org.jgrapht.traverse.*;
+
+import dynCG.callGraph.CGEdge;
 
 /** represent the dynamic call graph built from whole program path profiles */
 public class callTree {
@@ -71,7 +74,7 @@ public class callTree {
 		}
 		public boolean equals(Object other) {
 			boolean c1 = ((CGNode)other).idx.intValue() == this.idx.intValue();
-			boolean c2 = ((CGNode)other).ts.intValue() - this.ts.intValue() < 1E-3;
+			boolean c2 = ((CGNode)other).ts.intValue() == this.ts.intValue();
 			return c1 && c2;
 		}
 		public int hashCode() {
@@ -307,11 +310,10 @@ public class callTree {
 		for (CGNode src:srcs) {
 			for (CGNode tgt:tgts) {
 				if (src.getTimestamp()>=tgt.getTimestamp()) continue;
-				List<CGEdge> pathedges = new ArrayList<CGEdge>();
 				if (null != src && null != tgt) {
 					List<CGEdge> edges = DijkstraShortestPath.findPathBetween(_graph, src, tgt);
 					if (edges!=null && !edges.isEmpty()) {
-						allpaths.add(pathedges);
+						allpaths.add(edges);
 					}
 				}
 			}
@@ -353,15 +355,48 @@ public class callTree {
 		Set<CGNode> srcs = getNodesByName (caller);
 		Set<CGNode> tgts = getNodesByName (callee);
 		
+		System.out.println(srcs.size() + " nodes found for caller " + caller);
+		System.out.println(tgts.size() + " nodes found for callee " + callee);
+		
+		NaiveLcaFinder<CGNode, CGEdge> lcafinder = new NaiveLcaFinder<CGNode, CGEdge>( this._graph );
 		int nflows = 0;
 		for (CGNode src:srcs) {
 			for (CGNode tgt:tgts) {
 				if (src.getTimestamp()>=tgt.getTimestamp()) continue;
-				NaiveLcaFinder<CGNode, CGEdge> lcafinder = new NaiveLcaFinder<CGNode, CGEdge>( this._graph );
 				CGNode lca = lcafinder.findLca(src, tgt);
-				if (null!=lca) {
-					nflows ++;
+				if (null==lca) {
+					continue;
 				}
+				if (lca.equals(src) || lca.equals(tgt)) continue;
+				
+				System.out.print("\nlooking for paths from lca " + lca + " to src " + src + " and tgt " + tgt + "....");
+				List<CGEdge> edges2src = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, src));
+				List<CGEdge> edges2sink = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, tgt));
+				System.out.println("Done");
+				
+				if (!(edges2src.size()>=1 && edges2sink.size()>=1)) continue;
+				
+				Integer sts = edges2src.get(edges2src.size()-1).getTarget().getTimestamp();
+				Integer tts = edges2sink.get(0).getTarget().getTimestamp();
+				if (tts <= sts) continue;
+
+				int sinc=1;
+				int i = edges2src.size()-2;
+				for (; i >= 0 ;i--) {
+					if (edges2src.get(i).getTarget().getTimestamp() != (sts - sinc)) break;
+					sinc++;
+				}
+				if (i!=-1) continue; // no actual flow path reaching the instance of src at time sts
+				
+				int tinc=1;
+				int j = 1;
+				for (; j < edges2sink.size(); j++) {
+					if (edges2sink.get(j).getTarget().getTimestamp() != (tts+tinc)) break;			
+					tinc++;
+				}
+				if (j!=edges2sink.size()) continue;
+				
+				nflows ++;
 			}
 		}
 
@@ -379,6 +414,18 @@ public class callTree {
 			for (CGNode tgt:tgts) {
 				List<CGEdge> edges2sink = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, caller, tgt));
 				if (edges2sink==null || edges2sink.size()<1) continue;
+				
+				Integer sts = caller.getTimestamp();
+				Integer tts = edges2sink.get(0).getTarget().getTimestamp();
+				if (tts <= sts) continue;
+				
+				int tinc=1;
+				int j = 1;
+				for (; j < edges2sink.size(); j++) {
+					if (edges2sink.get(j).getTarget().getTimestamp() != (tts+tinc)) break;			
+					tinc++;
+				}
+				if (j!=edges2sink.size()) continue;
 				
 				nflows ++;
 			}

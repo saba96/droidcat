@@ -478,7 +478,7 @@ public class callGraph {
 		return 0;
 	}
 	
-	public int getNumberOfReachableFlowsShortest (String caller, String callee) {
+	public int getNumberOfReachableFlows(String caller, String callee) {
 		if (caller.equalsIgnoreCase(callee)) return 0;
 
 		CGNode src = getNodeByName (caller);
@@ -517,6 +517,8 @@ public class callGraph {
 			List<Integer> tgttss = new ArrayList<Integer>(edges2sink.get(0).getAllTS());
 			for (int k=0; k < maxpossibleFlows; k++) {
 				Integer sts = srctss.get(k);
+				Integer tts = tgttss.get(k);
+				if (tts <= sts) continue;
 
 				int sinc=1;
 				int i = edges2src.size()-2;
@@ -527,9 +529,6 @@ public class callGraph {
 					sinc++;
 				}
 				if (i!=-1) continue; // no actual flow path reaching the instance of src at time sts
-				
-				Integer tts = tgttss.get(k);
-				if (tts <= sts) continue;
 				
 				int tinc=1;
 				int j = 1;
@@ -605,7 +604,7 @@ public class callGraph {
 		
 		return nflows;
 	}
-	public int getNumberOfReachableFlows (String caller, String callee) {
+	public int getNumberOfReachableFlowsAll (String caller, String callee) {
 		if (caller.equalsIgnoreCase(callee)) return 0;
 
 		CGNode src = getNodeByName (caller);
@@ -660,7 +659,7 @@ public class callGraph {
 	
 	/** assume that the sensitive info retrieved by the direct caller of the source can propagate 
 	 * one back-edge away only (to that direct caller) */
-	public int getNumberOfReachableFlowsEx (String srcname, String sinkname) {
+	public int getNumberOfReachableFlowsConservativeEx (String srcname, String sinkname) {
 		if (srcname.equalsIgnoreCase(sinkname)) return 0;
 
 		CGNode src = getNodeByName (srcname);
@@ -678,7 +677,7 @@ public class callGraph {
 			int mints2src = Collections.min(srcedge.getAllTS());
 			
 			int thinnestEdge2sink = edges2sink.get(0).getAllTS().size();
-			Set<Integer> toremovesink = new HashSet<Integer>();
+			Set<Integer> remainedsink = new HashSet<Integer>();
 			for (int i = 1; i < edges2sink.size(); i++) {
 				int mints = Collections.min(edges2sink.get(i-1).getAllTS());
 				Set<Integer> tss = edges2sink.get(i).getAllTS();
@@ -695,14 +694,14 @@ public class callGraph {
 				int nremove = 0;
 				for (Integer ts : tss) {
 					if (ts <= mints || ts <= mints2src) nremove++;
-					else if (i==edges2sink.size()-1) toremovesink.add(ts);
+					else if (i==edges2sink.size()-1) remainedsink.add(ts);
 				}
 				if (tss.size()-nremove < thinnestEdge2sink) {
 					thinnestEdge2sink = tss.size()-nremove;
 				}
 			}
 			//if (edges2sink.get(edges2sink.size()-1).getAllTS().isEmpty()) {
-			if (toremovesink.isEmpty()) {
+			if (remainedsink.isEmpty()) {
 				continue;
 			}
 			
