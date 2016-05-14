@@ -369,10 +369,10 @@ public class callTree {
 				}
 				if (lca.equals(src) || lca.equals(tgt)) continue;
 				
-				System.out.print("\nlooking for paths from lca " + lca + " to src " + src + " and tgt " + tgt + "....");
+				//System.out.print("\nlooking for paths from lca " + lca + " to src " + src + " and tgt " + tgt + "....");
 				List<CGEdge> edges2src = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, src));
 				List<CGEdge> edges2sink = new ArrayList<CGEdge>(DijkstraShortestPath.findPathBetween(_graph, lca, tgt));
-				System.out.println("Done");
+				//System.out.println("Done");
 				
 				if (!(edges2src.size()>=1 && edges2sink.size()>=1)) continue;
 				

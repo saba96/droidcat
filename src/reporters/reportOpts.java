@@ -34,6 +34,9 @@ public class reportOpts {
 	// whether build dynamic calltree in addition to dynamic callgraph (always build)
 	protected boolean calltree = false; 
 	
+	// just for collecting features for ML-based classification
+	protected boolean featuresOnly = false;
+	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
 		boolean allowPhantom = true;
@@ -85,6 +88,9 @@ public class reportOpts {
 			}
 			else if (arg.equals("-calltree")) {
 				calltree = true;
+			}
+			else if (arg.equals("-featuresOnly")) {
+				featuresOnly = true;
 			}
 			else {
 				argsFiltered.add(arg);

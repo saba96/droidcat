@@ -61,7 +61,7 @@ public class generalReport implements Extension {
 	
 	// count all instances per category of code
 	int[] insClsAll = new int[] {0,0,0}; // {userCode, 3rdpartyLib, SDK}
-	int[] insMethodAll = new int[]{0,0,0};
+	int[] insMethodAll = new int[] {0,0,0};
 	
 	String packName = "";
 
@@ -113,6 +113,7 @@ public class generalReport implements Extension {
 	/** mapping from component type to component classes */
 	Map<String, Set<String>> sct2cc = new HashMap<String, Set<String>>();
 	Map<String, Set<String>> dct2cc = new HashMap<String, Set<String>>();
+	Map<String, Integer> dct2ins = new HashMap<String, Integer>();
 	
 	protected void init() {
 		packName = ProgramFlowGraph.appPackageName;
@@ -120,6 +121,7 @@ public class generalReport implements Extension {
 		for (String ctn : iccAPICom.component_type_names) {
 			sct2cc.put(ctn, new HashSet<String>());
 			dct2cc.put(ctn, new HashSet<String>());
+			dct2ins.put(ctn, 0);
 		}
 		
 		// set up the trace stating agent
@@ -144,9 +146,54 @@ public class generalReport implements Extension {
 		
 		traverse();
 		
+		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
+		for (CGNode n : allCGNodes) {
+			String cls = n.getSootClassName();
+			String me = n.getSootMethodName();
+			if (coveredAppClasses.contains(cls)) {
+				insClsAll[0] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredULClasses.contains(cls)) {
+				insClsAll[1] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredSDKClasses.contains(cls)) {
+				insClsAll[2] += stater.getCG().getTotalInCalls(me);
+			}
+
+			if (coveredAppMethods.contains(me)) {
+				insMethodAll[0] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredULMethods.contains(me)) {
+				insMethodAll[1] += stater.getCG().getTotalInCalls(me);
+			}
+			if (coveredSDKMethods.contains(me)) {
+				insMethodAll[2] += stater.getCG().getTotalInCalls(me);
+			}
+		}
+		
+		for (CGNode n : allCGNodes) {
+			String cls = n.getSootClassName();
+			for (String ct : dct2cc.keySet()) {
+				if (dct2cc.get(ct).contains(cls)) {
+					Integer cct = dct2ins.get(ct);
+					if (cct==null) cct = 0;
+					cct += stater.getCG().getTotalInCalls(n.getSootMethodName());
+					dct2ins.put(ct, cct);
+				}
+			}
+		}
+		
 		String dir = System.getProperty("user.dir");
+		
 
 		try {
+			if (opts.featuresOnly) {
+				String fngdistfeature = dir + File.separator + "gfeatures.txt";
+				PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
+				collectFeatures(psgdistfeature);
+				System.exit(0);
+			}
+
 			if (opts.debugOut) {
 				report (System.out);
 				reportIns (System.out);
@@ -370,30 +417,6 @@ public class generalReport implements Extension {
 	}
 	
 	public void reportIns(PrintStream os) {
-		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
-		for (CGNode n : allCGNodes) {
-			String cls = n.getSootClassName();
-			String me = n.getSootMethodName();
-			if (coveredAppClasses.contains(cls)) {
-				insClsAll[0] += stater.getCG().getTotalInCalls(me);
-			}
-			if (coveredULClasses.contains(cls)) {
-				insClsAll[1] += stater.getCG().getTotalInCalls(me);
-			}
-			if (coveredSDKClasses.contains(cls)) {
-				insClsAll[2] += stater.getCG().getTotalInCalls(me);
-			}
-
-			if (coveredAppMethods.contains(me)) {
-				insMethodAll[0] += stater.getCG().getTotalInCalls(me);
-			}
-			if (coveredULMethods.contains(me)) {
-				insMethodAll[1] += stater.getCG().getTotalInCalls(me);
-			}
-			if (coveredSDKMethods.contains(me)) {
-				insMethodAll[2] += stater.getCG().getTotalInCalls(me);
-			}
-		}
 		if (opts.debugOut) {
 			os.println("*** total instances of being called *** ");
 			os.println("format: class_app\t class_ul\t class_sdk\t class_all\t method_app\t method_ul\t method_sdk\t method_all");
@@ -406,8 +429,8 @@ public class generalReport implements Extension {
 	
 	/** rank covered classes/methods by call frequency and out/in degrees */
 	private String getCategory(String nameCls) {
-		if (coveredAppClasses.contains(nameCls)) return "App";
-		if (coveredULClasses.contains(nameCls)) return "UserLib";
+		if (coveredAppClasses.contains(nameCls)) return "UserCode";
+		if (coveredULClasses.contains(nameCls)) return "3rdLib";
 		if (coveredSDKClasses.contains(nameCls)) return "SDK";
 		return "Unknown";
 	}
@@ -482,6 +505,7 @@ public class generalReport implements Extension {
 			os.print(sct2cc.get(ctn).size() + "\t ");
 		}
 		os.println();
+
 		if (opts.debugOut) {
 			os.println("[dynamic]");
 		}
@@ -489,26 +513,101 @@ public class generalReport implements Extension {
 			os.print(dct2cc.get(ctn).size() + "\t ");
 		}
 		os.println();
-		
-		Set<CGNode> allCGNodes = stater.getCG().getInternalGraph().vertexSet();
-		Map<String, Integer> dct2ins = new HashMap<String, Integer>();
-		for (CGNode n : allCGNodes) {
-			String cls = n.getSootClassName();
-			for (String ct : dct2cc.keySet()) {
-				if (dct2cc.get(ct).contains(cls)) {
-					Integer cct = dct2ins.get(ct);
-					if (cct==null) cct = 0;
-					cct += stater.getCG().getTotalInCalls(n.getSootMethodName());
-					dct2ins.put(ct, cct);
-				}
-			}
-		}
+
 		if (opts.debugOut) {
 			os.println("[call instances]");
 		}
 		for (String ctn : iccAPICom.component_type_names) {
 			os.print( (dct2ins.containsKey(ctn)?dct2ins.get(ctn):0) + "\t ");
 		}
+		os.println();
+	}
+	static String percentage(int a, int b) {
+		DecimalFormat df = new DecimalFormat("#.####");
+		if (b==0) return df.format(0); 
+		return df.format(a*1.0/b);
+	}
+
+	// gather metrics used as potential ML classification features 
+	public void collectFeatures(PrintStream os) {
+		if (opts.debugOut) {
+			os.println("*** feature collection *** ");
+			os.print("format: packagename	");
+		}
+		Map<String, Integer> c2n = new HashMap<String, Integer>();
+		String[] cats = {"SDK->SDK", "SDK->3rdLib", "SDK->UserCode", "3rdLib->SDK", "3rdLib->3rdLib", "3rdLib->UserCode",
+				"UserCode->SDK", "UserCode->3rdLib", "UserCode->UserCode"};
+		for (String cat:cats) {
+			c2n.put(cat, 0);
+		}
+		int totaln = 0;
+		for (CGEdge e : stater.getCG().getInternalGraph().edgeSet()) {
+			String cat = getCategory(e.getSource().getSootClassName()).trim() + "->" + 
+						getCategory(e.getTarget().getSootClassName()).trim();
+			if (cat.contains("Unknown")) continue;
+			Integer n = c2n.get(cat);
+			assert n!=null;
+			n += e.getFrequency();
+			c2n.put(cat, n);
+			totaln += e.getFrequency();
+		}
+		
+		if (opts.debugOut) {
+			for (String cat : cats) {
+				os.print(cat + " ");
+			}
+			os.println();
+		}
+		// 1. inter-code-layer calls - all nine categories - percentage of instances
+		os.print(this.packName);
+		for (String cat : cats) {
+			//if (!c2n.containsKey(cat)) if (!cat.contains("Unknown")) {System.out.println("weird cat=" + cat); assert false;}
+			os.print("\t" + percentage(c2n.get(cat), totaln));
+		}
+		
+		// 2. composition - percentage of each code layer (w.r.t call targets) - by call sites
+		int dclsTotal = (appClsCov.getCovered()+ulClsCov.getCovered()+sdkClsCov.getCovered());
+		int dmeTotal = (appMethodCov.getCovered()+ulMethodCov.getCovered()+sdkMethodCov.getCovered());
+		os.print("\t" + percentage(appClsCov.getCovered(),dclsTotal) + "\t" + 
+				   percentage(ulClsCov.getCovered(),dclsTotal) + "\t" + 
+				   percentage(sdkClsCov.getCovered(),dclsTotal) + "\t" + 
+				   percentage(appMethodCov.getCovered(),dmeTotal) + "\t" + 
+				   percentage(ulMethodCov.getCovered(),dmeTotal) + "\t" + 
+				   percentage(sdkMethodCov.getCovered(),dmeTotal));
+
+		// 3. composition - percentage of each code layer (w.r.t call targets) - by instances
+		int insClsTotal = insClsAll[0]+insClsAll[1]+insClsAll[2];
+		int insMeTotal = insMethodAll[0]+insMethodAll[1]+insMethodAll[2];
+		/* UserCode-cls, 3rdLib-cls, SDK-cls, UserCode-method, 3rdLib-method, SDK-method */
+		os.print("\t" + percentage(insClsAll[0],insClsTotal) + "\t" + 
+				   percentage(insClsAll[1],insClsTotal) + "\t" + 
+				   percentage(insClsAll[2],insClsTotal) + "\t" + 
+				   percentage(insMethodAll[0],insMeTotal) + "\t" + 
+				   percentage(insMethodAll[1],insMeTotal) + "\t" + 
+				   percentage(insMethodAll[2],insMeTotal));
+		
+		// 4. component distribution - percentage of each type - by unique classes
+		int dctsum = 0;
+		for (int i=0;i<4;i++) {
+			String key = iccAPICom.component_type_names[i];
+			dctsum += dct2cc.get(key).size();
+		}
+		for (int i=0;i<4;i++) {
+			String key = iccAPICom.component_type_names[i];
+			os.print("\t"+percentage(dct2cc.get(key).size(),dctsum));
+		}
+
+		// 5. component distribution - percentage of each type - by instances
+		int dctinssum = 0;
+		for (int i=0;i<4;i++) {
+			String key = iccAPICom.component_type_names[i];
+			dctinssum += dct2ins.get(key);
+		}
+		for (int i=0;i<4;i++) {
+			String key = iccAPICom.component_type_names[i];
+			os.print("\t"+percentage(dct2ins.get(key),dctinssum));
+		}
+		
 		os.println();
 	}
 }  
