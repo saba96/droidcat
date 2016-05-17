@@ -1,4 +1,5 @@
 #!/usr/bin/python
+'''reduce DroidFax results according to the first two columns and keep the one with maximal sum of columns 9 and 10'''
 
 import os
 import string

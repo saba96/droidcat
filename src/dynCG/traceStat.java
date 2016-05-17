@@ -395,12 +395,14 @@ public class traceStat {
 		 * if a paired ICC can be found in the same trace
 		 */
 		calibrateICCTypes();
-		//addICCToCG();
+		addICCToCG();
 		
 		//this.cg.sanityCheck();
 		
 		System.out.println(this.getCG());
-		System.out.println(this.getCT());
+		if (this.useCallTree) {
+			System.out.println(this.getCT());
+		}
 	}
 
 	private void calibrateICCTypes() {
@@ -558,6 +560,9 @@ public class traceStat {
 
 			if (innode==null || outnode==null || innode.equals(outnode)) continue;
 			CGEdge e = cg.addEdge(outnode, innode, link.getKey().getTS());
+			if (this.useCallTree) {
+				ct.addCall(link.getKey().caller+callTree.CALL_DELIMIT+link.getValue().caller, link.getKey().getTS());
+			}
 			if (!addededges.add(e)) continue;
 			//System.out.println("added edge due to icc: " + outnode + " -> " + innode);
 			cnticcedge ++;
