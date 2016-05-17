@@ -12,6 +12,7 @@
  * 02/04/16		hcai		added one more data into over icc metric report to facilitate post-processing and tabulation
  * 02/05/16		hcai		fixed the bug in ICC classification and result reporting
  * 02/19/16		hcai		added statistics on ICC coverage
+ * 05/14/16		hcai		added feature collection for ML classification
 */
 package reporters;
 
@@ -223,6 +224,13 @@ public class iccReport implements Extension {
 		String dir = System.getProperty("user.dir");
 		
 		try {
+			if (opts.featuresOnly) {
+				String fngdistfeature = dir + File.separator + "iccfeatures.txt";
+				PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
+				collectFeatures(psgdistfeature);
+				System.exit(0);
+			}
+			
 			if (opts.debugOut) {
 				reportICC(System.out);
 				reportICCWithData(System.out);
@@ -605,6 +613,62 @@ public class iccReport implements Extension {
 		
 		os.println(percentage(inICCCovered, inIccCov.getTotal()) + "\t" + percentage(outICCCovered, outIccCov.getTotal())
 				+ "\t" + percentage(inICCCovered+outICCCovered, inIccCov.getTotal()+outIccCov.getTotal()));
+	}
+	
+	/** collect metrics to be used as features in the ML classification model */
+	public void collectFeatures(PrintStream os) {
+		if (opts.debugOut) {
+			os.println("*** ICC feature collection *** ");
+			os.print("format: packagename"+"\t");
+		}
+		
+		// dynamic
+		int int_ex_inc=0, int_ex_out=0, int_im_inc=0, int_im_out=0, ext_ex_inc=0, ext_ex_out=0, ext_im_inc=0, ext_im_out=0;
+		int all_dataonly = 0, all_extraonly = 0, all_both = 0;
+		for (ICCIntent itn : coveredInICCs) {
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_inc ++;
+				else int_ex_inc ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_inc ++;
+				else int_im_inc ++;
+			}
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
+		}
+		for (ICCIntent itn : coveredOutICCs) {
+			if (itn.isExplicit()) {
+				if (itn.isExternal()) ext_ex_out ++;
+				else int_ex_out ++;
+			}
+			else {
+				if (itn.isExternal()) ext_im_out ++;
+				else int_im_out ++;
+			}
+			if (itn.hasData() && !itn.hasExtras()) all_dataonly++;
+			if (itn.hasExtras() && !itn.hasData()) all_extraonly++;
+			if (itn.hasExtras() && itn.hasData()) all_both++;
+		}
+		//os.println("int_ex_inc\t int_ex_out\t int_im_inc\t int_im_out\t ext_ex_inc\t ext_ex_out\t ext_im_inc\t ext_im_out");
+		if (opts.debugOut) {
+			os.println("int_ex" + "\t" + "int_im" + "\t" + "ext_ex" + "\t" + "ext_im" + "\t" + 
+						"data_only" + "\t" + "extras_only" + "\t" + "data_both");
+		}
+		
+		// 1. ICC categorization
+		os.print(this.packName);
+		int iccTotal = int_ex_inc+int_ex_out+int_im_inc+int_im_out+ext_ex_inc+ext_ex_out+ext_im_inc+ext_im_out;
+		os.print("\t" + percentage(int_ex_inc+int_ex_out, iccTotal) +
+				 "\t" + percentage(int_im_inc+int_im_out, iccTotal) +
+				 "\t" + percentage(ext_ex_inc+ext_ex_out, iccTotal) +
+				 "\t" + percentage(ext_im_inc+ext_im_out, iccTotal));
+		
+		// 2. data-carrying ICC
+		os.println("\t" + percentage(all_dataonly, iccTotal) +
+				   "\t" + percentage(all_extraonly, iccTotal) + 
+				   "\t" + percentage(all_both, iccTotal));
 	}
 }
 

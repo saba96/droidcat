@@ -14,6 +14,7 @@
  * 							also added statistics on instances of being called for all metrics
  * 05/09/16		hcai		fix the method-level taint flow reachability 
  * 05/13/16		hcai		applied the calltree component using it for detailed src/sink reachability computation
+ * 05/15/16		hcai		added feature collection for ML classification
 */
 package reporters;
 
@@ -206,6 +207,13 @@ public class securityReport implements Extension {
 		String dir = System.getProperty("user.dir");
 
 		try {
+			if (opts.featuresOnly) {
+				String fngdistfeature = dir + File.separator + "securityfeatures.txt";
+				PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
+				collectFeatures(psgdistfeature);
+				//System.exit(0);
+			}
+			
 			if (opts.debugOut) {
 				reportSrcSinks (System.out);
 				if (opts.catsink!=null && opts.catsrc!=null) {
@@ -969,6 +977,101 @@ public class securityReport implements Extension {
 					percentage(coveredCatEventHandlerMethods.get(et).size(), eventhandlerCov.getCovered()) + "\t" + 
 					percentage(allCatEHInCalls.get(et), allEHInCalls) );
 		}
+	}
+	
+	public void collectFeatures(PrintStream os) {
+		// only take the top 5/6 most assessed categories as features
+		CATEGORY[] srccats = {CATEGORY.ACCOUNT_INFORMATION, CATEGORY.CALENDAR_INFORMATION, CATEGORY.LOCATION_INFORMATION,
+				CATEGORY.NETWORK_INFORMATION, CATEGORY.SYSTEM_SETTINGS};
+		//{"ACCOUNT_INFORMATION", "CALENDAR_INFORMATION", "LOCATION_INFORMATION", "NETWORK_INFORMATION", "SYSTEM_SETTINGS"};
+
+		CATEGORY[] sinkcats = {CATEGORY.ACCOUNT_SETTINGS, CATEGORY.FILE, CATEGORY.LOG, CATEGORY.NETWORK, CATEGORY.SMS_MMS, CATEGORY.SYSTEM_SETTINGS};
+		//{"ACCOUNT_SETTINGS", "FILE", "LOG", "NETWORK", "SMS_MMS", "SYSTEM_SETTINGS"};
+		String[] lccats = {"Activity", "Application", "BroadcastReceiver", "ContentProvider", "Service"};
+		EVENTCAT[] ehcats = {EVENTCAT.APPLICATION_MANAGEMENT, EVENTCAT.SYSTEM_STATUS, EVENTCAT.LOCATION_STATUS, EVENTCAT.HARDWARE_MANAGEMENT, EVENTCAT.NETWORK_MANAGEMENT, 
+				EVENTCAT.APP_BAR, EVENTCAT.MEDIA_CONTROL, EVENTCAT.VIEW, EVENTCAT.WIDGET, EVENTCAT.DIALOG};
+		//{"DIALOG", "HARDWARE_MANAGEMENT", "MEDIA_CONTROL", "NETWORK_MANAGEMENT", "VIEW",	"WIDGET"}; 
+		if (opts.debugOut) { 
+			os.println("*** security feature collection *** "); 
+			os.print("format: packagename"+"\t"+"src"+"\t"+"sink"+"\t"+"srcIns"+"\t"+"sinkIns"
+					+"\t"+"riskSrc"+"\t"+"riskSink"+ "\t" + "riskSrcIns" + "\t" + "riskSinkIns");
+			for (CATEGORY srccatT:srccats) {
+				String srccat = srccatT.toString();
+				os.print("\t" + srccat);
+				os.print("\t" + srccat+"-Ins");
+				os.print("\t" + srccat+"-escape");
+				os.print("\t" + srccat+"-escape-Ins");
+			}
+
+			for (CATEGORY sinkcatT:sinkcats) {
+				String sinkcat = sinkcatT.toString();
+				os.print("\t" + sinkcat);
+				os.print("\t" + sinkcat+"-Ins");
+				os.print("\t" + sinkcat+"-reach");
+				os.print("\t" + sinkcat+"-reach-Ins");
+			}
+
+			os.println("\t" + "lc" + "\t" + "eh" + "\t" + "lc-ins" + "\t" + "eh-ins");
+			for (String lccat:lccats) {
+				os.print("\t" + lccat);
+				os.print("\t" + lccat+"-Ins");
+			}
+			for (EVENTCAT ehcatT:ehcats) {
+				String ehcat = ehcatT.toString();
+				os.print("\t" + ehcat);
+				os.print("\t" + ehcat+"-Ins");
+			}
+			os.println();
+		}
+		
+		// 1. src/sink usage and reachability
+		os.print(this.packName);
+		os.print("\t" + percentage(srcCov.getCovered(),allCoveredMethods.size()) +
+				   "\t" + percentage(sinkCov.getCovered(), allCoveredMethods.size()) +
+				   "\t" + percentage(allSrcInCalls, allMethodInCalls) + 
+				   "\t" + percentage(allSinkInCalls, allMethodInCalls) + 
+				   "\t" + percentage(allEscapeSrcs, srcCov.getCovered()) + 
+				   "\t" + percentage(allReachableSinks, sinkCov.getCovered()) + 
+				   "\t" + percentage(allEscapeSrcInCalls, allSrcInCalls) +
+				   "\t" + percentage(allReachableSinkInCalls, allSinkInCalls));
+		
+		// 2. src/sink categorization (only the ones in which we found significant different between benign and malware traces)
+		for (CATEGORY srccat:srccats) {
+			os.print("\t" +
+					percentage(coveredCatSrcs.get(srccat).size(),srcCov.getCovered()) + "\t" +
+					percentage(allCatSrcInCalls.get(srccat),allSrcInCalls) + "\t" + 
+					percentage(allEscapeCatSrcs.get(srccat),allEscapeSrcs) + "\t" +
+					percentage(allEscapeCatSrcInCalls.get(srccat),allEscapeSrcInCalls) );
+		}
+		
+		for (CATEGORY sinkcat:sinkcats) {
+			os.print("\t" +
+					percentage(coveredCatSinks.get(sinkcat).size(),sinkCov.getCovered()) + "\t" +
+					percentage(allCatSinkInCalls.get(sinkcat),allSinkInCalls) + "\t" + 
+					percentage(allReachableCatSinks.get(sinkcat),allReachableSinks) + "\t" +
+					percentage(allReachableCatSinkInCalls.get(sinkcat),allReachableSinkInCalls) );
+		}
+		
+		// 3. callback usage
+		os.print("\t" + 
+				percentage(lifecycleCov.getCovered(), allCoveredMethods.size()) + "\t" +
+				percentage(eventhandlerCov.getCovered(), allCoveredMethods.size()) + "\t" +				
+				percentage(allLCInCalls, allMethodInCalls) + "\t" +
+				percentage(allEHInCalls, allMethodInCalls));
+		
+		// 4. callback categorization
+		for (String lccat:lccats) {
+			os.print("\t" +
+					percentage(coveredCatLifecycleMethods.get(lccat).size(),lifecycleCov.getCovered()) + "\t" + 
+					percentage(allCatLCInCalls.get(lccat), allLCInCalls));	
+		}
+		for (EVENTCAT ehcatT:ehcats) {
+			os.print("\t" +
+					percentage(coveredCatEventHandlerMethods.get(ehcatT).size(), eventhandlerCov.getCovered()) + "\t" + 
+					percentage(allCatEHInCalls.get(ehcatT), allEHInCalls) );
+		}
+		
+		os.println();
 	}
 }
 

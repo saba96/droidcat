@@ -531,8 +531,8 @@ public class generalReport implements Extension {
 	// gather metrics used as potential ML classification features 
 	public void collectFeatures(PrintStream os) {
 		if (opts.debugOut) {
-			os.println("*** feature collection *** ");
-			os.print("format: packagename	");
+			os.println("*** general feature collection *** ");
+			os.print("format: packagename"+"\t");
 		}
 		Map<String, Integer> c2n = new HashMap<String, Integer>();
 		String[] cats = {"SDK->SDK", "SDK->3rdLib", "SDK->UserCode", "3rdLib->SDK", "3rdLib->3rdLib", "3rdLib->UserCode",
@@ -554,9 +554,12 @@ public class generalReport implements Extension {
 		
 		if (opts.debugOut) {
 			for (String cat : cats) {
-				os.print(cat + " ");
+				os.print(cat + "\t");
 			}
-			os.println();
+			os.println("userCode-cls"+"\t"+"3rdLib-cls"+"\t"+"sdk-cls"+"\t"+"userCode-me"+"\t"+"3rdlib-me"+"\t"+"sdk-me"+
+			   "\t"+"userCode-clsIns"+"\t"+"3rdLib-clsIns"+"\t"+"sdk-clsIns"+"\t"+"userCode-meIns"+"\t"+"3rdlib-meIns"+ "\t"+"sdk-meIns"+
+			   "\t"+"activity"+"\t"+"service"+"\t"+"receiver"+"\t"+"provider"+
+			   "\t"+"activityIns"+"\t"+"serviceIns"+"\t"+"receiverIns"+"\t"+"providerIns");
 		}
 		// 1. inter-code-layer calls - all nine categories - percentage of instances
 		os.print(this.packName);
