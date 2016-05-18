@@ -26,7 +26,7 @@ inv=1
 for(i in seq(1,nrow(tdata),1)) {
 	if (sum(tdata[i,3:4])<1e-10) {
 		inv<-inv+1
-		next
+		#next
 	}
 
 	curssusi<- c(f.per(tdata[i,1],tdata[i,5]), f.per(tdata[i,2],tdata[i,5]))
@@ -44,10 +44,10 @@ for(i in seq(1,nrow(tdata),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid data points ignored."))
+#print(paste(inv," invalid data points ignored."))
 
 colors2<-c("gray80","gray80") #,"black","yellow","darkorange","darkorchid","red4","darkgrey")
-colors4<-c("red","green","blue","darkorange") #,"black","yellow","darkorange","darkorchid","red4","darkgrey")
+colors4<-c("darkgrey","green","blue","darkorange") #,"black","yellow","darkorange","darkorchid","red4","darkgrey")
 
 pdf("./srcsink-s.pdf",width=2.5,height=3.0)
 boxplot(ssusi, names=c("source","sink"),col=colors2,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
@@ -64,7 +64,7 @@ boxplot(dsusiins, names=c("source","sink"),col=colors2,ylab="percentage (instanc
 meandsusiins <- (colMeans(dsusiins, na.rm=TRUE))
 points(meandsusiins, col="red", pch=18, cex=0.5)
 
-pdf("./srcsink-risk.pdf",width=2.5,height=3.0)
+pdf("./srcsink-risk.pdf",width=3.5,height=3.0)
 boxplot(drisk, names=c("esc-src-uniq","rch-sink-uniq","esc-src-ins","rch-sink-ins"),col=colors4,ylab="percentage (both views)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandrisk <- (colMeans(drisk, na.rm=TRUE))
 points(meandrisk, col="red", pch=18, cex=0.5)

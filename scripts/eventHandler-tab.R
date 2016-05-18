@@ -43,7 +43,7 @@ colors<-rep("gray",20)
 
 pdf("./eventhandler-s.pdf",width=2.5,height=3.0)
 r=1
-alls<- matrix(NA, ncol=366, nrow=length(ls(scatdata)))
+alls<- matrix(NA, ncol=365, nrow=length(ls(scatdata)))
 snames  <- c()
 for (key in ls(scatdata)) {
 	vdata <- scatdata[[key]]*100
@@ -71,7 +71,7 @@ cat("\n")
 
 pdf("./eventhandler-d.pdf",width=2.5,height=3.0)
 r=1
-alld<- matrix(NA, ncol=366, nrow=length(ls(catdata)))
+alld<- matrix(NA, ncol=365, nrow=length(ls(catdata)))
 dnames  <- c()
 for (key in ls(catdata)) {
 	vdata <- catdata[[key]]*100
@@ -101,7 +101,7 @@ cat("\n")
 
 pdf("./eventhandler-dins.pdf",width=2.5,height=3.0)
 r=1
-alldIns<- matrix(NA, ncol=366, nrow=length(ls(catdataIns)))
+alldIns<- matrix(NA, ncol=365, nrow=length(ls(catdataIns)))
 dnamesIns  <- c()
 for (key in ls(catdataIns)) {
 	vdata <- catdataIns[[key]]*100
