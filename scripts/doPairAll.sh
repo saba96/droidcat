@@ -32,19 +32,19 @@ instr()
 	for subdir in "explicit" "implicit"
 	do
 		#for ((i=1;i<51;i++))
-		for i in $(seq 1 101)
+		for i in $(seq 1 250)
 		do
 			if [ ! -d $srcdir/$subdir/$i ];then continue; fi
 
 			for orgapk in $srcdir/$subdir/$i/*.apk
 			do
 				echo "/home/hcai/testbed/cgInstr.sh $orgapk "$destdir"/$subdir/$((i+0))/"
-				timeout 300 "/home/hcai/testbed/cgInstr.sh $orgapk $destdir/$subdir/$((i+0))/ 1>/dev/null 2>&1"
+				#timeout 1200 "/home/hcai/testbed/cgInstr.sh $orgapk $destdir/$subdir/$((i+0))/ 1>/dev/null 2>&1"
 			done
 
 			for instredapk in $destdir/$subdir/$((i+0))/*.apk
 			do
-				echo "echo "chapple" | /home/hcai/testbed/signandalign.sh $instredapk"
+				echo "chapple" | /home/hcai/testbed/signandalign.sh $instredapk
 			done
 		done
 	done

@@ -2,8 +2,8 @@
 
 srcdir=/home/hcai/testbed/input/pairs/
 destdir=/home/hcai/testbed/cg.instrumented/pairs/
-#tgtdir=$destdir/implicit_instrumented/
-tgtdir=$destdir/explicit_instrumented/
+tgtdir=$destdir/implicit_instrumented/
+#tgtdir=$destdir/explicit_instrumented/
 mkdir -p $tgtdir
 
 filter()
@@ -13,12 +13,11 @@ filter()
 	#for subdir in "implicit" "implicit_2ndset"
 	#for subdir in "implicit_3rdset"
 	#for subdir in "implicit" "implicit_2ndset" "implicit_3rdset"
-	#for subdir in "implicit"
+	for subdir in "implicit"
 	#for subdir in "explicit"
-	for subdir in "explicit_2ndset"
 	do
 		#for ((i=1;i<51;i++))
-		for i in $(seq 1 101)
+		for i in $(seq 1 250)
 		do
 			if [ ! -d $srcdir/$subdir/$i ];then continue; fi
 

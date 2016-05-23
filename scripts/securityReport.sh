@@ -27,15 +27,18 @@ starttime=`date +%s%N | cut -b1-13`
 	#-debug \
 	#-callback /home/hcai/libs/AndroidCallbacks.txt \
 	#-srcsink /home/hcai/libs/SourcesAndSinks.txt \
-java -Xmx4g -ea -cp ${MAINCP} reporters.securityReport \
+	#-calltree \
+	#-featuresOnly \
+java -Xmx5g -ea -cp ${MAINCP} reporters.securityReport \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \
 	-catsrc /home/hcai/libs/catsources.txt.final \
 	-catsink /home/hcai/libs/catsinks.txt.final \
 	-catcallback /home/hcai/libs/catCallbacks.txt \
+	-debug \
+	-featuresOnly \
 	-process-dir $apkfile \
-	-calltree \
 	-trace $tracefile
 
 stoptime=`date +%s%N | cut -b1-13`

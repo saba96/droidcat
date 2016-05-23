@@ -25,6 +25,7 @@ done
 starttime=`date +%s%N | cut -b1-13`
 
 	#-debug \
+	#-featuresOnly \
 java -Xmx4g -ea -cp ${MAINCP} reporters.generalReport \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \

@@ -25,7 +25,8 @@ do
 		/home/hcai/testbed/input/pairs/$cat/$i/t.apk \
 		/home/hcai/testbed/$rep/singleAppLogs_$cat/$i-t.logcat >> $resultlog 2>&1
 done
-mv /home/hcai/testbed/{calleerank.txt,callerrank.txt,calleerankIns.txt,callerrankIns.txt,compdist.txt,edgefreq.txt,gdistcov.txt,gdistcovIns.txt} \
-	/home/hcai/testbed/results/generalReport/$rep/$cat/
+#mv /home/hcai/testbed/{calleerank.txt,callerrank.txt,calleerankIns.txt,callerrankIns.txt,compdist.txt,edgefreq.txt,gdistcov.txt,gdistcovIns.txt} /home/hcai/testbed/results/generalReport/$rep/$cat/
+
+#mv /home/hcai/testbed/gfeatures.txt /home/hcai/testbed/results/generalReport/$rep/$cat/
 
 exit 0
