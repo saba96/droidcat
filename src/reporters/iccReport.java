@@ -656,7 +656,6 @@ public class iccReport implements Extension {
 			os.println("int_ex" + "\t" + "int_im" + "\t" + "ext_ex" + "\t" + "ext_im" + "\t" + 
 						"data_only" + "\t" + "extras_only" + "\t" + "data_both");
 		}
-		
 		// 1. ICC categorization
 		os.print(this.packName);
 		int iccTotal = int_ex_inc+int_ex_out+int_im_inc+int_im_out+ext_ex_inc+ext_ex_out+ext_im_inc+ext_im_out;

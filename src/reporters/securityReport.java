@@ -1011,7 +1011,7 @@ public class securityReport implements Extension {
 				os.print("\t" + sinkcat+"-reach-Ins");
 			}
 
-			os.println("\t" + "lc" + "\t" + "eh" + "\t" + "lc-ins" + "\t" + "eh-ins");
+			os.print("\t" + "lc" + "\t" + "eh" + "\t" + "lc-ins" + "\t" + "eh-ins");
 			for (String lccat:lccats) {
 				os.print("\t" + lccat);
 				os.print("\t" + lccat+"-Ins");
@@ -1023,7 +1023,7 @@ public class securityReport implements Extension {
 			}
 			os.println();
 		}
-		
+		System.exit(1);
 		// 1. src/sink usage and reachability
 		os.print(this.packName);
 		os.print("\t" + percentage(srcCov.getCovered(),allCoveredMethods.size()) +
