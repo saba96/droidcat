@@ -25,3 +25,5 @@ print "PREDICTION RESULTS"
 print output
 print "PREDICTION SCORE"
 print forest.score(test_data, numpy.ones(len(test_data)))
+
+# hcai: set ts=4 tw=100 sts=4 sw=4
