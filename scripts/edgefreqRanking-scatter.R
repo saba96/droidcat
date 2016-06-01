@@ -29,7 +29,8 @@ for(i in 1:nrow(tdata)) {
 pdf("./edgeFreq-scatter.pdf",width=4.0,height=3.5)
 i=1
 #colors<-c("red","blue","black","green","yellow","darkorange","darkorchid","gold4","darkgrey")
-colors<-c("gray0","gray10","gray20","gray30","gray40","gray50","gray60","gray70","gray80")
+#colors<-c("gray0","gray10","gray20","gray30","gray40","gray50","gray60","gray70","gray80")
+colors<-c('#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999')
 pches<-c(0:8)
 
 #3rdLib -> 3rdLib 

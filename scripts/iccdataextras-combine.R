@@ -33,7 +33,7 @@ for(i in seq(1,nrow(tdata),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid data points ignogray50."))
+print(paste(inv," invalid data points igno#ffff33."))
 
 fndatainter=args[2]
 tdatainter=read.table(file=fndatainter)
@@ -54,16 +54,16 @@ for(i in seq(1,nrow(tdatainter),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid inter data points ignogray50."))
+print(paste(inv," invalid inter data points igno#ffff33."))
 
-colors<-c("gray50","gray80","gray50","gray80","gray50","gray80","gray50","gray80") 
+colors<-c("#ffff33","gray80","#ffff33","gray80","#ffff33","gray80","#ffff33","gray80") 
 
 pdf("./deiccboth.pdf",width=2.5,height=3.0)
 deiccboth <- cbind ( deicc[,1],deinterICC[,1], deicc[,2],deinterICC[,2], deicc[,3],deinterICC[,3], deicc[,4],deinterICC[,4] )
 boxplot(deiccboth, names=c("int_ex","","int_im","","ext_ex","","ex_im",""),col=colors,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 meandeiccboth <- (colMeans(deiccboth, na.rm=TRUE))
 points(meandeiccboth, col="red", pch=18, cex=0.5)
-legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("gray50","gray80"), lwd=4.5, bty="n",horiz=TRUE)
+legend("top", legend=c("single-app", "inter-app"), cex=.5, col=c("#ffff33","gray80"), lwd=4.5, bty="n",horiz=TRUE)
 
 #dev.off
 

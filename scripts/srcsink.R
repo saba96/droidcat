@@ -69,5 +69,15 @@ boxplot(drisk, names=c("esc-src-uniq","rch-sink-uniq","esc-src-ins","rch-sink-in
 meandrisk <- (colMeans(drisk, na.rm=TRUE))
 points(meandrisk, col="red", pch=18, cex=0.5)
 
+pdf("./srcsink-risk-d.pdf",width=2.5,height=3.0)
+boxplot(drisk[,1:2], names=c("risky source","risky sink"),col=colors2,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
+meandrisk <- (colMeans(drisk[,1:2], na.rm=TRUE))
+points(meandrisk, col="red", pch=18, cex=0.5)
+
+pdf("./srcsink-risk-dins.pdf",width=2.5,height=3.0)
+boxplot(drisk[,3:4], names=c("risky source","risky sink"),col=colors2,ylab="percentage (unique view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
+meandrisk <- (colMeans(drisk[,3:4], na.rm=TRUE))
+points(meandrisk, col="red", pch=18, cex=0.5)
+
 #dev.off
 
