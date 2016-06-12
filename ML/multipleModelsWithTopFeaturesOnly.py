@@ -83,17 +83,11 @@ if __name__=="__main__":
               BernoulliNB())
 
     if g_accuracy:
-        s=1
-        for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-            print "=========== feature set %d ===========" % s
-            s+=1
-            for model in models:
-                print 'model ' + str(model)
+        for model in models:
+            print 'model ' + str(model)
+            for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
                 ret = cv (model, selectFeatures( features, fset ), labels)
-                print ret[0], ret[1]
-                for j in range(0,len(ret[2])):
-                    #print "%d\t%s" % (j+1, ret[2][j])
-                    print "%s" % (ret[2][j])
+                print ret[0]
     else:
         model2ret={}
         for model in models:
@@ -102,19 +96,13 @@ if __name__=="__main__":
                 ret = cv (model, selectFeatures( features, fset ), labels)
                 model2ret[str(model)+str(fset)] = ret
         tlabs=('precision', 'recall', 'F1')
-        s=1
-        for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-            print "=========== feature set %d ===========" % s
-            s+=1
-            for i in (0,1,2):
-                print "******     " + str(tlabs[i]) + "    ******"
-                for model in models:
-                    print 'model ' + str(model)
+        for i in (0,1,2):
+            print "******     " + str(tlabs[i]) + "    ******"
+            for model in models:
+                print 'model ' + str(model)
+                for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
                     ret = model2ret[str(model)+str(fset)]
-                    print ret[i][0], ret[i][1]
-                    for j in range(0,len(ret[i][2])):
-                        #print "%d\t%s" % (j+1, ret[2][j])
-                        print "%s" % (ret[i][2][j])
+                    print ret[i][0]
     sys.exit(0)
 
 # hcai: set ts=4 tw=100 sts=4 sw=4
