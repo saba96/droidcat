@@ -1,0 +1,486 @@
+python multipleModelsWithTopFeaturesOnly.py false false  
+===============================================================
+114 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:516: Warning: The least populated class in y has only 1 members, which is too few. The minimum number of labels for any class cannot be less than n_folds=10.
+  % (min_labels, self.n_folds)), Warning)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     precision    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.804028319909
+0.796267497647
+0.579469415109
+0.749486818936
+0.81075005752
+0.81007702989
+0.798521293635
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.784076954733
+0.701614954526
+0.328996454996
+0.48152850566
+0.683231407304
+0.734423081318
+0.767231187882
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.776091641406
+0.763905120171
+0.540058794008
+0.681543029604
+0.764333063886
+0.746771586123
+0.762292484622
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.675701077097
+0.694647690616
+0.257777777778
+0.431178427778
+0.504614149709
+0.695764315271
+0.693478714906
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.802038779866
+0.784846225419
+0.44065289663
+0.691788388083
+0.759837465634
+0.779465469229
+0.789578758087
+******     recall    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.855555555556
+0.844444444444
+0.633333333333
+0.815555555556
+0.842222222222
+0.862222222222
+0.853333333333
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.833333333333
+0.78
+0.542222222222
+0.588888888889
+0.76
+0.806666666667
+0.822222222222
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.764444444444
+0.74
+0.6
+0.693333333333
+0.746666666667
+0.748888888889
+0.766666666667
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.744444444444
+0.762222222222
+0.502222222222
+0.535555555556
+0.646666666667
+0.737777777778
+0.753333333333
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.748888888889
+0.755555555556
+0.586666666667
+0.593333333333
+0.737777777778
+0.731111111111
+0.74
+******     F1    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.824936847447
+0.811097952389
+0.547248236204
+0.773138216403
+0.82540491911
+0.826841790663
+0.815017030258
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.803793838458
+0.736871572256
+0.397103521688
+0.500971069359
+0.713883133248
+0.761805953389
+0.791371640778
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.764511988689
+0.747767594023
+0.536607112583
+0.699514444595
+0.731326172762
+0.745776387431
+0.758431415427
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.707396090196
+0.716134574133
+0.339250377922
+0.426148426135
+0.55832436031
+0.682492183743
+0.711197367352
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.758415231576
+0.741431207411
+0.463564875274
+0.614136335857
+0.72134305516
+0.734986887522
+0.751200840471
+
+python multipleModelsWithTopFeaturesOnly.py false true
+========================================================
+114 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:516: Warning: The least populated class in y has only 1 members, which is too few. The minimum number of labels for any class cannot be less than n_folds=10.
+  % (min_labels, self.n_folds)), Warning)
+0.991169977925
+0.991169977925
+0.763796909492
+0.991169977925
+0.991169977925
+0.991169977925
+0.991169977925
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.885209713024
+0.82119205298
+0.584988962472
+0.618101545254
+0.792494481236
+0.849889624724
+0.85651214128
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.991169977925
+0.991169977925
+0.754966887417
+0.991169977925
+0.991169977925
+0.991169977925
+0.991169977925
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.779249448124
+0.770419426049
+0.503311258278
+0.53642384106
+0.646799116998
+0.777041942605
+0.788079470199
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.78587196468
+0.790286975717
+0.604856512141
+0.64238410596
+0.746136865342
+0.78587196468
+0.788079470199
+
+
+python multipleModelsWithTopFeaturesOnly.py true false 
+========================================================
+114 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     precision    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.936468750525
+0.940792634258
+0.765150503803
+0.890942694333
+0.929521922164
+0.936173309991
+0.938220640728
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.925125710153
+0.919331458242
+0.746666666667
+0.800201465201
+0.893443796144
+0.915355216444
+0.92644309108
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.921446118763
+0.918019947452
+0.771773893215
+0.891671556257
+0.938389862299
+0.923556927005
+0.926793759616
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.879869361781
+0.890677747658
+0.746666666667
+0.764588539966
+0.866686653723
+0.877202720258
+0.902032607915
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.922717633622
+0.917960258696
+0.746754756871
+0.871377701977
+0.910947840183
+0.911236715251
+0.922735340701
+******     recall    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.966734690286
+0.963877547429
+0.969776330019
+0.964329523675
+0.9734087726
+0.979123058314
+0.963751220583
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.958982621135
+0.960520321185
+1.0
+0.981285014006
+0.957264434519
+0.946785092641
+0.944212579765
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.90624687687
+0.926417076648
+0.961437401396
+0.88965910094
+0.931336315624
+0.927675763137
+0.909839777528
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.96600757767
+0.976915723845
+1.0
+0.96725234761
+0.951517451555
+0.961106894371
+0.972090526978
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.910051838545
+0.941361126618
+0.987636815122
+0.876291589111
+0.84802113953
+0.9271527397
+0.932993352261
+******     F1    ******
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.952650548696
+0.952747444215
+0.854078969913
+0.927459702778
+0.948840095764
+0.952364417284
+0.949858075701
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.941194851358
+0.938992161077
+0.853188950764
+0.880205816607
+0.923545092486
+0.930293880031
+0.933592053997
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.900388372968
+0.935363352495
+0.858699800402
+0.893325676832
+0.93686205908
+0.909086559217
+0.914031796019
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.9196569127
+0.930944787003
+0.853188950764
+0.851018480855
+0.911884055837
+0.91824698846
+0.935323544086
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.910540165914
+0.925413473794
+0.847807743796
+0.859516141809
+0.875635264096
+0.914294313051
+0.92513420789
+
+python multipleModelsWithTopFeaturesOnly.py true true 
+==========================================================
+114 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+0.991169977925
+0.991169977925
+0.845474613687
+0.991169977925
+0.991169977925
+0.991169977925
+0.991169977925
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+0.938189845475
+0.931567328918
+0.748344370861
+0.832229580574
+0.907284768212
+0.924944812362
+0.924944812362
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+0.991169977925
+0.991169977925
+0.823399558499
+0.991169977925
+0.991169977925
+0.991169977925
+0.991169977925
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+0.909492273731
+0.898454746137
+0.748344370861
+0.763796909492
+0.867549668874
+0.898454746137
+0.916114790287
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+0.894039735099
+0.894039735099
+0.746136865342
+0.818984547461
+0.858719646799
+0.900662251656
+0.907284768212
+
