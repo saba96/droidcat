@@ -207,10 +207,10 @@ public class securityReport implements Extension {
 		String dir = System.getProperty("user.dir");
 
 		try {
+			String fngdistfeature = dir + File.separator + "securityfeatures.txt";
+			PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
+			collectFeatures(psgdistfeature);
 			if (opts.featuresOnly) {
-				String fngdistfeature = dir + File.separator + "securityfeatures.txt";
-				PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
-				collectFeatures(psgdistfeature);
 				System.exit(0);
 			}
 			

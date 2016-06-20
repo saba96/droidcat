@@ -187,10 +187,10 @@ public class generalReport implements Extension {
 		
 
 		try {
+			String fngdistfeature = dir + File.separator + "gfeatures.txt";
+			PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
+			collectFeatures(psgdistfeature);
 			if (opts.featuresOnly) {
-				String fngdistfeature = dir + File.separator + "gfeatures.txt";
-				PrintStream psgdistfeature = new PrintStream (new FileOutputStream(fngdistfeature,true));
-				collectFeatures(psgdistfeature);
 				System.exit(0);
 			}
 
