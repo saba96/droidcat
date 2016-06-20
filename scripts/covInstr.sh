@@ -9,7 +9,7 @@ apkfile=$1
 ROOT=/home/hcai/
 subjectloc=`pwd`
 
-OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
+OUTDIR=${2:-"$subjectloc/cov.instrumented/"}
 
 MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
 
@@ -25,7 +25,7 @@ done
 suffix=${apkfile##*/}
 suffix=${suffix%.*}
 
-LOGDIR=out-dynInstr-cg
+LOGDIR=out-dynInstr-cov
 mkdir -p $LOGDIR
 logout=$LOGDIR/instr-$suffix.out
 logerr=$LOGDIR/instr-$suffix.err
@@ -68,13 +68,9 @@ starttime=`date +%s%N | cut -b1-13`
 	#-validate \
 	#-force-android-jar /home/hcai/Android/Sdk/platforms/android-22/android.jar \
 	#-dumpJimple \
-	#-instr3rdparty \
-	#-noMonitorICC \
-	#-dumpJimple \
-cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.sceneInstr \
+cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.covInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
-	-dumpJimple \
 	-d $OUTDIR \
 	-process-dir $apkfile"
 
