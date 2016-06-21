@@ -1023,7 +1023,6 @@ public class securityReport implements Extension {
 			}
 			os.println();
 		}
-		System.exit(1);
 		// 1. src/sink usage and reachability
 		os.print(this.packName);
 		os.print("\t" + percentage(srcCov.getCovered(),allCoveredMethods.size()) +

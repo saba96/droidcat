@@ -36,8 +36,6 @@ java -Xmx5g -ea -cp ${MAINCP} reporters.securityReport \
 	-catsrc /home/hcai/libs/catsources.txt.final \
 	-catsink /home/hcai/libs/catsinks.txt.final \
 	-catcallback /home/hcai/libs/catCallbacks.txt \
-	-debug \
-	-featuresOnly \
 	-process-dir $apkfile \
 	-trace $tracefile
 
