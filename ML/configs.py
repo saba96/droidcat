@@ -3,7 +3,9 @@
 '''
 directory of all feature text files
 '''
-FTXT_DIR="/home/hcai/ML/features/"
+#FTXT_DIR="/home/hcai/ML/features/"
+import os
+FTXT_DIR=os.getcwd()+"/features/"
 
 '''
 benign app feature text files
