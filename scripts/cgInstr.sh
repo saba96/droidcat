@@ -74,7 +74,6 @@ starttime=`date +%s%N | cut -b1-13`
 cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
-	-dumpJimple \
 	-d $OUTDIR \
 	-process-dir $apkfile"
 

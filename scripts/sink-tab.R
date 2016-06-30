@@ -17,6 +17,7 @@ catdataIns=new.env()
 
 threshold=.1
 
+colwidth<-0
 for(i in 1:nrow(tdata)) {
 	mykey<-paste(tdata[i,1])
 	#if (grepl("ALL", mykey) || grepl("NO_CATEGORY", mykey)) {
@@ -35,6 +36,8 @@ for(i in 1:nrow(tdata)) {
 	scatdata[[mykey]] <- c(catdata[[mykey]], tdata[i,7])
 	catdata[[mykey]] <- c(catdata[[mykey]], tdata[i,8])
 	catdataIns[[mykey]] <- c(catdataIns[[mykey]], tdata[i,9])
+
+	colwidth<-colwidth+1
 }
 
 pches<-c(0:8)
@@ -44,7 +47,7 @@ colors<-rep("gray",20)
 #par(mar = c(1,1,1,1))
 pdf("./sink-s.pdf",width=2.5,height=3.0)
 r=1
-alls<- matrix(NA, ncol=365, nrow=length(ls(scatdata)))
+alls<- matrix(NA, ncol=colwidth, nrow=length(ls(scatdata)))
 snames  <- c()
 for (key in ls(scatdata)) {
 	vdata <- scatdata[[key]]*100
@@ -71,7 +74,7 @@ cat("\n")
 
 pdf("./sink-d.pdf",width=2.5,height=3.0)
 r=1
-alld<- matrix(NA, ncol=365, nrow=length(ls(catdata)))
+alld<- matrix(NA, ncol=colwidth, nrow=length(ls(catdata)))
 dnames  <- c()
 for (key in ls(catdata)) {
 	vdata <- catdata[[key]]*100
@@ -100,7 +103,7 @@ cat("\n")
 
 pdf("./sink-dins.pdf",width=2.5,height=3.0)
 r=1
-alldIns<- matrix(NA, ncol=365, nrow=length(ls(catdataIns)))
+alldIns<- matrix(NA, ncol=colwidth, nrow=length(ls(catdataIns)))
 dnamesIns  <- c()
 for (key in ls(catdataIns)) {
 	vdata <- catdataIns[[key]]*100

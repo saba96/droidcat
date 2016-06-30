@@ -2,7 +2,7 @@
 
 #(test $# -lt 1) && (echo "too few arguments") && exit 0
 
-tmv=${1:-"3600"}
+tmv=${1:-"600"}
 destdir=/home/hcai/testbed/cov.instrumented/pairs/
 
 timeout() {
@@ -22,39 +22,34 @@ timeout() {
 }
 
 runOneApk() {
-	cat=$1
-	i=$2
-	e=$3
+	i=$1
 	
-	finaldir=$destdir/${cat}_installed
-	OUTDIR=/home/hcai/testbed/covLogs_singleapp_${cat}
+	finaldir=$destdir/
+	OUTDIR=/home/hcai/testbed/covLogs_allapps
 	mkdir -p $OUTDIR
 
-	if [ ! -s $finaldir/$i/${e}.apk ];then return; fi
-	if [ -s $OUTDIR/$i-${e}.logcat ];then 
-		echo "app $finaldir/$i/${e}.apk has been processed, skipped it now."
+	if [ ! -s $finaldir/${i}.apk ];then return; fi
+	if [ -s $OUTDIR/${i}.logcat ];then 
+		echo "app $finaldir/${i}.apk has been processed, skipped it now."
 		return
 	fi
 
 	/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
-	apkinstall $finaldir/$i/${e}.apk
-	adb logcat -v raw -s "hcai-cov-monitor" &>$OUTDIR/${i}-${e}.logcat 2>&1 &
-	tgtp=`~/bin/getpackage.sh $finaldir/$i/${e}.apk | awk '{print $2}'`
-	timeout $tmv "adb shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${i}-${e}.monkey"
+	apkinstall $finaldir/${i}.apk
+	adb logcat -v raw -s "hcai-cov-monitor" &>$OUTDIR/${i}.logcat 2>&1 &
+	tgtp=`~/bin/getpackage.sh $finaldir/${i}.apk | awk '{print $2}'`
+	timeout $tmv "adb shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${i}.monkey"
 	killall -9 adb
 }
 
-runPairs() {
-	cat=$1
-	for ((i=1;i<=250;i++))
+runCovApps() {
+	for ((i=1;i<=515;i++))
 	do
-		echo "================ RUN INDIVIDUAL APPS IN PAIR $i ==========================="
-		runOneApk $cat $i "s"
-		runOneApk $cat $i "t"
+		echo "================ RUN INDIVIDUAL APPS No. $i ==========================="
+		runOneApk $i
 	done
 }
 
-runPairs "implicit"
-runPairs "explicit"
+runCovApps
 
 exit 0
