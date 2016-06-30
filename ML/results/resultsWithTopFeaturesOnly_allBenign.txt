@@ -1,0 +1,126 @@
+hcai@hcai-Yoga:~/gitrepo/droidcat/ML$ python multipleModelsWithTopFeaturesOnly_tab.py 
+295 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:516: Warning: The least populated class in y has only 1 members, which is too few. The minimum number of labels for any class cannot be less than n_folds=10.
+  % (min_labels, self.n_folds)), Warning)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     accuracy    ******
+0.993690851735	0.881703470032	0.993690851735	0.817034700315	0.791798107256	
+0.993690851735	0.832807570978	0.993690851735	0.82334384858	0.774447949527	
+0.766561514196	0.591482649842	0.766561514196	0.523659305994	0.585173501577	
+0.993690851735	0.654574132492	0.993690851735	0.605678233438	0.652996845426	
+0.993690851735	0.821766561514	0.993690851735	0.723974763407	0.752365930599	
+0.993690851735	0.858044164038	0.993690851735	0.81072555205	0.798107255521	
+0.993690851735	0.865930599369	0.993690851735	0.820189274448	0.794952681388	
+
+******     precision    ******
+0.834936872314	0.79968338965	0.796448888585	0.757383918488	0.807618446965	
+0.833906807876	0.764441756061	0.814036921346	0.759176048599	0.791649139811	
+0.60407843162	0.484593276486	0.593028717252	0.429198201314	0.506227831795	
+0.778629858497	0.520136851	0.733318689324	0.524192800973	0.687115142979	
+0.832336601813	0.739087732618	0.806746205946	0.607819651045	0.783844984043	
+0.838633822689	0.77032122061	0.793853026363	0.74665957132	0.794576507208	
+0.831147501341	0.797209016532	0.809058222097	0.757288116329	0.809083436705	
+
+******     recall    ******
+0.865079365079	0.839682539683	0.806349206349	0.809523809524	0.75873015873	
+0.868253968254	0.81746031746	0.807936507937	0.814285714286	0.744444444444	
+0.649206349206	0.563492063492	0.625396825397	0.515873015873	0.557142857143	
+0.814285714286	0.620634920635	0.746031746032	0.588888888889	0.626984126984	
+0.866666666667	0.801587301587	0.795238095238	0.71746031746	0.749206349206	
+0.869841269841	0.812698412698	0.801587301587	0.780952380952	0.771428571429	
+0.871428571429	0.833333333333	0.801587301587	0.804761904762	0.75873015873	
+
+******     F1    ******
+0.848759560552	0.814976338637	0.80804576033	0.776244574336	0.774653677415	
+0.84379856569	0.789085087442	0.798378838868	0.783170059041	0.736642513598	
+0.614225397245	0.503197501709	0.593689460474	0.439879033182	0.487660897397	
+0.792271751831	0.559791842979	0.728759507811	0.53002635427	0.647103817016	
+0.845221115626	0.765461693999	0.780325702903	0.652812636915	0.743445127384	
+0.842401433863	0.785353637582	0.800771532122	0.743480050025	0.772959200477	
+0.853295197143	0.808261663026	0.800871994237	0.772390382084	0.774699277824	
+
+hcai@hcai-Yoga:~/gitrepo/droidcat/ML$ python multipleModelsWithTopFeaturesOnly_tab.py true
+295 valid benign app training samples to be used.
+339 valid malicious app training samples to be used.
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+
+
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     accuracy    ******
+0.993690851735	0.917981072555	0.993690851735	0.903785488959	0.883280757098	
+0.993690851735	0.913249211356	0.993690851735	0.894321766562	0.881703470032	
+0.801261829653	0.659305993691	0.799684542587	0.569400630915	0.619873817035	
+0.993690851735	0.820189274448	0.993690851735	0.730283911672	0.758675078864	
+0.993690851735	0.889589905363	0.993690851735	0.84858044164	0.853312302839	
+0.993690851735	0.900630914826	0.993690851735	0.894321766562	0.888012618297	
+0.993690851735	0.903785488959	0.993690851735	0.903785488959	0.889589905363	
+
+******     precision    ******
+0.918771556337	0.873236449029	0.878985424364	0.877730967356	0.860842150469	
+0.930334800312	0.892362072478	0.907803488202	0.862832981774	0.856017431993	
+0.791547913835	0.785313421556	0.772189600255	0.565892736413	0.669351117351	
+0.878269336257	0.766939914731	0.825274469931	0.669153535947	0.744436753471	
+0.931293090693	0.856762478476	0.88409825268	0.84649914988	0.859435502334	
+0.928563878093	0.869132738606	0.900274486692	0.876170384934	0.876577128508	
+0.917620140946	0.893261322847	0.892860945361	0.881100392581	0.870978479503	
+
+******     recall    ******
+0.945292264135	0.912332896213	0.90041439901	0.941023969003	0.917160608385	
+0.950433548109	0.922915833552	0.907406484513	0.933931060155	0.912077200331	
+0.610133228919	0.496655275289	0.604472150592	0.821196836055	0.580694059261	
+0.907912149696	0.822809719973	0.822302432967	0.845248579167	0.787908655053	
+0.939138360059	0.907909581809	0.874810810456	0.86470996008	0.821636330849	
+0.950634144477	0.910741524622	0.88801788871	0.913670703462	0.90898600521	
+0.950349514496	0.916832884243	0.903848432122	0.922016335622	0.91421476338	
+
+******     F1    ******
+0.938029495665	0.894161150228	0.87694469038	0.905724258004	0.892374123423	
+0.931526399485	0.906708272537	0.909366437917	0.901366197614	0.885563857729	
+0.684816908445	0.603680535891	0.666610216026	0.668992471521	0.614913233521	
+0.89674510472	0.802417187841	0.820398203509	0.753670169791	0.752414847748	
+0.934959773002	0.880820044541	0.865138462846	0.854849129167	0.845161689794	
+0.94104260376	0.888642335125	0.89723013614	0.898752873	0.888403289952	
+0.934189139761	0.901389888375	0.901452807331	0.90184986472	0.893856206876	
+
