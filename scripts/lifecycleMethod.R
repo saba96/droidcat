@@ -15,6 +15,7 @@ scatdata=new.env()
 catdata=new.env()
 catdataIns=new.env()
 
+colwidth<-0
 for(i in 1:nrow(tdata)) {
 	mykey<-paste(tdata[i,1])
 	#if (grepl("ALL", mykey) || grepl("NO_CATEGORY", mykey)) {
@@ -33,6 +34,7 @@ for(i in 1:nrow(tdata)) {
 	scatdata[[mykey]] <- c(catdata[[mykey]], tdata[i,5])
 	catdata[[mykey]] <- c(catdata[[mykey]], tdata[i,6])
 	catdataIns[[mykey]] <- c(catdataIns[[mykey]], tdata[i,7])
+	colwidth<-colwidth+1
 }
 
 pches<-c(0:8)
@@ -41,7 +43,7 @@ colors<-c("red","green","blue","darkorange","darkorchid","gold4","darkgrey","yel
 #par(mar = c(1,1,1,1))
 pdf("./lifecycle-s.pdf",width=2.5,height=3.0)
 r=1
-alls<- matrix(NA, ncol=366, nrow=length(ls(scatdata)))
+alls<- matrix(NA, ncol=colwidth, nrow=length(ls(scatdata)))
 snames  <- c()
 for (key in ls(scatdata)) {
 	vdata <- scatdata[[key]]*100
@@ -60,7 +62,7 @@ points( meanalls, col='gold', pch=18, cex=0.5 )
 
 pdf("./lifecycle-d.pdf",width=2.5,height=3.0)
 r=1
-alld<- matrix(NA, ncol=366, nrow=length(ls(catdata)))
+alld<- matrix(NA, ncol=colwidth, nrow=length(ls(catdata)))
 dnames  <- c()
 for (key in ls(catdata)) {
 	vdata <- catdata[[key]]*100
@@ -81,7 +83,7 @@ points( meanalld, col='gold', pch=18, cex=0.5 )
 
 pdf("./lifecycle-dins.pdf",width=2.5,height=3.0)
 r=1
-alldIns<- matrix(NA, ncol=366, nrow=length(ls(catdataIns)))
+alldIns<- matrix(NA, ncol=colwidth, nrow=length(ls(catdataIns)))
 dnamesIns  <- c()
 for (key in ls(catdataIns)) {
 	vdata <- catdataIns[[key]]*100
