@@ -2,8 +2,10 @@
 
 #(test $# -lt 1) && (echo "too few arguments") && exit 0
 
-tmv=${1:-"3600"}
-destdir=/home/hcai/testbed/cg.instrumented/pairs/
+#tmv=${1:-"3600"}
+tmv=${1:-"600"}
+#destdir=/home/hcai/testbed/cg.instrumented/pairs/
+destdir=/home/hcai/testbed/cg.instrumented/pairs.secondset/
 
 timeout() {
 
@@ -27,7 +29,7 @@ runOneApk() {
 	e=$3
 	
 	finaldir=$destdir/${cat}_installed
-	OUTDIR=/home/hcai/testbed/singleAppLogsNew_${cat}
+	OUTDIR=/home/hcai/testbed/singleAppLogsNew_10m_${cat}
 	mkdir -p $OUTDIR
 
 	if [ ! -s $finaldir/$i/${e}.apk ];then return; fi
@@ -35,6 +37,9 @@ runOneApk() {
 		echo "app $finaldir/$i/${e}.apk has been processed, skipped it now."
 		return
 	fi
+
+	srt=`cat lowcov_benign_set2.${cat}.final | awk '{print $1}' | grep -a -c -E "^${i}-${e}.logcat$"`
+	if [ $srt -ge 1 ];then return; fi
 
 	/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
 	apkinstall $finaldir/$i/${e}.apk
