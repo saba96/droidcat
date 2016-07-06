@@ -46,7 +46,7 @@ print(paste(inv," invalid data points ignored"))
 fndatainter=args[2]
 tdatainter=read.table(file=fndatainter)
 
-sdoverallinter<- matrix(NA, nrow=nrow(tdata), ncol=2)
+sdoverallinter<- matrix(NA, nrow=nrow(tdatainter), ncol=2)
 dataextrainter<- matrix(NA, nrow=nrow(tdatainter), ncol=3)
 ginterICC<- matrix(NA, nrow=nrow(tdatainter), ncol=4)
 
