@@ -34,8 +34,8 @@ def load_generalFeatures(gfn):
     for app in gfeatures.keys():
         allsets = gfeatures[app]
         if len(allsets)<2:
-            print >> sys.err, app + " has one set of general features only!"
-            continue
+            print >> sys.stderr, app + " has one set of general features only!"
+            #continue
         for j in range(0, len(allsets[0])):
             for k in range(1,len(allsets)):
                 allsets[0][j] += allsets[k][j]
@@ -65,8 +65,8 @@ def load_ICCFeatures(iccfn):
     for app in iccfeatures.keys():
         allsets = iccfeatures[app]
         if len(allsets)<2:
-            print >> sys.err, app + " has one set of ICC features only!"
-            continue
+            print >> sys.stderr, app + " has one set of ICC features only!"
+            #continue
         for j in range(0, len(allsets[0])):
             for k in range(1,len(allsets)):
                 allsets[0][j] += allsets[k][j]
@@ -96,8 +96,8 @@ def load_securityFeatures(secfn):
     for app in secfeatures.keys():
         allsets = secfeatures[app]
         if len(allsets)<2:
-            print >> sys.err, app + " has one set of security features only!"
-            continue
+            print >> sys.stderr, app + " has one set of security features only!"
+            #continue
         for j in range(0, len(allsets[0])):
             for k in range(1,len(allsets)):
                 allsets[0][j] += allsets[k][j]
@@ -172,9 +172,12 @@ def getTrainingData(dichotomous=False):
 
     allapps_benign = set(gfeatures_benign.keys()).intersection(iccfeatures_benign.keys()).intersection(secfeatures_benign.keys())
     for app in set(malbenignapps):
-        del gfeatures_benign[app]
-        del iccfeatures_benign[app]
-        del secfeatures_benign[app]
+        if app in gfeatures_benign:
+            del gfeatures_benign[app]
+        if app in iccfeatures_benign:
+            del iccfeatures_benign[app]
+        if app in secfeatures_benign:
+            del secfeatures_benign[app]
     for app in set(gfeatures_benign.keys()).difference(allapps_benign):
         del gfeatures_benign[app] 
     for app in set(iccfeatures_benign.keys()).difference(allapps_benign):
@@ -244,7 +247,10 @@ def getTrainingData(dichotomous=False):
         r+=1
         if c==None:
             c = len (allfeatures[app])
+            print "feature vector length=%d" % (c)
             continue
+        if c != len (allfeatures[app]):
+            print "inconsistent feature vector length for app: %s --- %d" % (app, len(allfeatures[app]))
         assert c == len (allfeatures[app])
 
     allLabels = benignLabels.copy()

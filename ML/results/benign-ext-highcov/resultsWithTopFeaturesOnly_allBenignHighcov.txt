@@ -1,0 +1,497 @@
+python multipleModelsWithTopFeaturesOnly_tab.py 
+
+mobi.infolife.weatheralert has one set of general features only!
+my.savemoney.taxapp has one set of general features only!
+hm.orz.chaos114.android.tethersetting has one set of general features only!
+com.dietas.adelgazar.free has one set of general features only!
+eu.wheelchairsite.m has one set of general features only!
+com.uk.edealinfoinc has one set of general features only!
+com.trialtea.inglesmovil has one set of general features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of general features only!
+netiks.FransaBank.mobile has one set of general features only!
+com.dobmob.doblistdemo has one set of general features only!
+au.gov.customs.trs has one set of general features only!
+com.tigoenergy.smart has one set of general features only!
+com.manarcadpalli has one set of general features only!
+com.theactionapp has one set of general features only!
+com.bruno.marcadorplacar has one set of general features only!
+co.epearl.ethiopiatv has one set of general features only!
+com.ciandt.tt has one set of general features only!
+com.Threelineinfotech.thiruverkadu has one set of general features only!
+com.app.dstorz has one set of general features only!
+com.gidon.coffeesnumber has one set of general features only!
+com.hanna.pitbull has one set of general features only!
+com.mathesoft.fakeapps has one set of general features only!
+com.troysoft.caloriecalculator has one set of general features only!
+com.abast.fmjv has one set of general features only!
+com.bluejuice.thekiteshow has one set of general features only!
+com.outilsobdfacile.obd.connecteur has one set of general features only!
+com.skp.valentine has one set of general features only!
+com.mobusi.bestapps has one set of general features only!
+net.mojeto.timelapsecalc.app has one set of general features only!
+com.mrcombi.ratedemo has one set of general features only!
+com.webcamscz.map has one set of general features only!
+com.spideroak.android has one set of general features only!
+org.ibeccato.photoczip has one set of general features only!
+mdis.kangur has one set of general features only!
+com.rudicedita.com.kimbailey has one set of general features only!
+asp.emo.pack27.ext has one set of general features only!
+ticket.booking.india has one set of general features only!
+com.phonegap.kinomondsterne has one set of general features only!
+com.iSharpeners.KeertanRadio has one set of general features only!
+com.mbdholdings.tenseforbengalistudents has one set of general features only!
+com.greydot has one set of general features only!
+com.jimnevin.weatherireland has one set of general features only!
+com.borezo.kasperskyfan has one set of general features only!
+com.iroshni.mualamulquran has one set of general features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of general features only!
+com.appdiabetes has one set of general features only!
+com.wickert.bowlingnight has one set of general features only!
+com.badcoke.aweather has one set of general features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of general features only!
+com.cutter.alside has one set of general features only!
+com.dialquick has one set of general features only!
+com.color.droid.shivmahapuran has one set of general features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of general features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of general features only!
+gust.svm has one set of general features only!
+com.gpsandfleet.gpstracking has one set of general features only!
+cz.mpelant.deskclock has one set of general features only!
+com.flatron.rosewallpape has one set of general features only!
+mobi.infolife.weatheralert has one set of ICC features only!
+my.savemoney.taxapp has one set of ICC features only!
+hm.orz.chaos114.android.tethersetting has one set of ICC features only!
+com.dietas.adelgazar.free has one set of ICC features only!
+eu.wheelchairsite.m has one set of ICC features only!
+net.ays.PROD342197 has one set of ICC features only!
+com.uk.edealinfoinc has one set of ICC features only!
+com.trialtea.inglesmovil has one set of ICC features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of ICC features only!
+netiks.FransaBank.mobile has one set of ICC features only!
+com.dobmob.doblistdemo has one set of ICC features only!
+au.gov.customs.trs has one set of ICC features only!
+com.tigoenergy.smart has one set of ICC features only!
+com.manarcadpalli has one set of ICC features only!
+com.theactionapp has one set of ICC features only!
+com.bruno.marcadorplacar has one set of ICC features only!
+co.epearl.ethiopiatv has one set of ICC features only!
+com.ciandt.tt has one set of ICC features only!
+com.Threelineinfotech.thiruverkadu has one set of ICC features only!
+com.app.dstorz has one set of ICC features only!
+com.gidon.coffeesnumber has one set of ICC features only!
+com.hanna.pitbull has one set of ICC features only!
+com.mathesoft.fakeapps has one set of ICC features only!
+com.troysoft.caloriecalculator has one set of ICC features only!
+com.abast.fmjv has one set of ICC features only!
+com.bluejuice.thekiteshow has one set of ICC features only!
+com.outilsobdfacile.obd.connecteur has one set of ICC features only!
+com.skp.valentine has one set of ICC features only!
+com.mobusi.bestapps has one set of ICC features only!
+net.mojeto.timelapsecalc.app has one set of ICC features only!
+com.mrcombi.ratedemo has one set of ICC features only!
+com.webcamscz.map has one set of ICC features only!
+com.spideroak.android has one set of ICC features only!
+org.ibeccato.photoczip has one set of ICC features only!
+mdis.kangur has one set of ICC features only!
+com.rudicedita.com.kimbailey has one set of ICC features only!
+asp.emo.pack27.ext has one set of ICC features only!
+ticket.booking.india has one set of ICC features only!
+com.phonegap.kinomondsterne has one set of ICC features only!
+com.iSharpeners.KeertanRadio has one set of ICC features only!
+com.mbdholdings.tenseforbengalistudents has one set of ICC features only!
+com.greydot has one set of ICC features only!
+com.jimnevin.weatherireland has one set of ICC features only!
+com.borezo.kasperskyfan has one set of ICC features only!
+com.iroshni.mualamulquran has one set of ICC features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of ICC features only!
+com.appdiabetes has one set of ICC features only!
+com.wickert.bowlingnight has one set of ICC features only!
+com.badcoke.aweather has one set of ICC features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of ICC features only!
+com.cutter.alside has one set of ICC features only!
+com.dialquick has one set of ICC features only!
+com.color.droid.shivmahapuran has one set of ICC features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of ICC features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of ICC features only!
+gust.svm has one set of ICC features only!
+com.gpsandfleet.gpstracking has one set of ICC features only!
+cz.mpelant.deskclock has one set of ICC features only!
+com.flatron.rosewallpape has one set of ICC features only!
+mobi.infolife.weatheralert has one set of security features only!
+my.savemoney.taxapp has one set of security features only!
+hm.orz.chaos114.android.tethersetting has one set of security features only!
+com.dietas.adelgazar.free has one set of security features only!
+eu.wheelchairsite.m has one set of security features only!
+com.uk.edealinfoinc has one set of security features only!
+com.trialtea.inglesmovil has one set of security features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of security features only!
+netiks.FransaBank.mobile has one set of security features only!
+com.dobmob.doblistdemo has one set of security features only!
+au.gov.customs.trs has one set of security features only!
+com.tigoenergy.smart has one set of security features only!
+com.manarcadpalli has one set of security features only!
+com.theactionapp has one set of security features only!
+com.bruno.marcadorplacar has one set of security features only!
+co.epearl.ethiopiatv has one set of security features only!
+com.ciandt.tt has one set of security features only!
+com.Threelineinfotech.thiruverkadu has one set of security features only!
+com.app.dstorz has one set of security features only!
+com.gidon.coffeesnumber has one set of security features only!
+com.hanna.pitbull has one set of security features only!
+com.mathesoft.fakeapps has one set of security features only!
+com.troysoft.caloriecalculator has one set of security features only!
+com.abast.fmjv has one set of security features only!
+com.bluejuice.thekiteshow has one set of security features only!
+com.outilsobdfacile.obd.connecteur has one set of security features only!
+com.skp.valentine has one set of security features only!
+com.mobusi.bestapps has one set of security features only!
+net.mojeto.timelapsecalc.app has one set of security features only!
+com.mrcombi.ratedemo has one set of security features only!
+com.webcamscz.map has one set of security features only!
+com.spideroak.android has one set of security features only!
+org.ibeccato.photoczip has one set of security features only!
+mdis.kangur has one set of security features only!
+com.rudicedita.com.kimbailey has one set of security features only!
+asp.emo.pack27.ext has one set of security features only!
+ticket.booking.india has one set of security features only!
+com.phonegap.kinomondsterne has one set of security features only!
+com.iSharpeners.KeertanRadio has one set of security features only!
+com.mbdholdings.tenseforbengalistudents has one set of security features only!
+com.greydot has one set of security features only!
+com.jimnevin.weatherireland has one set of security features only!
+com.borezo.kasperskyfan has one set of security features only!
+com.iroshni.mualamulquran has one set of security features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of security features only!
+com.appdiabetes has one set of security features only!
+com.wickert.bowlingnight has one set of security features only!
+com.badcoke.aweather has one set of security features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of security features only!
+com.cutter.alside has one set of security features only!
+com.dialquick has one set of security features only!
+com.color.droid.shivmahapuran has one set of security features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of security features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of security features only!
+gust.svm has one set of security features only!
+com.gpsandfleet.gpstracking has one set of security features only!
+cz.mpelant.deskclock has one set of security features only!
+com.flatron.rosewallpape has one set of security features only!
+136 valid benign app training samples to be used.
+com.nicky.lyyws.xmall has one set of general features only!
+com.ku6.android.videobrowser has one set of general features only!
+exam.fengyan.aiqingceshi has one set of general features only!
+com.nicky.lyyws.xmall has one set of ICC features only!
+com.ku6.android.videobrowser has one set of ICC features only!
+exam.fengyan.aiqingceshi has one set of ICC features only!
+com.nicky.lyyws.xmall has one set of security features only!
+com.ku6.android.videobrowser has one set of security features only!
+exam.fengyan.aiqingceshi has one set of security features only!
+135 valid malicious app training samples to be used.
+feature vector length=122
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:516: Warning: The least populated class in y has only 1 members, which is too few. The minimum number of labels for any class cannot be less than n_folds=10.
+  % (min_labels, self.n_folds)), Warning)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1076: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     accuracy    ******
+0.988929889299	0.885608856089	0.988929889299	0.79704797048	0.793357933579	
+0.988929889299	0.822878228782	0.988929889299	0.760147601476	0.782287822878	
+0.79704797048	0.612546125461	0.79704797048	0.586715867159	0.560885608856	
+0.988929889299	0.678966789668	0.988929889299	0.612546125461	0.616236162362	
+0.988929889299	0.79704797048	0.988929889299	0.749077490775	0.767527675277	
+0.988929889299	0.841328413284	0.988929889299	0.749077490775	0.789667896679	
+0.988929889299	0.867158671587	0.988929889299	0.749077490775	0.774907749077	
+
+******     precision    ******
+0.81103318384	0.767007977625	0.786650047483	0.681730301591	0.750637161193	
+0.788552431894	0.779962580387	0.805762087707	0.674739822934	0.741900140528	
+0.614539701402	0.548681625044	0.621489521735	0.528943355803	0.56093341374	
+0.77392612051	0.606633446692	0.712738660516	0.598022997013	0.651948851515	
+0.788748740971	0.694305523211	0.805239871482	0.658249433331	0.753353337536	
+0.804045575582	0.751440567421	0.776985808755	0.655628630024	0.759524981192	
+0.79466552813	0.776537545002	0.772492483309	0.665213337622	0.731798941799	
+
+******     recall    ******
+0.825925925926	0.792592592593	0.759259259259	0.755555555556	0.72962962963	
+0.825925925926	0.814814814815	0.777777777778	0.744444444444	0.744444444444	
+0.651851851852	0.596296296296	0.648148148148	0.585185185185	0.551851851852	
+0.8	0.648148148148	0.707407407407	0.611111111111	0.585185185185	
+0.811111111111	0.755555555556	0.792592592593	0.740740740741	0.744444444444	
+0.82962962963	0.781481481481	0.77037037037	0.733333333333	0.755555555556	
+0.822222222222	0.807407407407	0.759259259259	0.72962962963	0.737037037037	
+
+******     F1    ******
+0.81553575267	0.770013074254	0.789013460355	0.707912186339	0.726566135891	
+0.809401481776	0.79245045734	0.778779025532	0.700239208708	0.735949684001	
+0.600830980157	0.54641938656	0.615506259446	0.520286168593	0.533553914923	
+0.767914970955	0.603992690006	0.688212239141	0.526149966227	0.596448309306	
+0.785351678998	0.71644158189	0.7811500141	0.692126995411	0.741224568552	
+0.808074923368	0.756708207982	0.788129469287	0.688362183809	0.75850133593	
+0.805594415185	0.784265802008	0.763367030189	0.684993621099	0.721245085719	
+
+python multipleModelsWithTopFeaturesOnly_tab.py  true
+
+mobi.infolife.weatheralert has one set of general features only!
+my.savemoney.taxapp has one set of general features only!
+hm.orz.chaos114.android.tethersetting has one set of general features only!
+com.dietas.adelgazar.free has one set of general features only!
+eu.wheelchairsite.m has one set of general features only!
+com.uk.edealinfoinc has one set of general features only!
+com.trialtea.inglesmovil has one set of general features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of general features only!
+netiks.FransaBank.mobile has one set of general features only!
+com.dobmob.doblistdemo has one set of general features only!
+au.gov.customs.trs has one set of general features only!
+com.tigoenergy.smart has one set of general features only!
+com.manarcadpalli has one set of general features only!
+com.theactionapp has one set of general features only!
+com.bruno.marcadorplacar has one set of general features only!
+co.epearl.ethiopiatv has one set of general features only!
+com.ciandt.tt has one set of general features only!
+com.Threelineinfotech.thiruverkadu has one set of general features only!
+com.app.dstorz has one set of general features only!
+com.gidon.coffeesnumber has one set of general features only!
+com.hanna.pitbull has one set of general features only!
+com.mathesoft.fakeapps has one set of general features only!
+com.troysoft.caloriecalculator has one set of general features only!
+com.abast.fmjv has one set of general features only!
+com.bluejuice.thekiteshow has one set of general features only!
+com.outilsobdfacile.obd.connecteur has one set of general features only!
+com.skp.valentine has one set of general features only!
+com.mobusi.bestapps has one set of general features only!
+net.mojeto.timelapsecalc.app has one set of general features only!
+com.mrcombi.ratedemo has one set of general features only!
+com.webcamscz.map has one set of general features only!
+com.spideroak.android has one set of general features only!
+org.ibeccato.photoczip has one set of general features only!
+mdis.kangur has one set of general features only!
+com.rudicedita.com.kimbailey has one set of general features only!
+asp.emo.pack27.ext has one set of general features only!
+ticket.booking.india has one set of general features only!
+com.phonegap.kinomondsterne has one set of general features only!
+com.iSharpeners.KeertanRadio has one set of general features only!
+com.mbdholdings.tenseforbengalistudents has one set of general features only!
+com.greydot has one set of general features only!
+com.jimnevin.weatherireland has one set of general features only!
+com.borezo.kasperskyfan has one set of general features only!
+com.iroshni.mualamulquran has one set of general features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of general features only!
+com.appdiabetes has one set of general features only!
+com.wickert.bowlingnight has one set of general features only!
+com.badcoke.aweather has one set of general features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of general features only!
+com.cutter.alside has one set of general features only!
+com.dialquick has one set of general features only!
+com.color.droid.shivmahapuran has one set of general features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of general features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of general features only!
+gust.svm has one set of general features only!
+com.gpsandfleet.gpstracking has one set of general features only!
+cz.mpelant.deskclock has one set of general features only!
+com.flatron.rosewallpape has one set of general features only!
+mobi.infolife.weatheralert has one set of ICC features only!
+my.savemoney.taxapp has one set of ICC features only!
+hm.orz.chaos114.android.tethersetting has one set of ICC features only!
+com.dietas.adelgazar.free has one set of ICC features only!
+eu.wheelchairsite.m has one set of ICC features only!
+net.ays.PROD342197 has one set of ICC features only!
+com.uk.edealinfoinc has one set of ICC features only!
+com.trialtea.inglesmovil has one set of ICC features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of ICC features only!
+netiks.FransaBank.mobile has one set of ICC features only!
+com.dobmob.doblistdemo has one set of ICC features only!
+au.gov.customs.trs has one set of ICC features only!
+com.tigoenergy.smart has one set of ICC features only!
+com.manarcadpalli has one set of ICC features only!
+com.theactionapp has one set of ICC features only!
+com.bruno.marcadorplacar has one set of ICC features only!
+co.epearl.ethiopiatv has one set of ICC features only!
+com.ciandt.tt has one set of ICC features only!
+com.Threelineinfotech.thiruverkadu has one set of ICC features only!
+com.app.dstorz has one set of ICC features only!
+com.gidon.coffeesnumber has one set of ICC features only!
+com.hanna.pitbull has one set of ICC features only!
+com.mathesoft.fakeapps has one set of ICC features only!
+com.troysoft.caloriecalculator has one set of ICC features only!
+com.abast.fmjv has one set of ICC features only!
+com.bluejuice.thekiteshow has one set of ICC features only!
+com.outilsobdfacile.obd.connecteur has one set of ICC features only!
+com.skp.valentine has one set of ICC features only!
+com.mobusi.bestapps has one set of ICC features only!
+net.mojeto.timelapsecalc.app has one set of ICC features only!
+com.mrcombi.ratedemo has one set of ICC features only!
+com.webcamscz.map has one set of ICC features only!
+com.spideroak.android has one set of ICC features only!
+org.ibeccato.photoczip has one set of ICC features only!
+mdis.kangur has one set of ICC features only!
+com.rudicedita.com.kimbailey has one set of ICC features only!
+asp.emo.pack27.ext has one set of ICC features only!
+ticket.booking.india has one set of ICC features only!
+com.phonegap.kinomondsterne has one set of ICC features only!
+com.iSharpeners.KeertanRadio has one set of ICC features only!
+com.mbdholdings.tenseforbengalistudents has one set of ICC features only!
+com.greydot has one set of ICC features only!
+com.jimnevin.weatherireland has one set of ICC features only!
+com.borezo.kasperskyfan has one set of ICC features only!
+com.iroshni.mualamulquran has one set of ICC features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of ICC features only!
+com.appdiabetes has one set of ICC features only!
+com.wickert.bowlingnight has one set of ICC features only!
+com.badcoke.aweather has one set of ICC features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of ICC features only!
+com.cutter.alside has one set of ICC features only!
+com.dialquick has one set of ICC features only!
+com.color.droid.shivmahapuran has one set of ICC features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of ICC features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of ICC features only!
+gust.svm has one set of ICC features only!
+com.gpsandfleet.gpstracking has one set of ICC features only!
+cz.mpelant.deskclock has one set of ICC features only!
+com.flatron.rosewallpape has one set of ICC features only!
+mobi.infolife.weatheralert has one set of security features only!
+my.savemoney.taxapp has one set of security features only!
+hm.orz.chaos114.android.tethersetting has one set of security features only!
+com.dietas.adelgazar.free has one set of security features only!
+eu.wheelchairsite.m has one set of security features only!
+com.uk.edealinfoinc has one set of security features only!
+com.trialtea.inglesmovil has one set of security features only!
+com.abdulrahmansalam.app_ReadArabicLevel2 has one set of security features only!
+netiks.FransaBank.mobile has one set of security features only!
+com.dobmob.doblistdemo has one set of security features only!
+au.gov.customs.trs has one set of security features only!
+com.tigoenergy.smart has one set of security features only!
+com.manarcadpalli has one set of security features only!
+com.theactionapp has one set of security features only!
+com.bruno.marcadorplacar has one set of security features only!
+co.epearl.ethiopiatv has one set of security features only!
+com.ciandt.tt has one set of security features only!
+com.Threelineinfotech.thiruverkadu has one set of security features only!
+com.app.dstorz has one set of security features only!
+com.gidon.coffeesnumber has one set of security features only!
+com.hanna.pitbull has one set of security features only!
+com.mathesoft.fakeapps has one set of security features only!
+com.troysoft.caloriecalculator has one set of security features only!
+com.abast.fmjv has one set of security features only!
+com.bluejuice.thekiteshow has one set of security features only!
+com.outilsobdfacile.obd.connecteur has one set of security features only!
+com.skp.valentine has one set of security features only!
+com.mobusi.bestapps has one set of security features only!
+net.mojeto.timelapsecalc.app has one set of security features only!
+com.mrcombi.ratedemo has one set of security features only!
+com.webcamscz.map has one set of security features only!
+com.spideroak.android has one set of security features only!
+org.ibeccato.photoczip has one set of security features only!
+mdis.kangur has one set of security features only!
+com.rudicedita.com.kimbailey has one set of security features only!
+asp.emo.pack27.ext has one set of security features only!
+ticket.booking.india has one set of security features only!
+com.phonegap.kinomondsterne has one set of security features only!
+com.iSharpeners.KeertanRadio has one set of security features only!
+com.mbdholdings.tenseforbengalistudents has one set of security features only!
+com.greydot has one set of security features only!
+com.jimnevin.weatherireland has one set of security features only!
+com.borezo.kasperskyfan has one set of security features only!
+com.iroshni.mualamulquran has one set of security features only!
+vcam.dk.DeutschNachrichtenZeitungen has one set of security features only!
+com.appdiabetes has one set of security features only!
+com.wickert.bowlingnight has one set of security features only!
+com.badcoke.aweather has one set of security features only!
+com.tamilnoolakam.Tamilnoolakamapp has one set of security features only!
+com.cutter.alside has one set of security features only!
+com.dialquick has one set of security features only!
+com.color.droid.shivmahapuran has one set of security features only!
+nl.littlebluefrog.leeuwarderbioscopen has one set of security features only!
+jp.co.a_tm.android.plus_crystal_daisy has one set of security features only!
+gust.svm has one set of security features only!
+com.gpsandfleet.gpstracking has one set of security features only!
+cz.mpelant.deskclock has one set of security features only!
+com.flatron.rosewallpape has one set of security features only!
+136 valid benign app training samples to be used.
+com.nicky.lyyws.xmall has one set of general features only!
+com.ku6.android.videobrowser has one set of general features only!
+exam.fengyan.aiqingceshi has one set of general features only!
+com.nicky.lyyws.xmall has one set of ICC features only!
+com.ku6.android.videobrowser has one set of ICC features only!
+exam.fengyan.aiqingceshi has one set of ICC features only!
+com.nicky.lyyws.xmall has one set of security features only!
+com.ku6.android.videobrowser has one set of security features only!
+exam.fengyan.aiqingceshi has one set of security features only!
+135 valid malicious app training samples to be used.
+feature vector length=122
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1074: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+model DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=None,
+            max_features=None, max_leaf_nodes=None, min_samples_leaf=1,
+            min_samples_split=2, min_weight_fraction_leaf=0.0,
+            presort=False, random_state=None, splitter='best')
+model MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+model BernoulliNB(alpha=1.0, binarize=0.0, class_prior=None, fit_prior=True)
+******     accuracy    ******
+1.0	0.940959409594	1.0	0.874538745387	0.874538745387	
+1.0	0.907749077491	1.0	0.870848708487	0.870848708487	
+0.819188191882	0.682656826568	0.80442804428	0.678966789668	0.642066420664	
+1.0	0.741697416974	1.0	0.690036900369	0.763837638376	
+1.0	0.870848708487	1.0	0.808118081181	0.845018450185	
+1.0	0.881918819188	1.0	0.859778597786	0.856088560886	
+1.0	0.89667896679	1.0	0.859778597786	0.852398523985	
+
+******     precision    ******
+0.874055023923	0.866109195242	0.831493506494	0.852428086619	0.873919413919	
+0.885507703081	0.865324373339	0.855845543346	0.84610958486	0.848587903325	
+0.709244089244	0.753055555556	0.690417915418	0.67952020202	0.613601712615	
+0.831997724498	0.727679077458	0.763309900883	0.66789940324	0.835354922855	
+0.880077838828	0.808374783112	0.840227272727	0.839767871018	0.834700715951	
+0.89664160401	0.845178571429	0.873554720134	0.863274225774	0.831587750485	
+0.890759251069	0.855164835165	0.833546453546	0.868598901099	0.821750920648	
+
+******     recall    ******
+0.938163425841	0.89614850234	0.880598768277	0.886333240203	0.888525939145	
+0.924146974457	0.916935764614	0.888148071399	0.899907900837	0.873784220595	
+0.51974840433	0.493733775684	0.537526182108	0.655256697207	0.791314564349	
+0.875760654894	0.665864860973	0.854674537709	0.52633648773	0.616267354936	
+0.878086574588	0.887976488596	0.856107442609	0.737586441766	0.821891026071	
+0.905642341834	0.895668796288	0.908142054024	0.872862277042	0.8662300101	
+0.917956498266	0.893440752574	0.862133442753	0.85211080629	0.856113459983	
+
+******     F1    ******
+0.894927405296	0.88303351979	0.837247438552	0.856522876152	0.878779481917	
+0.878372033272	0.886116149996	0.874731837569	0.87072161686	0.855964120392	
+0.591530153887	0.593814020118	0.606486348722	0.626095290611	0.681223907187	
+0.872400702483	0.671804807109	0.794747748875	0.6080562481	0.681539359875	
+0.898625915899	0.851091359971	0.843126780627	0.786316911752	0.822757063471	
+0.896806820563	0.868663466724	0.897642131315	0.855776036752	0.833465127028	
+0.902277434946	0.864187986652	0.851815986326	0.84291916473	0.838120936775	
+
+
