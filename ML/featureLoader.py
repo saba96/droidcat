@@ -161,14 +161,20 @@ def malwareCategorize(resultDir,fnmapping):
 
     return ret
 
-def getTrainingData(dichotomous=False):
+def getTrainingData(dichotomous=False, \
+        benign_g=FTXT_BENIGN_G,\
+        benign_icc=FTXT_BENIGN_ICC,\
+        benign_sec=FTXT_BENIGN_SEC,\
+        mal_g=FTXT_MALWARE_G,\
+        mal_icc=FTXT_MALWARE_ICC,\
+        mal_sec=FTXT_MALWARE_SEC):
     '''
     1. Assemble benign app features
     '''
 
-    gfeatures_benign = load_generalFeatures(FTXT_BENIGN_G)
-    iccfeatures_benign = load_ICCFeatures(FTXT_BENIGN_ICC)
-    secfeatures_benign = load_securityFeatures(FTXT_BENIGN_SEC)
+    gfeatures_benign = load_generalFeatures(benign_g)
+    iccfeatures_benign = load_ICCFeatures(benign_icc)
+    secfeatures_benign = load_securityFeatures(benign_sec)
 
     allapps_benign = set(gfeatures_benign.keys()).intersection(iccfeatures_benign.keys()).intersection(secfeatures_benign.keys())
     for app in set(malbenignapps):
@@ -201,9 +207,9 @@ def getTrainingData(dichotomous=False):
     '''
     2. Assemble malicious app features
     '''
-    gfeatures_malware = load_generalFeatures(FTXT_MALWARE_G)
-    iccfeatures_malware = load_ICCFeatures(FTXT_MALWARE_ICC)
-    secfeatures_malware = load_securityFeatures(FTXT_MALWARE_SEC)
+    gfeatures_malware = load_generalFeatures(mal_g)
+    iccfeatures_malware = load_ICCFeatures(mal_icc)
+    secfeatures_malware = load_securityFeatures(mal_sec)
 
     allapps_malware = \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
