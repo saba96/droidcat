@@ -42,12 +42,6 @@ for(i in seq(1,nrow(tdata),3)) {
 
 	r <- r+1
 }
-for (i in seq(1, nrow(dpm))) {
-	#print(dpm[i,4])
-}
-for (i in seq(1, nrow(dpmins))) {
-	#print(dpmins[i,4])
-}
 
 print(paste(inv," invalid data points ignored."))
 

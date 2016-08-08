@@ -35,9 +35,9 @@ for(i in seq(1,nrow(tdata),1)) {
 	r <- r+1
 }
 
-print(paste(inv," invalid data points igno#ffff33."))
+print(paste(inv," invalid data points ignogray50."))
 
-colors<-c("#ffff33","gray80", "#ffff33","gray80", "#ffff33","gray80") #,"black","yellow","darkorange","darkorchid","red4","darkgrey")
+colors<-c("gray50","gray80", "gray50","gray80", "gray50","gray80") #,"black","yellow","darkorange","darkorchid","red4","darkgrey")
 xnames<-c("UserCode", "", "3rdLib", "", "SDK", "")
 pches<-c(0:8)
 
@@ -46,6 +46,9 @@ s <- cbind( dpmclsins[,1], dpmmeins[,1], dpmclsins[,2], dpmmeins[,2], dpmclsins[
 boxplot(s, names=xnames,col=colors,ylab="percentage (instance view)",range=0,cex.axis=0.4,lwd=0.3,cex.lab=0.5)
 means <- (colMeans(s, na.rm=TRUE))
 points(means, col="red", pch=18, cex=0.5)
-legend("topleft", legend=c("class", "method"), cex=.5, col=c("#ffff33","gray80"), lwd=4.5, bty="n")
+legend("topleft", legend=c("class", "method"), cex=.5, col=c("gray50","gray80"), lwd=4.5, bty="n")
+
+print(means)
+print(apply( s, 2, sd, na.rm=TRUE ))
 
 #dev.off
