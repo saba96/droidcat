@@ -15,7 +15,7 @@ import sys
 import string
 
 from configs import *
-from featureLoader import *
+from featureLoader_perFamily import *
 
 global g_accuracy,g_binary
 
@@ -124,7 +124,10 @@ if __name__=="__main__":
     if len(sys.argv)>=4:
         g_label = sys.argv[3]
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( g_binary )
+    if g_accuracy:
+        (features, labels, Testfeatures, Testlabels) = getTrainingData( g_binary, malwareFamily=g_label )
+    else:
+        (features, labels, Testfeatures, Testlabels) = getTrainingData( g_binary )
 
     models = (RandomForestClassifier(n_estimators = 100),\
               SVC(kernel='rbf'),

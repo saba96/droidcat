@@ -5,9 +5,9 @@ directory of all feature text files
 '''
 #FTXT_DIR="/home/hcai/ML/features/"
 import os
-FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov.10m/"
+#FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov.10m/"
 #FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov/"
-#FTXT_DIR=os.getcwd()+"/features/benign-full/"
+FTXT_DIR=os.getcwd()+"/features/benign-full/"
 
 '''
 benign app feature text files

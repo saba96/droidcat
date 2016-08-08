@@ -233,6 +233,7 @@ def malwareCategorize(resultDir,fnmapping):
     return ret
 
 def getTrainingData(dichotomous=False, \
+        malwareFamily="MALICIOUS",
         benign_g=FTXT_BENIGN_G,\
         benign_icc=FTXT_BENIGN_ICC,\
         benign_sec=FTXT_BENIGN_SEC,\
@@ -285,7 +286,6 @@ def getTrainingData(dichotomous=False, \
     allapps_malware = \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
 
-    #malFam = malwareCategorizeRough(malwareResultDir, malwareMappingFile)
     malFam = malwareCategorize(malwareResultDir, malwareMappingFile)
 
     allapps_malware = allapps_malware.intersection( malFam.keys() )
@@ -311,7 +311,13 @@ def getTrainingData(dichotomous=False, \
         if dichotomous:
             malwareLabels[app] = 'MALICIOUS'
         else:
-            malwareLabels[app] = str(malFam[app][0])
+            if malwareFamily=="MALICIOUS":
+                malwareLabels[app] = str(malFam[app][0])
+            else:
+                if str(malFam[app][0]).lower()==malwareFamily.lower():
+                    malwareLabels[app] = str(malFam[app][0])
+                else:
+                    malwareLabels[app] = "MALICIOUS"
 
     '''
     3. assemble into the entire training set (as a matrix)
