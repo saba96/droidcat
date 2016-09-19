@@ -111,7 +111,7 @@ def getpackname(fnapk):
     try:
         appname = subprocess.check_output([BIN_GETPACKNAME, fnapk])
     except Exception,e:
-        print >> sys.stderr, "error occurred when executing getpackage.sh " + fnapk 
+        print >> sys.stderr, "error occurred when executing getpackage.sh " + fnapk
     return string.split(appname.lstrip().rstrip(),'\t')[1]
 
 def malwareCategorizeRough(resultDir,fnmapping):
@@ -176,7 +176,7 @@ def refineFamily(fullFamilyList, vtres):
         if f2n[fam] > winCnt:
             winCnt = f2n[fam]
             winFam = fam
-    return winFam 
+    return winFam
 
 def malwareCategorize(resultDir,fnmapping):
     fullFamilyList=list()
@@ -238,7 +238,8 @@ def getTrainingData(dichotomous=False, \
         benign_sec=FTXT_BENIGN_SEC,\
         mal_g=FTXT_MALWARE_G,\
         mal_icc=FTXT_MALWARE_ICC,\
-        mal_sec=FTXT_MALWARE_SEC):
+        mal_sec=FTXT_MALWARE_SEC,\
+	pruneMinor=False):
     '''
     1. Assemble benign app features
     '''
@@ -256,11 +257,11 @@ def getTrainingData(dichotomous=False, \
         if app in secfeatures_benign:
             del secfeatures_benign[app]
     for app in set(gfeatures_benign.keys()).difference(allapps_benign):
-        del gfeatures_benign[app] 
+        del gfeatures_benign[app]
     for app in set(iccfeatures_benign.keys()).difference(allapps_benign):
-        del iccfeatures_benign[app] 
+        del iccfeatures_benign[app]
     for app in set(secfeatures_benign.keys()).difference(allapps_benign):
-        del secfeatures_benign[app] 
+        del secfeatures_benign[app]
 
     assert len(gfeatures_benign)==len(iccfeatures_benign) and len(iccfeatures_benign)==len(secfeatures_benign)
     print str(len(gfeatures_benign)) + " valid benign app training samples to be used."
@@ -336,13 +337,29 @@ def getTrainingData(dichotomous=False, \
 
     assert r == len (allLabels)
 
+    if pruneMinor:
+        purelabels = list()
+        for app in allfeatures.keys():
+            purelabels.append (allLabels[app])
+        l2c = malwareCatStat(purelabels)
+        minorapps = list()
+        for app in allfeatures.keys():
+            if pruneMinor and l2c[ allLabels[app] ] <= 1:
+                minorapps.append( app )
+        for app in minorapps:
+            del allfeatures[app]
+            del allLabels[app]
+        print "%d minor apps pruned" % (len(minorapps))
+        r -= len(minorapps)
+
     features = numpy.zeros( shape=(r,c) )
     labels = list()
     k=0
     j=0
     Testfeatures = list() #numpy.zeros( shape=(r/2,c) )
     Testlabels = list()
-    
+
+
     # test data: randomly pick 50% of the samples as test cases
     for app in allfeatures.keys():
         features[k] = allfeatures[app]
@@ -364,12 +381,13 @@ def malwareCatStat(labels):
         if lab not in l2c.keys():
             l2c[lab]=0
         l2c[lab]=l2c[lab]+1
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
+    return l2c
 
 if __name__=="__main__":
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False )
-    malwareCatStat(labels)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    l2c = malwareCatStat(labels)
+    for lab in l2c.keys():
+        print "%s\t%s" % (lab, l2c[lab])
     sys.exit(0)
 
 # hcai: set ts=4 tw=100 sts=4 sw=4
