@@ -8,6 +8,8 @@ import subprocess
 
 from configs import *
 
+verbose=False
+
 '''
 feature storage structure:
     {appname:[feature value set 1[feature-value1,feature-value2,...,feature-valueN], feature value set 2[...],...,]}
@@ -33,7 +35,7 @@ def load_generalFeatures(gfn):
     # for multiple sets of feature values per app, compute and keep the averages only
     for app in gfeatures.keys():
         allsets = gfeatures[app]
-        if len(allsets)<2:
+        if verbose and len(allsets)<2:
             print >> sys.stderr, app + " has one set of general features only!"
             #continue
         for j in range(0, len(allsets[0])):
@@ -64,7 +66,7 @@ def load_ICCFeatures(iccfn):
     # for multiple sets of feature values per app, compute and keep the averages only
     for app in iccfeatures.keys():
         allsets = iccfeatures[app]
-        if len(allsets)<2:
+        if verbose and len(allsets)<2:
             print >> sys.stderr, app + " has one set of ICC features only!"
             #continue
         for j in range(0, len(allsets[0])):
@@ -95,7 +97,7 @@ def load_securityFeatures(secfn):
     # for multiple sets of feature values per app, compute and keep the averages only
     for app in secfeatures.keys():
         allsets = secfeatures[app]
-        if len(allsets)<2:
+        if verbose and len(allsets)<2:
             print >> sys.stderr, app + " has one set of security features only!"
             #continue
         for j in range(0, len(allsets[0])):

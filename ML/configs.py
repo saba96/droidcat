@@ -5,8 +5,8 @@ directory of all feature text files
 '''
 #FTXT_DIR="/home/hcai/ML/features/"
 import os
-FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov.10m/"
-#FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov/"
+#FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov.10m/"
+FTXT_DIR=os.getcwd()+"/features/benign-ext-highcov/"
 #FTXT_DIR=os.getcwd()+"/features/benign-full/"
 
 '''
@@ -36,7 +36,7 @@ shell script for retrieving package name of a given APK
 '''
 BIN_GETPACKNAME='/home/hcai/bin/getpackage.sh'
 
-# these benign apps are found malicious by VirusTotal, will be excluded from the training data set
+#these benign apps are found malicious by VirusTotal, will be excluded from the training data set
 malbenignapps=["com.ictap.casm", "com.aob", "com.vaishnavism.vishnusahasranaamam.english", "com.hardcoreapps.loboshaker"]
 
 
