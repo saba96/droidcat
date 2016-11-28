@@ -62,8 +62,9 @@ def cv(model, features, labels):
         model.fit( trainFeatures, trainLabels )
         y_pred = model.predict( testFeatures )
         #if testLabels[0].lower() == "fakeinst":
-        if j in [24, 158, 46, 54, 200]:
+        #if j in [47, 166, 209]:
         #if j in [85, 114, 121, 175, 188, 197, 209, 235, 240]:
+        if j in [88, 118, 183, 206, 219, 251]:
             print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testLabels))
             print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
@@ -80,7 +81,7 @@ def selectFeatures(features, selection):
 
 if __name__=="__main__":
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False)
 
     models = (RandomForestClassifier(n_estimators = 100),)#, SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())

@@ -346,7 +346,7 @@ def getTrainingData(dichotomous=False, \
         l2c = malwareCatStat(purelabels)
         minorapps = list()
         for app in allfeatures.keys():
-            if pruneMinor and l2c[ allLabels[app] ] <= 1:
+            if pruneMinor and l2c[ allLabels[app] ] <= 2:
                 minorapps.append( app )
         for app in minorapps:
             del allfeatures[app]
@@ -375,6 +375,12 @@ def getTrainingData(dichotomous=False, \
 
     assert len(Testfeatures)==len(Testlabels)
     assert len(features)==len(labels)
+
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
+    for j in range(0, len(labels)):
+        if labels[j] not in big_families:
+            labels[j] = 'MALICIOUS'
+
     return (features, labels, Testfeatures, Testlabels)
 
 def malwareCatStat(labels):
@@ -387,9 +393,11 @@ def malwareCatStat(labels):
 
 if __name__=="__main__":
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+
     l2c = malwareCatStat(labels)
     for lab in l2c.keys():
         print "%s\t%s" % (lab, l2c[lab])
+
     sys.exit(0)
 
 # hcai: set ts=4 tw=100 sts=4 sw=4
