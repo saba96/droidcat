@@ -228,8 +228,10 @@ def malwareCategorize(resultDir,fnmapping):
     ret=dict()
     for app in set(vtRes.keys()).intersection( familymapping.keys() ):
         finalFam = refineFamily(fullFamilyList, vtRes[app])
+        print >> sys.stdout, "%s\t%s" % (app, finalFam)
         if None==finalFam:
             finalFam=familymapping[app]
+            print >> sys.stdout, "%s\t%s" % (app, finalFam)
         ret[app] = [finalFam, vtRes[app]]
 
     return ret

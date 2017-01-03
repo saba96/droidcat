@@ -87,19 +87,20 @@ if __name__=="__main__":
 
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False )
 
-    models = (RandomForestClassifier(n_estimators = 100),)#, SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    models = (RandomForestClassifier(n_estimators = 100), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     uniqLabels = set()
     for item in labels:
         uniqLabels.add (item)
 
-    fh = sys.stdout #file ('confusion_matrix_formajorfamilyonly_ext_highcov_10m_all.txt', 'w')
+    #fh = sys.stdout
+    fh = file ('confusion_matrix_formajorfamilyonly_all-final-again.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     for model in models:
-        #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        for fset in (FSET_FULL, FSET_YYY):
+        for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
+        #for fset in (FSET_FULL, FSET_YYY):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = cv (model, selectFeatures( features, fset ), labels)
             for row in ret:
