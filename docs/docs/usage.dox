@@ -1,69 +1,61 @@
-/*! \page page_usage DroidFax Usage
+/*! \page page_usage droidcat Usage
 
-\section droidfax_usage How to use DroidFax
+\section droidcat_usage How to reproduce the evaluation results in the paper
 
-\subsection sec1 1. Download apps from Google Play
+If you just want to reproduce the empirical results on unified malware detection as presented in the paper, just shoot the simple line as follows 
 
-scripts/smartAppDownload.sh apk-list number-of-samples
+python ML/confusionMatrix_multipleModels_loo_forMajorFamilyOnly.py  
 
-where apk-list is a text file containing the entire pool of apks (each per line) from which you want to randomly 
-select and download up to number-of-samples apps.
+This will run the leave-one-out cross validation using the benchmark samples for training and testing, and will produce the 
+confusion matrix shown in the paper, including results with alternative learning algorithms and feature sets.
 
-\subsection sec2 2. run static analysis (including the instrumentation) of all selected apps
+If you want to reproduce the results on using DroidCat simply for the conventional, binary detection, shoot the following line
 
-you can do so on an individual app using "scripts/cgInstr.sh apk-file", or using scripts/instrAll.sh to do all at once.
+<!--
+python ML/RF_malware_detect_cv.py true true|false
 
-\subsection sec3 3. run instrumented apps (or app pairs) and generate call traces
+The last argument switches output between accuracy and precision/recall/F1.
 
-"scripts/runAllApps_monkey.sh" for single-app executions, and "scripts/runAllPairs_monkey.sh" for inter-app executions.
+Also in the binary setting, if you would like to see how DroidCat performs with other learning algorithms and feature sets as described in the paper, run the following
 
-\subsection sec4 4. analyze traces and compute metrics
+python ML/multipleModels_tab.py true true|false
 
-do so for general metrics, single-app ICC metrics, inter-app ICC metrics, and security metrics 
+The arguments work the same way as above.
+-->
+python ML/multipleModels_tab.py true true|false
+The last argument switches output between accuracy and precision/recall/F1.
+
+This will produce binary-detection results with all learning algorithms and feature sets.
+
+
+\section droidcat_usage How to use droidcat on a set of unknown apps with the current classification model
+
+The following instructions are used when running DroidCat on unknown apps using the model already trained with the benchmark samples
+
+\subsection sec1 1. run static analysis (including the instrumentation) of each app
+
+scripts/cgInstr.sh apk-file
+
+where the apk-file is the APK of the app under detection.
+
+\subsection sec2 2. run the instrumented app and generate call traces
+
+scripts/runAllApps_monkey.sh 
+
+\subsection sec3 3. analyze traces and compute features 
+
+do so for general features, single-app ICC features, inter-app ICC features, and security features 
 using "scripts/allGeneralReport_all.sh", "scripts/allICCReport_all.sh", "scripts/allInterAppICCReport_all.sh", 
 and "scripts/allSecurityReport_all.sh", respectively.
 
-\subsection sec5 5. compute statistics and produce figures and tabular data results
+The step will result in feature vector files including gfeatures.txt, iccfeatures.txt, and securityfeatures.txt.
 
-\subsubsection ssec1 5.1 general metrics statistics
+\subsection sec4 4. classify the apps
 
-+ callercalleeRanking.py	-	rank callers and callees by their out/in degress in the dynamic call graph
-+ compcov.py	-	compute component level coverage
-+ compdist.R	-	compute component distribution
-+ covstat.py	-	compute coverages at class and method levels
-+ edgefreqRanking-cdf.R	-	call frequency ranking plotted using CDF (cumulative distribution function)
-+ edgefreqRanking-scatter.R	-	call frequency ranking plotted using stacked scatter plots
-+ gdistcov-combine.R	-	compute execution composition in the unique call view, combining method and class level in one figure
-+ gdistcovIns-combine.R -	compute execution composition in the call instance view, combining method and class level in one figure 
-+ gdistcovIns.R	-	compute execution composition in the unique call view, producing method and class level in separate figures
-+ gdistcov.R	-	compute execution composition in the call instance view, producing method and class level in separate figures
+Gather the above three feature vector files in a directory. Let's say, appfv. Then, run shoot the following line:
 
-+ callback.R	-	calculate callback usage
-+ eventHandler.R	-	plot event handler categorization with percentage distribution
-+ eventHandler-tab.R	-	tabulate event handler categorization with percentage distribution
-+ lifecycleMethod.R	-	plot lifecyle method categorization with percentage distribution
-+ lifecycleMethod-tab.R	-	tabulate lifecyle method categorization with percentage distribution
+python ML/DroidCat_detect.py true|false
 
-\subsubsection ssec2 5.2 ICC metrics statistics
-
-for ICCs from single-app traces:
-
-+ gicc.R	-	compute ICC categorization producing separate figures
-+ gicc-combine.R	-	compute ICC categorization combining all plots in one figure
-+ iccdataextras-combine.R	-	compute ICC data carriage combining all plots in one figure
-+ iccdataextras.R	-	compute ICC data carriage producing separate figures
-
-for ICCs from inter-app traces:
-
-+ ginterIcc.R -	compute ICC categorization producing separate figures
-+ interIccDataExtras.R	-	compute ICC data carriage producing separate figures
-
-\subsubsection ssec3 5.3 security metrics and statistics
-
-+ srcsink.R	-	calculate source and sink usage and reachable taint flow (at method level) on the dynamic call graph
-+ src.R	-	plot source categorization with percentage distribution
-+ src-tab.R -	tabulate source categorization with percentage distribution
-+ sink.R	-	plot sink categorization with percentage distribution
-+ sink-tab.R -	tabulate sink categorization with percentage distribution
+With the last argument being true for binary detection and false (default) for the unified detection.
 
 */

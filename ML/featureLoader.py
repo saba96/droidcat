@@ -228,10 +228,10 @@ def malwareCategorize(resultDir,fnmapping):
     ret=dict()
     for app in set(vtRes.keys()).intersection( familymapping.keys() ):
         finalFam = refineFamily(fullFamilyList, vtRes[app])
-        print >> sys.stdout, "%s\t%s" % (app, finalFam)
+        #print >> sys.stdout, "%s\t%s" % (app, finalFam)
         if None==finalFam:
             finalFam=familymapping[app]
-            print >> sys.stdout, "%s\t%s" % (app, finalFam)
+            #print >> sys.stdout, "%s\t%s" % (app, finalFam)
         ret[app] = [finalFam, vtRes[app]]
 
     return ret
@@ -384,6 +384,38 @@ def getTrainingData(dichotomous=False, \
             labels[j] = 'MALICIOUS'
 
     return (features, labels, Testfeatures, Testlabels)
+
+def getTestingData( app_g, app_icc, app_sec):
+    '''
+    1. Assemble app features
+    '''
+    gfeatures_app = load_generalFeatures(app_g)
+    iccfeatures_app = load_ICCFeatures(app_icc)
+    secfeatures_app = load_securityFeatures(app_sec)
+
+    allapps_app = set(gfeatures_app.keys()).intersection(iccfeatures_app.keys()).intersection(secfeatures_app.keys())
+    for app in set(malbenignapps):
+        if app in gfeatures_app:
+            del gfeatures_app[app]
+        if app in iccfeatures_app:
+            del iccfeatures_app[app]
+        if app in secfeatures_app:
+            del secfeatures_app[app]
+    for app in set(gfeatures_app.keys()).difference(allapps_app):
+        del gfeatures_app[app]
+    for app in set(iccfeatures_app.keys()).difference(allapps_app):
+        del iccfeatures_app[app]
+    for app in set(secfeatures_app.keys()).difference(allapps_app):
+        del secfeatures_app[app]
+
+    assert len(gfeatures_app)==len(iccfeatures_app) and len(iccfeatures_app)==len(secfeatures_app)
+    print str(len(gfeatures_app)) + " valid apps for detection..."
+
+    allfeatures_app = dict()
+    for app in gfeatures_app.keys():
+        allfeatures_app[app] = gfeatures_app[app] + iccfeatures_app[app] + secfeatures_app[app]
+
+    return allfeatures_app
 
 def malwareCatStat(labels):
     l2c={}

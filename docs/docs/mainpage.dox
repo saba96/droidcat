@@ -33,31 +33,35 @@ in 10 minutes, and then finishes the prediction in a couple of minutes. Since as
 is the profiling time which is constant across different apps, DroidCat is readily scalable to any real-world Android apps. 
 
 This is the project homepage for DroidCat, where you can find the usage information and downloads of source code and 
-evaluation dataset. DroidCat is implemented on top of Android App Dynamic Characterization Toolkit <a bref="http://chapering.github.io/droidfax">DroidFax</a>
-and the Python Machine Learning Toolkit <a href="scikit-learn.org/">scikit-learn</a>. Our implementation also includes the implementation of DroidCat using other feature sets and 
+evaluation dataset. Similar to our Android App Dynamic Characterization Toolkit <a bref="http://chapering.github.io/droidcat">droidcat</a>, 
+the feature-computation part of DroidCat is implemented on top of our Android data-flow analysis and instrumentation 
+library <span style="color:blue;font-weight:bold"><a href="https://bitbucket.org/haipeng_cai/duaf/src/d193ac3faaf0d1b76a22668170b3ccb6915be971/duafdroid">duafdroid</a></span>, 
+which is based on the <span style="color:blue;font-weight:bold"><a href="http://www.sable.mcgill.ca/soot/">Soot byte-code analysis and optimization framework</a></span>. 
+The core of DroidCat however is the multi-class classifier implemented on top of the Python Machine Learning Toolkit <a href="scikit-learn.org/">scikit-learn</a>. 
+Beyond the default configuration, our package also includes the implementation of DroidCat using other feature sets and 
 popular learning algorithms like SVM with both linear and radial kernels, decision tree, nearest neighbours, and Naive Bayes with various probability 
-distribution functions.
+distribution functions. All these components including duafdroid and Soot on which DroidCat depends can be downloaded on this page as well, using the following links.
 
-\section droidfax_use How to use DroidCat
+\section droidcat_use How to use DroidCat
 - \subpage page_usage
 
-\section droidfax_downloads Release Downloads
-- <a href="../droidfax.jar"> Download DroidFax </a><br>
+\section droidcat_downloads Release Downloads
+- <a href="../droidcat.jar"> Download droidcat </a><br>
 - <a href="../duafdroid.jar"> Download duafdroid </a><br>
 - <a href="../libs.jar"> Download Soot and its libraries required </a><br>
 
-\section droidfax_src Source Code
-You can obtain the source code on <a href="https://bitbucket.org/haipeng_cai/droidfax/src">DroidFax source repository</a>, where all necessary inputs to DroidFax are hosted too (e.g., our manual callback categorization and our manually improved source and sink categorization).
+\section droidcat_src Source Code
+You can obtain the source code on <a href="https://bitbucket.org/haipeng_cai/droidcat/src">droidcat source repository</a>, where all necessary inputs to droidcat are hosted too (e.g., our manual callback categorization and our manually improved source and sink categorization).
 
-\section droidfax_results Study Results
-- <a href="https://bitbucket.org/haipeng_cai/droidfax/src/96e62f090542968427e87e9f5434a4e61719f49c/results/"> View the original experimental results </a><br>
+\section droidcat_results Study Results
+- <a href="https://bitbucket.org/haipeng_cai/droidcat/src/133eda596bcbaca422f04129141fcfbc5fa694c7/ML/results/?at=master</a><br>
 - <a href="results.tar.gz"> Download original experimental results </a><br>
-- \subpage page_resultformat
 
-\section droidfax_benchmakr Inter-App Benchmark Suite
-As a result of our study, we obtained a suite of Android app pairs in which the two apps have been confirmed to have 
-inter-app ICCs that can be easily exercised with random inputs. We list the package names of each two apps and exercised 
-inter-app ICC statistics.
+\section droidcat_benchmarks Benchmark apps
+This benchmark suite includes 136 benign apps and 135 malicious apps covering various malware families. You may use this 
+suite as the training samples and testing apps to reproduce our evaluation results. Meanwhile, these apps can be used 
+as benchmarks for dynamic Android app analysis as well since they can be readily exercised by randomly-generated inputs (e.g., those 
+from the Monkey tool) with high coverage (no less than 50% of user code) as confirmed in our evaluation study. 
 
 */
 
