@@ -1,4 +1,5 @@
-.pyc
-.blg
-.bak
-.tmp
+*.pyc
+*.blg
+*.bak
+*.tmp
+ML/*.pyc
