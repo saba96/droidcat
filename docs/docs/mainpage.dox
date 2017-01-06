@@ -33,7 +33,7 @@ in 10 minutes, and then finishes the prediction in a couple of minutes. Since as
 is the profiling time which is constant across different apps, DroidCat is readily scalable to any real-world Android apps. 
 
 This is the project homepage for DroidCat, where you can find the usage information and downloads of source code and 
-evaluation dataset. Similar to our Android App Dynamic Characterization Toolkit <a bref="http://chapering.github.io/droidcat">droidcat</a>, 
+evaluation dataset. Similar to our Android App Dynamic Characterization Toolkit <a href="http://chapering.github.io/droidfax">DroidFax</a>, 
 the feature-computation part of DroidCat is implemented on top of our Android data-flow analysis and instrumentation 
 library <span style="color:blue;font-weight:bold"><a href="https://bitbucket.org/haipeng_cai/duaf/src/d193ac3faaf0d1b76a22668170b3ccb6915be971/duafdroid">duafdroid</a></span>, 
 which is based on the <span style="color:blue;font-weight:bold"><a href="http://www.sable.mcgill.ca/soot/">Soot byte-code analysis and optimization framework</a></span>. 
@@ -54,7 +54,7 @@ distribution functions. All these components including duafdroid and Soot on whi
 You can obtain the source code on <a href="https://bitbucket.org/haipeng_cai/droidcat/src">droidcat source repository</a>, where all necessary inputs to droidcat are hosted too (e.g., our manual callback categorization and our manually improved source and sink categorization).
 
 \section droidcat_results Study Results
-- <a href="https://bitbucket.org/haipeng_cai/droidcat/src/133eda596bcbaca422f04129141fcfbc5fa694c7/ML/results/?at=master</a><br>
+- <a href="https://bitbucket.org/haipeng_cai/droidcat/src/133eda596bcbaca422f04129141fcfbc5fa694c7/ML/results/?at=master">View original experimental results</a><br>
 - <a href="results.tar.gz"> Download original experimental results </a><br>
 
 \section droidcat_benchmarks Benchmark apps
@@ -62,6 +62,7 @@ This benchmark suite includes 136 benign apps and 135 malicious apps covering va
 suite as the training samples and testing apps to reproduce our evaluation results. Meanwhile, these apps can be used 
 as benchmarks for dynamic Android app analysis as well since they can be readily exercised by randomly-generated inputs (e.g., those 
 from the Monkey tool) with high coverage (no less than 50% of user code) as confirmed in our evaluation study. 
+These apps themselves are too large combined to be hosted here. If you would like to get them, please email the author.
 
 */
 

@@ -1,6 +1,6 @@
-/*! \page page_usage droidcat Usage
+/*! \page page_usage DroidCat Usage
 
-\section droidcat_usage How to reproduce the evaluation results in the paper
+\section droidcat_reproduce How to reproduce the evaluation results in the paper
 
 If you just want to reproduce the empirical results on unified malware detection as presented in the paper, just shoot the simple line as follows 
 
@@ -57,5 +57,19 @@ Gather the above three feature vector files in a directory. Let's say, appfv. Th
 python ML/DroidCat_detect.py true|false
 
 With the last argument being true for binary detection and false (default) for the unified detection.
+
+\section droidcat_retraining How to use droidcat with an updated classification model
+
+To accommodate new malware families and new types of benign apps, the classification model of DroidCat will need to be retrained using a 
+new set of training samples. 
+
+\subsection sec1 1. obtain the new training data set
+
+Compute the features of each training sample by following the first three steps in Section \ref droidcat_usage. Then merge all their features into 
+the three feature files and move these three files in ML/features. 
+
+\subsection sec2 2. use DoridCat on the new training data set
+
+Just use DroidCat as shown in the fourth step of Section \ref droidcat_usage, the new classification model will be trained automatically on the new training data set.
 
 */
