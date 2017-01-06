@@ -63,12 +63,12 @@ With the last argument being true for binary detection and false (default) for t
 To accommodate new malware families and new types of benign apps, the classification model of DroidCat will need to be retrained using a 
 new set of training samples. 
 
-\subsection sec1 1. obtain the new training data set
+\subsection ssec1 1. obtain the new training data set
 
 Compute the features of each training sample by following the first three steps in Section \ref droidcat_usage. Then merge all their features into 
 the three feature files and move these three files in ML/features. 
 
-\subsection sec2 2. use DoridCat on the new training data set
+\subsection ssec2 2. use DoridCat on the new training data set
 
 Just use DroidCat as shown in the fourth step of Section \ref droidcat_usage, the new classification model will be trained automatically on the new training data set.
 
