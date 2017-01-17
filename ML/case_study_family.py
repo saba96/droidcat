@@ -363,6 +363,7 @@ def getTrainingData(dichotomous=False, \
     Testfeatures = list() #numpy.zeros( shape=(r/2,c) )
     Testlabels = list()
 
+
     # test data: randomly pick 50% of the samples as test cases
     for app in allfeatures.keys():
         features[k] = allfeatures[app]
@@ -373,6 +374,82 @@ def getTrainingData(dichotomous=False, \
             Testfeatures.append ( allfeatures[app] )
             Testlabels.append (allLabels[app])
             j+=1
+
+    pnnfeatures = numpy.zeros( shape=(27,c) )
+    dkfeatures = numpy.zeros( shape=(5,c) )
+    gdfeatures = numpy.zeros( shape=(11,c) )
+    pkfeatures = numpy.zeros( shape=(8,c) )
+    fifeatures = numpy.zeros( shape=(33,c) )
+    malfeatures = numpy.zeros( shape=(41,c) )
+    k1=0; k2=0; k3=0; k4=0; k5=0; k6=0
+    for app in allfeatures.keys():
+        if allLabels[app] == "ProxyTrojan/NotCompatible/NioServ":
+            #print "%s \t %s" % (app, allLabels[app])
+            pnnfeatures[k1] = allfeatures[app]
+            k1+=1
+        elif allLabels[app] == "DroidKungfu":
+            #print "%s \t %s" % (app, allLabels[app])
+            dkfeatures[k2] = allfeatures[app]
+            k2+=1
+        elif allLabels[app] == "GoldDream":
+            #print "%s \t %s" % (app, allLabels[app])
+            gdfeatures[k3] = allfeatures[app]
+            k3+=1
+        elif allLabels[app] == "Plankton":
+            #print "%s \t %s" % (app, allLabels[app])
+            pkfeatures[k4] = allfeatures[app]
+            k4+=1
+        elif allLabels[app] == "FakeInst":
+            #print "%s \t %s" % (app, allLabels[app])
+            fifeatures[k5] = allfeatures[app]
+            k5+=1
+        elif allLabels[app] == "MALICIOUS":
+            #print "%s \t %s" % (app, allLabels[app])
+            malfeatures[k6] = allfeatures[app]
+            k6+=1
+
+    def selectFeatures(features, selection):
+        featureSelect=[idx-1 for idx in selection]
+        selectedfeatures=list()
+        for featureRow in features:
+            selectedfeatures.append ( featureRow[ featureSelect ] )
+        return selectedfeatures
+
+    import configs
+    selpnns = selectFeatures(pnnfeatures, FSET_YYY)
+    seldk = selectFeatures(dkfeatures, FSET_YYY)
+    selgd = selectFeatures(gdfeatures, FSET_YYY)
+    selpk = selectFeatures(pkfeatures, FSET_YYY)
+    selfi = selectFeatures(fifeatures, FSET_YYY)
+    selmal = selectFeatures(malfeatures, FSET_YYY)
+
+    selall = selectFeatures(features, FSET_YYY)
+
+    print "%d \t %d \t %d \t %d" % (len(selpnns), len(selall), len(selpnns[0]), len(selall[0]))
+
+    print "%s" % numpy.mean(selall, axis=0)
+    print "%s" % numpy.mean(selpnns, axis=0)
+    allmean = numpy.mean(selall, axis=0)
+    pnnsmean = numpy.mean(selpnns, axis=0)
+    dkmean = numpy.mean(seldk, axis=0)
+    gdmean = numpy.mean(selgd, axis=0)
+    pkmean = numpy.mean(selpk, axis=0)
+    fimean = numpy.mean(selfi, axis=0)
+    malmean = numpy.mean(selmal, axis=0)
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(malmean[j]-pnnsmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+    '''
+    for j in range(0,70):
+        print "%s" % numpy.mean(selall[:,j], axis=0)
+        #print "%f \t %f \t %f" % (numpy.mean(selall, j), numpy.mean(selpnns, j), numpy.mean(selall, j)-numpy.mean(selpnns, j))
+    '''
 
     assert len(Testfeatures)==len(Testlabels)
     assert len(features)==len(labels)
