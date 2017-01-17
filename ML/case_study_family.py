@@ -382,7 +382,15 @@ def getTrainingData(dichotomous=False, \
     fifeatures = numpy.zeros( shape=(33,c) )
     malfeatures = numpy.zeros( shape=(41,c) )
     k1=0; k2=0; k3=0; k4=0; k5=0; k6=0
+
+    n=-1
+    pnnsamplefeature = numpy.zeros( shape=(1,c) )
     for app in allfeatures.keys():
+        n+=1
+        if n==8:
+            assert allLabels[app] == "ProxyTrojan/NotCompatible/NioServ"
+            print "sample PNN app: %s " % (app)
+            pnnsamplefeature[0] = allfeatures[app]
         if allLabels[app] == "ProxyTrojan/NotCompatible/NioServ":
             #print "%s \t %s" % (app, allLabels[app])
             pnnfeatures[k1] = allfeatures[app]
@@ -423,12 +431,14 @@ def getTrainingData(dichotomous=False, \
     selfi = selectFeatures(fifeatures, FSET_YYY)
     selmal = selectFeatures(malfeatures, FSET_YYY)
 
+    selpnnsample = selectFeatures(pnnsamplefeature, FSET_YYY)
+
     selall = selectFeatures(features, FSET_YYY)
 
     print "%d \t %d \t %d \t %d" % (len(selpnns), len(selall), len(selpnns[0]), len(selall[0]))
 
-    print "%s" % numpy.mean(selall, axis=0)
-    print "%s" % numpy.mean(selpnns, axis=0)
+    #print "%s" % numpy.mean(selall, axis=0)
+    #print "%s" % numpy.mean(selpnns, axis=0)
     allmean = numpy.mean(selall, axis=0)
     pnnsmean = numpy.mean(selpnns, axis=0)
     dkmean = numpy.mean(seldk, axis=0)
@@ -436,6 +446,99 @@ def getTrainingData(dichotomous=False, \
     pkmean = numpy.mean(selpk, axis=0)
     fimean = numpy.mean(selfi, axis=0)
     malmean = numpy.mean(selmal, axis=0)
+
+    pnnsamplemean = numpy.mean(selpnnsample, axis=0)
+
+    print "Between PNN mean and PNN sample"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(pnnsmean[j]-pnnsamplemean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between BENIGN mean and PNN sample"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-pnnsamplemean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+
+    print "Between Plankton and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-pkmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between FakeInst and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-fimean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between GoldDream and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-gdmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between DroidKungfu and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-dkmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between ProxyTrojan/NotCompatible/NioServ and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-pnnsmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(allmean[j]-malmean[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS and ProxyTrojan/NotCompatible/NioServ"
     x=0
     y=0
     for j in range(0,70):
