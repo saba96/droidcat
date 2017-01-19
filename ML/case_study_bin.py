@@ -64,7 +64,8 @@ def cv(model, features, labels):
         #if testLabels[0].lower() == "fakeinst":
         #if j in [47, 166, 209]:
         #if j in [85, 114, 121, 175, 188, 197, 209, 235, 240]:
-        if j in [88, 118, 183, 206, 219, 251]:
+        #if j in [88, 118, 183, 206, 219, 251]:
+        if j in [8, 43, 12, 156]:
             print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testLabels))
             print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
@@ -95,7 +96,7 @@ if __name__=="__main__":
 
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        for fset in (FSET_FULL, FSET_YYY):
+        for fset in (FSET_YYY,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = cv (model, selectFeatures( features, fset ), labels)
 
