@@ -149,6 +149,7 @@ if __name__=="__main__":
                 for x in row:
                     print >> fh, "%d\t" % (x),
                 print >> fh
+            fh.flush()
 
     fh.flush()
     fh.close()
