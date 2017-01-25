@@ -385,54 +385,95 @@ def getTrainingData(dichotomous=False, \
             allLabels[app] = "MALICIOUS"
 
     pnnfeatures = numpy.zeros( shape=(27,c) )
+    pnnfeaturesbad = numpy.zeros( shape=(27,c) )
     dkfeatures = numpy.zeros( shape=(5,c) )
+    dkfeaturesbad = numpy.zeros( shape=(5,c) )
     gdfeatures = numpy.zeros( shape=(11,c) )
+    gdfeaturesbad = numpy.zeros( shape=(11,c) )
     pkfeatures = numpy.zeros( shape=(8,c) )
+    pkfeaturesbad = numpy.zeros( shape=(8,c) )
     fifeatures = numpy.zeros( shape=(33,c) )
+    fifeaturesbad = numpy.zeros( shape=(33,c) )
     malfeatures = numpy.zeros( shape=(41,c) )
+    malfeaturesbad = numpy.zeros( shape=(41,c) )
     bgnfeatures = numpy.zeros( shape=(136,c) )
+    bgnfeaturesbad = numpy.zeros( shape=(136,c) )
     k1=0; k2=0; k3=0; k4=0; k5=0; k6=0; k7=0
+    k1b=0; k2b=0; k3b=0; k4b=0; k5b=0; k6b=0; k7b=0
+
+    pnnbads = [8, 43, 72, 88, 117, 138, 184, 196,        118, 183, 206, 219, 246, 251]
+    dkbads = [86]
+    gdbads = [74]
+    pkbads = [95]
+    fibads = [24, 102, 132, 209, 214, 220,    47, 55, 166]
+    malbads = [27, 50, 59, 85, 90, 92, 258, 259,      41, 53, 79, 84, 124, 148, 152, 154, 175, 202, 212, 237,    128,     56, 73]
+    bgnbads = [169]
 
     n=-1
-    pnnsamplefeature = numpy.zeros( shape=(1,c) )
-    pnnsample2feature = numpy.zeros( shape=(1,c) )
     for app in allfeatures.keys():
         n+=1
-        if n==8:
-            assert allLabels[app] == "ProxyTrojan/NotCompatible/NioServ"
-            print "sample PNN app: %s " % (app)
-            pnnsamplefeature[0] = allfeatures[app]
-        if n==12:
-            assert allLabels[app] == "ProxyTrojan/NotCompatible/NioServ"
-            print "sample PNN app 2: %s " % (app)
-            pnnsample2feature[0] = allfeatures[app]
         if allLabels[app] == "ProxyTrojan/NotCompatible/NioServ":
             #print "%s \t %s" % (app, allLabels[app])
-            pnnfeatures[k1] = allfeatures[app]
-            k1+=1
+            if n in pnnbads:
+                pnnfeaturesbad[k1b] = allfeatures[app]
+                k1b+=1
+            else:
+                pnnfeatures[k1] = allfeatures[app]
+                k1+=1
+
         elif allLabels[app] == "DroidKungfu":
             #print "%s \t %s" % (app, allLabels[app])
-            dkfeatures[k2] = allfeatures[app]
-            k2+=1
+            if n in dkbads:
+                dkfeaturesbad[k2b] = allfeatures[app]
+                k2b+=1
+            else:
+                dkfeatures[k2] = allfeatures[app]
+                k2+=1
+
         elif allLabels[app] == "GoldDream":
             #print "%s \t %s" % (app, allLabels[app])
-            gdfeatures[k3] = allfeatures[app]
-            k3+=1
+            if n in gdbads:
+                gdfeaturesbad[k3b] = allfeatures[app]
+                k3b+=1
+            else:
+                gdfeatures[k3] = allfeatures[app]
+                k3+=1
+
         elif allLabels[app] == "Plankton":
             #print "%s \t %s" % (app, allLabels[app])
-            pkfeatures[k4] = allfeatures[app]
-            k4+=1
+            if n in pkbads:
+                pkfeaturesbad[k4b] = allfeatures[app]
+                k4b+=1
+            else:
+                pkfeatures[k4] = allfeatures[app]
+                k4+=1
+
         elif allLabels[app] == "FakeInst":
             #print "%s \t %s" % (app, allLabels[app])
-            fifeatures[k5] = allfeatures[app]
-            k5+=1
+            if n in fibads:
+                fifeaturesbad[k5b] = allfeatures[app]
+                k5b+=1
+            else:
+                fifeatures[k5] = allfeatures[app]
+                k5+=1
+
         elif allLabels[app] == "MALICIOUS":
             #print "%s \t %s" % (app, allLabels[app])
-            malfeatures[k6] = allfeatures[app]
-            k6+=1
+            if n in malbads:
+                malfeaturesbad[k6b] = allfeatures[app]
+                k6b+=1
+            else:
+                malfeatures[k6] = allfeatures[app]
+                k6+=1
+
         elif allLabels[app] == "BENIGN":
-            bgnfeatures[k7] = allfeatures[app]
-            k7+=1
+            #print "%s \t %s" % (app, allLabels[app])
+            if n in bgnbads:
+                bgnfeaturesbad[k7b] = allfeatures[app]
+                k7b+=1
+            else:
+                bgnfeatures[k7] = allfeatures[app]
+                k7+=1
 
     def selectFeatures(features, selection):
         featureSelect=[idx-1 for idx in selection]
@@ -450,8 +491,13 @@ def getTrainingData(dichotomous=False, \
     selmal = selectFeatures(malfeatures, FSET_YYY)
     selbgn = selectFeatures(bgnfeatures, FSET_YYY)
 
-    selpnnsample = selectFeatures(pnnsamplefeature, FSET_YYY)
-    selpnnsample2 = selectFeatures(pnnsample2feature, FSET_YYY)
+    selpnnsbad = selectFeatures(pnnfeaturesbad, FSET_YYY)
+    seldkbad = selectFeatures(dkfeaturesbad, FSET_YYY)
+    selgdbad = selectFeatures(gdfeaturesbad, FSET_YYY)
+    selpkbad = selectFeatures(pkfeaturesbad, FSET_YYY)
+    selfibad = selectFeatures(fifeaturesbad, FSET_YYY)
+    selmalbad = selectFeatures(malfeaturesbad, FSET_YYY)
+    selbgnbad = selectFeatures(bgnfeaturesbad, FSET_YYY)
 
     selall = selectFeatures(features, FSET_YYY)
 
@@ -460,6 +506,7 @@ def getTrainingData(dichotomous=False, \
     #print "%s" % numpy.mean(selall, axis=0)
     #print "%s" % numpy.mean(selpnns, axis=0)
     allmean = numpy.mean(selall, axis=0)
+
     pnnsmean = numpy.mean(selpnns, axis=0)
     dkmean = numpy.mean(seldk, axis=0)
     gdmean = numpy.mean(selgd, axis=0)
@@ -468,92 +515,92 @@ def getTrainingData(dichotomous=False, \
     malmean = numpy.mean(selmal, axis=0)
     bgnmean = numpy.mean(selbgn, axis=0)
 
-    pnnsamplemean = numpy.mean(selpnnsample, axis=0)
-    pnnsample2mean = numpy.mean(selpnnsample2, axis=0)
+    pnnsmeanbad = numpy.mean(selpnnsbad, axis=0)
+    dkmeanbad = numpy.mean(seldkbad, axis=0)
+    gdmeanbad = numpy.mean(selgdbad, axis=0)
+    pkmeanbad = numpy.mean(selpkbad, axis=0)
+    fimeanbad = numpy.mean(selfibad, axis=0)
+    malmeanbad = numpy.mean(selmalbad, axis=0)
+    bgnmeanbad = numpy.mean(selbgnbad, axis=0)
 
-    print "sample 1: %s" % (selpnnsample)
-    print "sample 2: %s" % (selpnnsample2)
-
-    print "Between PNN mean and PNN sample"
+    print "Between PlanktonBad and BENGIN"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(pnnsmean[j]-pnnsamplemean[j])
+        diff=abs(bgnmean[j]-pkmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between PNN mean and PNN sample 2"
+    print "Between PlanktonBad and MALICIOUS"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(pnnsmean[j]-pnnsample2mean[j])
+        diff=abs(malmean[j]-pkmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between PNN sample and PNN sample 2"
+    print "Between PlanktonBad and ProxyTrojan/NotCompatible/NioServ"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(pnnsample2mean[j]-pnnsamplemean[j])
-        if diff >= 0.02:
-            x+=1
-        if diff >= 0.05:
-            y+=1
-            print "feature %d: %f vs %f" % (j+1, pnnsample2mean[j], pnnsamplemean[j])
-    print "%d noticeable, %d disparate" % (x,y)
-
-    print "Between BENIGN mean and PNN sample"
-    x=0
-    y=0
-    for j in range(0,70):
-        diff=abs(bgnmean[j]-pnnsamplemean[j])
+        diff=abs(pnnsmean[j]-pkmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between BENIGN mean and PNN sample 2"
+    print "Between PlanktonBad and PlanktonGood"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-pnnsample2mean[j])
+        diff=abs(pkmean[j]-pkmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-
-    print "Between Plankton and BENGIN"
+    print "Between FakeInstBad and BENGIN"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-pkmean[j])
+        diff=abs(bgnmean[j]-fimeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between FakeInst and BENGIN"
+    print "Between FakeInstBad and MALICIOUS"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-fimean[j])
+        diff=abs(malmean[j]-fimeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between GoldDream and BENGIN"
+    print "Between FakeInstBad and FakeInstGood"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(fimean[j]-fimeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between GoldDreamBad and BENGIN"
     x=0
     y=0
     for j in range(0,70):
@@ -564,49 +611,161 @@ def getTrainingData(dichotomous=False, \
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between DroidKungfu and BENGIN"
+    print "Between GoldDreamBad and MALICIOUS"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-dkmean[j])
+        diff=abs(malmean[j]-gdmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between ProxyTrojan/NotCompatible/NioServ and BENGIN"
+    print "Between GoldDreamBad and ProxyTrojan/NotCompatible/NioServ"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-pnnsmean[j])
+        diff=abs(pnnsmean[j]-gdmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between MALICIOUS and BENGIN"
+    print "Between GoldDreamBad and GoldDreamGood"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(bgnmean[j]-malmean[j])
+        diff=abs(gdmean[j]-gdmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
 
-    print "Between MALICIOUS and ProxyTrojan/NotCompatible/NioServ"
+    print "Between DroidKungfuBad and BENGIN"
     x=0
     y=0
     for j in range(0,70):
-        diff=abs(malmean[j]-pnnsmean[j])
+        diff=abs(bgnmean[j]-dkmeanbad[j])
         if diff >= 0.02:
             x+=1
         if diff >= 0.05:
             y+=1
     print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between DroidKungfuBad and MALICIOUS"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(malmean[j]-dkmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between DroidKungfuBad and DroidKungfuGood"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(dkmean[j]-dkmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between ProxyTrojan/NotCompatible/NioServBad and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(bgnmean[j]-pnnsmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between ProxyTrojan/NotCompatible/NioServBad and MALICIOUS"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(malmean[j]-pnnsmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between ProxyTrojan/NotCompatible/NioServBad and ProxyTrojan/NotCompatible/NioServGood"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(pnnsmean[j]-pnnsmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS-Bad and BENGIN"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(bgnmean[j]-malmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS-Bad and MALICIOUS-Good"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(malmean[j]-malmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS-Bad and ProxyTrojan/NotCompatible/NioServ"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(pnnsmean[j]-malmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS-Bad and FakeInst"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(fimean[j]-malmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+    print "Between MALICIOUS-Bad and GoldDream"
+    x=0
+    y=0
+    for j in range(0,70):
+        diff=abs(gdmean[j]-malmeanbad[j])
+        if diff >= 0.02:
+            x+=1
+        if diff >= 0.05:
+            y+=1
+    print "%d noticeable, %d disparate" % (x,y)
+
+
     '''
     for j in range(0,70):
         print "%s" % numpy.mean(selall[:,j], axis=0)

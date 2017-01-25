@@ -59,8 +59,13 @@ def cv(model, features, labels):
         y_pred = model.predict( testFeatures )
         #if testLabels[0].lower() == "fakeinst" and y_pred.lower() == "benign":
         #if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv" and str(y_pred[0]).lower() == "benign":
+        #if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv":
         #if testLabels[0].lower() == "fakeinst":
-        if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv":
+        if testLabels[0].lower() == "golddream":
+        #if testLabels[0].lower() == "droidkungfu":
+        #if testLabels[0].lower() == "plankton":
+        #if testLabels[0].lower() == "malicious":
+        #if testLabels[0].lower() == "benign":
             print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testLabels))
             print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
@@ -92,7 +97,8 @@ if __name__=="__main__":
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
         #for fset in (FSET_FULL, FSET_YYY):
-        for fset in (FSET_FULL,):
+        #for fset in (FSET_FULL,):
+        for fset in (FSET_YYY,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = cv (model, selectFeatures( features, fset ), labels)
 

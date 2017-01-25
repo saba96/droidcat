@@ -380,7 +380,7 @@ def getTrainingData(dichotomous=False, \
     big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
     for j in range(0, len(labels)):
         if labels[j] not in big_families:
-            labels[j] = 'MALICIOUS'
+            labels[j] = "MALICIOUS"
 
     return (features, labels, Testfeatures, Testlabels)
 
