@@ -397,12 +397,15 @@ def getTrainingData(dichotomous=False, \
     pkfeaturesbad = numpy.zeros( shape=(8,c) )
     fifeatures = numpy.zeros( shape=(33,c) )
     fifeaturesbad = numpy.zeros( shape=(33,c) )
-    malfeatures = numpy.zeros( shape=(41,c) )
-    malfeaturesbad = numpy.zeros( shape=(41,c) )
+    malfeatures = numpy.zeros( shape=(51,c) )
+    malfeaturesbad = numpy.zeros( shape=(51,c) )
     bgnfeatures = numpy.zeros( shape=(136,c) )
     bgnfeaturesbad = numpy.zeros( shape=(136,c) )
     k1=0; k2=0; k3=0; k4=0; k5=0; k6=0; k7=0
     k1b=0; k2b=0; k3b=0; k4b=0; k5b=0; k6b=0; k7b=0
+
+    allmalfeatures = numpy.zeros( shape=(135,c) )
+    k8=0
 
     pnnbads = [8, 43, 72, 88, 117, 138, 184, 196,        118, 183, 206, 219, 246, 251]
     dkbads = [86,268]
@@ -415,6 +418,10 @@ def getTrainingData(dichotomous=False, \
     n=-1
     for app in allfeatures.keys():
         n+=1
+        if allLabels[app] != "BENIGN":
+            allmalfeatures[k8]=allfeatures[app]
+            k8+=1
+
         if allLabels[app] == "ProxyTrojan/NotCompatible/NioServ":
             #print "%s \t %s" % (app, allLabels[app])
             if n in pnnbads:
@@ -424,7 +431,7 @@ def getTrainingData(dichotomous=False, \
                 pnnfeatures[k1] = allfeatures[app]
                 k1+=1
 
-        elif allLabels[app] == "DroidKungfu":
+        if allLabels[app] == "DroidKungfu":
             #print "%s \t %s" % (app, allLabels[app])
             if n in dkbads:
                 dkfeaturesbad[k2b] = allfeatures[app]
@@ -433,7 +440,7 @@ def getTrainingData(dichotomous=False, \
                 dkfeatures[k2] = allfeatures[app]
                 k2+=1
 
-        elif allLabels[app] == "GoldDream":
+        if allLabels[app] == "GoldDream":
             #print "%s \t %s" % (app, allLabels[app])
             if n in gdbads:
                 gdfeaturesbad[k3b] = allfeatures[app]
@@ -442,7 +449,7 @@ def getTrainingData(dichotomous=False, \
                 gdfeatures[k3] = allfeatures[app]
                 k3+=1
 
-        elif allLabels[app] == "Plankton":
+        if allLabels[app] == "Plankton":
             #print "%s \t %s" % (app, allLabels[app])
             if n in pkbads:
                 pkfeaturesbad[k4b] = allfeatures[app]
@@ -451,7 +458,7 @@ def getTrainingData(dichotomous=False, \
                 pkfeatures[k4] = allfeatures[app]
                 k4+=1
 
-        elif allLabels[app] == "FakeInst":
+        if allLabels[app] == "FakeInst":
             #print "%s \t %s" % (app, allLabels[app])
             if n in fibads:
                 fifeaturesbad[k5b] = allfeatures[app]
@@ -460,7 +467,7 @@ def getTrainingData(dichotomous=False, \
                 fifeatures[k5] = allfeatures[app]
                 k5+=1
 
-        elif allLabels[app] == "MALICIOUS":
+        if allLabels[app] == "MALICIOUS":
             #print "%s \t %s" % (app, allLabels[app])
             if n in malbads:
                 malfeaturesbad[k6b] = allfeatures[app]
@@ -469,7 +476,7 @@ def getTrainingData(dichotomous=False, \
                 malfeatures[k6] = allfeatures[app]
                 k6+=1
 
-        elif allLabels[app] == "BENIGN":
+        if allLabels[app] == "BENIGN":
             #print "%s \t %s" % (app, allLabels[app])
             if n in bgnbads:
                 bgnfeaturesbad[k7b] = allfeatures[app]
@@ -477,6 +484,9 @@ def getTrainingData(dichotomous=False, \
             else:
                 bgnfeatures[k7] = allfeatures[app]
                 k7+=1
+
+
+    print "k1=%d, k1b=%d, k2=%d, k2b=%d, k3=%d, k3b=%d, k4=%d, k4b=%d, k5=%d, k5b=%d, k6=%d, k6b=%d, k7=%d, k7b=%d, k8=%d" % (k1,k1b,k2,k2b,k3,k3b,k4,k4b,k5,k5b,k6,k6b,k7,k7b,k8)
 
     def selectFeatures(features, selection):
         featureSelect=[idx-1 for idx in selection]
@@ -502,6 +512,8 @@ def getTrainingData(dichotomous=False, \
     selmalbad = selectFeatures(malfeaturesbad, FSET_YYY)
     selbgnbad = selectFeatures(bgnfeaturesbad, FSET_YYY)
 
+
+    selallmal= selectFeatures(allmalfeatures, FSET_YYY)
     selall = selectFeatures(features, FSET_YYY)
 
     #print "%d \t %d \t %d \t %d" % (len(selpnns), len(selall), len(selpnns[0]), len(selall[0]))
@@ -526,7 +538,12 @@ def getTrainingData(dichotomous=False, \
     malmeanbad = numpy.mean(selmalbad, axis=0)
     bgnmeanbad = numpy.mean(selbgnbad, axis=0)
 
-    top10indices = [0,1,2,9,19,28,33,35,66,67]
+    allmalmean = numpy.mean(selallmal, axis=0)
+
+    #top10indices = [0,1,2,9,19,28,33,35,66,67]
+    #top10indices = [0,1,2,28, 35, 33, 66, 67, 19, 9]
+    #top10indices = [0,1,2,28, 35, 33, 66, 67, 18, 44]
+    top10indices = [0,1,2,28, 35, 33, 66, 67, 18, 9]
 
     #print "%s\n%s\n" % (malmean, malmeanbad)
 
@@ -607,6 +624,12 @@ def getTrainingData(dichotomous=False, \
     print
     print
 
+    print "all malware\t",
+    for j in top10indices:
+        print "%f\t" % allmalmean[j],
+    print
+    print
+
 
     return (features, labels, Testfeatures, Testlabels)
 
@@ -651,7 +674,7 @@ def malwareCatStat(labels):
     return l2c
 
 if __name__=="__main__":
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False)
 
     l2c = malwareCatStat(labels)
     for lab in l2c.keys():

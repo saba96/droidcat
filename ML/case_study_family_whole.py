@@ -818,7 +818,7 @@ def malwareCatStat(labels):
     return l2c
 
 if __name__=="__main__":
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False)
 
     l2c = malwareCatStat(labels)
     for lab in l2c.keys():

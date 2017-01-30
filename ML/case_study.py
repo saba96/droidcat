@@ -59,9 +59,9 @@ def cv(model, features, labels):
         y_pred = model.predict( testFeatures )
         #if testLabels[0].lower() == "fakeinst" and y_pred.lower() == "benign":
         #if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv" and str(y_pred[0]).lower() == "benign":
-        #if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv":
+        if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv":
         #if testLabels[0].lower() == "fakeinst":
-        if testLabels[0].lower() == "golddream":
+        #if testLabels[0].lower() == "golddream":
         #if testLabels[0].lower() == "droidkungfu":
         #if testLabels[0].lower() == "plankton":
         #if testLabels[0].lower() == "malicious":
