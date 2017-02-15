@@ -11,18 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Options {
-	protected boolean debugOut = false;
-	protected boolean dumpJimple = false;
-	protected boolean instr3rdparty = false;
+	public boolean debugOut = false;
+	public boolean dumpJimple = false;
+	public boolean instr3rdparty = false; // whether dig into third-party libraries for the instrumentation
+	
+	protected boolean instrlifecycle = false; // whether tracking lifecycle events also
 	
 	public String catCallbackFile = null; // if this argument is given, then instrument for monitoring events also
 	
-	protected boolean debugOut() { return debugOut; }
-	protected boolean dumpJimple() { return dumpJimple; }
-	protected boolean instr3rdparty() { return instr3rdparty; }
+	public boolean debugOut() { return debugOut; }
+	public boolean dumpJimple() { return dumpJimple; }
+	public boolean instr3rdparty() { return instr3rdparty; }
+	public boolean instrlifecycle() { return instrlifecycle; }
 	
 	public String[] process(String[] args) {
 		//args = super.process(args);
+		boolean allowPhantom = true;
 		
 		List<String> argsFiltered = new ArrayList<String>();
 		for (int i = 0; i < args.length; ++i) {
@@ -41,9 +45,15 @@ public class Options {
 			else if (arg.equals("-instr3rdparty")) {
 				instr3rdparty = true;
 			}
+			else if (arg.equals("-instrlifecycle")) {
+				instrlifecycle = true;
+			}
 			else {
 				argsFiltered.add(arg);
 			}
+		}
+		if (allowPhantom) {
+			argsFiltered.add("-allowphantom");
 		}
 		
 		String[] arrArgsFilt = new String[argsFiltered.size()];

@@ -4,6 +4,7 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 10/19/15		hcai		created; for command-line argument processing for DynCG Instrumenter
+ * 02/04/17		hcai		added option for monitoring events (triggers of event-handling callbacks)
  *
 */
 package dynCG;
@@ -18,8 +19,12 @@ public class Options {
 	protected boolean wrapTryCatch = false;
 	protected boolean dumpFunctionList = false;
 	protected boolean statUncaught = false;
-	protected boolean monitorICC = true;
+	
 	protected boolean instr3rdparty = false;
+	
+	protected boolean monitorICC = true;
+	protected boolean monitorAllCalls = true;
+	protected boolean monitorEvents = false;
 
 	public boolean debugOut() { return debugOut; }
 	public boolean dumpJimple() { return dumpJimple; }
@@ -27,10 +32,14 @@ public class Options {
 	public boolean wrapTryCatch() { return wrapTryCatch; }
 	public boolean dumpFunctionList() { return dumpFunctionList; }
 	public boolean statUncaught() { return statUncaught; }
-	public boolean monitorICC() { return monitorICC; }
+
 	protected boolean instr3rdparty() { return instr3rdparty; }
 	
-	public final static int OPTION_NUM = 6;
+	public boolean monitorICC() { return monitorICC; }
+	protected boolean monitorAllCalls() { return monitorAllCalls; }
+	protected boolean monitorEvents() { return monitorEvents; }
+	
+	public final static int OPTION_NUM = 7;
 	
 	public String[] process(String[] args) {
 		List<String> argsFiltered = new ArrayList<String>();
@@ -59,6 +68,12 @@ public class Options {
 			}
 			else if (arg.equals("-noMonitorICC")) {
 				monitorICC = false; 
+			}
+			else if (arg.equals("-noMonitorCalls")) {
+				monitorAllCalls = false; 
+			}
+			else if (arg.equals("-monitorEvents")) {
+				monitorEvents = true; 
 			}
 			else if (arg.equals("-instr3rdparty")) {
 				instr3rdparty = true;

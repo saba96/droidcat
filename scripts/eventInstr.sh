@@ -9,7 +9,7 @@ apkfile=$1
 ROOT=/home/hcai/
 subjectloc=`pwd`
 
-OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
+OUTDIR=${2:-"$subjectloc/event.instrumented/"}
 
 MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
 
@@ -25,7 +25,7 @@ done
 suffix=${apkfile##*/}
 suffix=${suffix%.*}
 
-LOGDIR=out-dynInstr-cg
+LOGDIR=out-dynInstr-event
 mkdir -p $LOGDIR
 logout=$LOGDIR/instr-$suffix.out
 logerr=$LOGDIR/instr-$suffix.err
@@ -50,15 +50,12 @@ starttime=`date +%s%N | cut -b1-13`
 	#-p wjtp enabled:true -p wjpp enabled:false \
     #
 	#-instr3rdparty \
-	#-noMonitorICC \
 	#-dumpJimple \
-    #-noMonitorCalls \
-cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.sceneInstr \
+cmd="java -Xmx4g -ea -cp ${MAINCP} eventTracker.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \
     -debug \
-    -monitorEvents \
 	-catcallback /home/hcai/libs/catCallbacks.txt \
 	-instr3rdparty \
     -instrlifecycle \
@@ -71,7 +68,7 @@ stoptime=`date +%s%N | cut -b1-13`
 echo "StaticAnalysisTime for $suffix elapsed: " `expr $stoptime - $starttime` milliseconds
 echo "static analysis finished."
 
-echo "chapple" | ./signandalign.sh $OUTDIR/${suffix}.apk
+echo "chapple" | ./signandalign.sh $OUTDIR/${suffix}.apk >/dev/null 
 exit 0
 
 

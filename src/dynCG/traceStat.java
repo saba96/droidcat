@@ -63,7 +63,14 @@ public class traceStat {
 	public traceStat () {
 		traceFn = null;
 	}
-	public void setPackagenameOther (String packname) { this.appPacknameOther = packname; }
+	static int counter = 0;
+	public void setPackagenameOther (String packname) {
+		
+		counter ++; System.out.println("setPackagaenameOther is called " + counter + " times.");
+		
+		
+		this.appPacknameOther = packname; 
+	}
 	public void setPackagename (String packname) { this.appPackname = packname; }
 	public void setClassNames (Set<String> clsnames) { this.clsNames = clsnames; }
 	public void setClassNamesOther (Set<String> clsnames) { this.clsNamesOther = clsnames; }

@@ -14,7 +14,7 @@ OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
 
 MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
 
-SOOTCP="$ROOT/workspace/iac/bin:/home/hcai/Android/Sdk/platforms/android-23/android.jar"
+SOOTCP="$ROOT/workspace/iac/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
 
 for i in $ROOT/libs/*.jar;
 do

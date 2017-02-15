@@ -4,7 +4,9 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 10/19/15		hcai		created; for profiling function calls and intent-based ICCs 
- * 10/26/15		hcai			added ICC monitoring with time-stamping call events
+ * 10/26/15		hcai		added ICC monitoring with time-stamping call events
+ * 02/14/17		hcai		added the option of event tracking
+ * 02/15/17		hcai		first working version with event tracking
 */
 package dynCG;
 
@@ -81,7 +83,16 @@ public class sceneInstr implements Extension {
 			Scene.v().addBasicClass("iacUtil.logicClock");
 		}
 		
+		if (opts.monitorEvents()) {
+			Scene.v().addBasicClass("eventTracker.Monitor");
+			args = eventTracker.sceneInstr.preProcessArgs(eventTracker.sceneInstr.opts, args);
+			eventTracker.sceneInstr.opts.debugOut = opts.debugOut();
+			eventTracker.sceneInstr.opts.debugOut = opts.dumpJimple();
+			eventTracker.sceneInstr.opts.instr3rdparty = opts.instr3rdparty();
+		}
+		
 		Forensics.registerExtension(icgins);
+		
 		Forensics.main(args);
 	}
 	
@@ -111,6 +122,10 @@ public class sceneInstr implements Extension {
 			Scene.v().getSootClass("iacUtil.logicClock").setApplicationClass();
 		}
 		
+		if (opts.monitorEvents()) {
+			Scene.v().getSootClass("eventTracker.Monitor").setApplicationClass();
+		}
+		
 		mInitialize = clsMonitor.getMethodByName("initialize");
 		mEnter = clsMonitor.getMethodByName("enter");
 		mLibCall = clsMonitor.getMethodByName("libCall");
@@ -123,14 +138,24 @@ public class sceneInstr implements Extension {
 		//StmtMapper.getCreateInverseMap();
 
 		g_instr3rdparty = opts.instr3rdparty();
-
-		System.out.println("instrument 3rd party libraries as well: " + g_instr3rdparty);
-		instrument();
 		
+		init();
+
+		// monitor all method calls
+		if (opts.monitorAllCalls()) {
+			System.out.println("instrument 3rd party libraries as well: " + g_instr3rdparty);
+			instrument();
+		}
+		
+		// monitor all ICCs
 		if (opts.monitorICC()) {
 			intentTracker.sceneInstr.g_instr3rdparty = g_instr3rdparty;
 			new intentTracker.sceneInstr().run();
-		}		
+		}
+		
+		if (opts.monitorEvents()) {
+			new eventTracker.sceneInstr().run();
+		}
 
 		if (opts.dumpJimple()) {
 			String fnJimple = soot.options.Options.v().output_dir()+File.separator+utils.getAPKName()+"_JimpleInstrumented.out";
@@ -153,8 +178,6 @@ public class sceneInstr implements Extension {
 			utils.dumpFunctionList(fnFunclist);
 			//utils.dumpEntryReachableFunctionList(Util.getCreateBaseOutPath() + "functionList.out");
 		}
-		
-		init();
 		
 		//List<SootMethod> entryMes = ProgramFlowGraph.inst().getEntryMethods();
 		Set<SootMethod> entryMes = utils.getEntryMethods(true);
@@ -250,7 +273,7 @@ public class sceneInstr implements Extension {
 				
 				// -- DEBUG
 				if (opts.debugOut()) {
-					System.out.println("\nNow instrumenting method " + meId + "...");
+					System.out.println("Now instrumenting method for function-call tracking: " + meId + " ...");
 				}
 
 				//List<CFGNode> cfgnodes = cfg.getFirstRealNonIdNode().getSuccs();

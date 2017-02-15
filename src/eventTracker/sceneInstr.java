@@ -4,32 +4,42 @@
  * Date			Author      Changes
  * -------------------------------------------------------------------------------------------
  * 02/04/17		hcai		created; for the instrumentation monitoring event-handling callbacks
+ * 02/15/17		hcai		first working version after long debugging (trouble laid in disallowing phantom classes
 */
 package eventTracker;
 
-import iacUtil.utils;
-import iacUtil.iccAPICom.EVENTCAT;
-import iacUtil.iccAPICom;
+import iacUtil.*;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import profile.InstrumManager;
 
 import dua.Extension;
 import dua.Forensics;
 import dua.global.ProgramFlowGraph;
 import dua.method.CFG;
 import dua.method.CFG.CFGNode;
-import profile.InstrumManager;
+
+
+import iacUtil.utils;
+import iacUtil.iccAPICom.EVENTCAT;
+import iacUtil.AndroidEntryPointConstants;
+import iacUtil.iccAPICom;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import soot.Body;
 import soot.FastHierarchy;
 import soot.PatchingChain;
@@ -37,9 +47,6 @@ import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.Unit;
-import soot.Value;
-import soot.jimple.AssignStmt;
-import soot.jimple.InvokeExpr;
 import soot.jimple.Jimple;
 import soot.jimple.Stmt;
 import soot.jimple.StringConstant;
@@ -56,9 +63,11 @@ public class sceneInstr implements Extension {
 	public static void main(String args[]){
 		args = preProcessArgs(opts, args);
 
-		sceneInstr instr = new sceneInstr();
+		sceneInstr eventinstr = new sceneInstr();
 		// examine catch blocks
 		dua.Options.ignoreCatchBlocks = false;
+		dua.Options.skipDUAAnalysis = false;
+		dua.Options.modelAndroidLC = false;
 		dua.Options.analyzeAndroid = true;
 		
 		soot.options.Options.v().set_src_prec(soot.options.Options.src_prec_apk);
@@ -67,14 +76,16 @@ public class sceneInstr implements Extension {
 		soot.options.Options.v().set_output_format(soot.options.Options.output_format_dex);
 		soot.options.Options.v().set_force_overwrite(true);
 		
-		//Scene.v().addBasicClass("eventTracker.Monitor",SootClass.SIGNATURES);
+		Scene.v().addBasicClass("com.ironsource.mobilcore.BaseFlowBasedAdUnit",SootClass.SIGNATURES);
+		
 		Scene.v().addBasicClass("eventTracker.Monitor");
 		
-		Forensics.registerExtension(instr);
+		Forensics.registerExtension(eventinstr);
+		
 		Forensics.main(args);
 	}
 	
-	protected static String[] preProcessArgs(Options _opts, String[] args) {
+	public static String[] preProcessArgs(Options _opts, String[] args) {
 		opts = _opts;
 		args = opts.process(args);
 		
@@ -156,19 +167,29 @@ public class sceneInstr implements Extension {
 			}
 
 			for (String clsname : callbackClses) {
-				callbackSootClses.add( Scene.v().getSootClass(clsname) );
+				SootClass scl = null;
+				try {
+					scl = Scene.v().getSootClass(clsname);
+				}
+				catch (Exception e) {System.err.println("class " + clsname + " not resolved by Soot"); continue;}
+				callbackSootClses.add( scl );
 			}
 		}
 		catch (Exception e) {
-			System.err.println("Failed in parsing the androidCallbacks file: ");
+			System.err.println("Failed in parsing the androidCallbacks file: " + opts.catCallbackFile);
 			e.printStackTrace(System.err);
 			System.exit(-1);
 		}
+		System.out.println(callbackSootClses.size() + " callback classes loaded.");
 	}
 	
 	public void run() {
 		System.out.println("Running static analysis for event tracking instrumentation");
 		//StmtMapper.getCreateInverseMap();
+		if (opts.catCallbackFile==null) {
+			System.err.println("callback classes not specified, cannot proceed.");
+			return;
+		}
 		
 		init();
 		
@@ -205,8 +226,20 @@ public class sceneInstr implements Extension {
             }
             
             String CallbackCls = isCallbackClass(sClass);
-            if (CallbackCls!=null) { continue; }
-            EVENTCAT ehType = catCallbackClses.get(CallbackCls);
+            boolean isComponent = false;
+            if (opts.instrlifecycle()) {
+            	isComponent = iccAPICom.getComponentType(sClass).compareTo("Unknown")!=0;
+            }
+            if (isComponent==false && CallbackCls==null) { 
+            	//System.err.println(sClass.getName() + " is not a callback class."); 
+            	continue; 
+            }
+            
+            EVENTCAT ehType = null;
+            if (CallbackCls!=null) {
+            	System.out.println("\n" + sClass.getName() + " is a callback class of type "+ CallbackCls);
+            	ehType = catCallbackClses.get(CallbackCls);
+            }
             
             /* traverse all methods of the class */
             Iterator<SootMethod> meIt = sClass.getMethods().iterator();
@@ -221,7 +254,14 @@ public class sceneInstr implements Extension {
                     // don't handle reflections now either
                     continue;
                 }
-                if (!sMethod.getName().startsWith("on")) { continue; }
+                
+                String lifecycleType = null;
+                if (isComponent && AndroidEntryPointConstants.isLifecycleMethod(sMethod.getSubSignature())) {
+               		lifecycleType = AndroidEntryPointConstants.getLifecycleType(sMethod.getSubSignature());
+               		if (lifecycleType.compareTo("Unknown")==0) lifecycleType = null;
+                }
+                
+                if (lifecycleType==null && ! (CallbackCls!=null && sMethod.getName().startsWith("on")) ) { continue; }
                 
                 Body body = sMethod.retrieveActiveBody();
                 
@@ -234,7 +274,12 @@ public class sceneInstr implements Extension {
                 // -- DEBUG
                 if (opts.debugOut()) 
                 {
-                    System.out.println("\nNow instrumenting event-handling callback method for event tracking : " + meId + "...");
+                	if (opts.instrlifecycle()) {
+                		System.out.println("Now instrumenting lifecycle and event-handling callback method for event tracking : " + meId + " ...");
+                	}
+                	else {
+                		System.out.println("Now instrumenting event-handling callback method for event tracking : " + meId + " ...");
+                	}
                 }
                 
 				/* instrument method entry events at each event-handling callback */
@@ -248,7 +293,17 @@ public class sceneInstr implements Extension {
 				
 				//enterArgs.add(StringConstant.v(meId));
 				enterArgs.add(StringConstant.v(sMethod.getName()));
-				enterArgs.add(StringConstant.v(ehType.name()));
+				if (lifecycleType!=null) {
+					enterArgs.add(StringConstant.v(lifecycleType)); 
+				}
+				else {
+					if (ehType==null) {
+						assert CallbackCls!=null;
+						System.err.println(sMethod.getSignature());
+					}
+					assert ehType !=null;
+					enterArgs.add(StringConstant.v(ehType.name()));
+				}
 				Stmt sEnterCall = Jimple.v().newInvokeStmt( Jimple.v().newStaticInvokeExpr(	mEventTracker.makeRef(), enterArgs ));
 				enterProbes.add(sEnterCall);
 				
