@@ -206,6 +206,7 @@ public class sceneInstr implements Extension {
             
             String CallbackCls = isCallbackClass(sClass);
             if (CallbackCls!=null) { continue; }
+            EVENTCAT ehType = catCallbackClses.get(CallbackCls);
             
             /* traverse all methods of the class */
             Iterator<SootMethod> meIt = sClass.getMethods().iterator();
@@ -245,7 +246,9 @@ public class sceneInstr implements Extension {
 				List<Stmt> enterProbes = new ArrayList<Stmt>();
 				List<StringConstant> enterArgs = new ArrayList<StringConstant>();
 				
-				enterArgs.add(StringConstant.v(meId));
+				//enterArgs.add(StringConstant.v(meId));
+				enterArgs.add(StringConstant.v(sMethod.getName()));
+				enterArgs.add(StringConstant.v(ehType.name()));
 				Stmt sEnterCall = Jimple.v().newInvokeStmt( Jimple.v().newStaticInvokeExpr(	mEventTracker.makeRef(), enterArgs ));
 				enterProbes.add(sEnterCall);
 				
