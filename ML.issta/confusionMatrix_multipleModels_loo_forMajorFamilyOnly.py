@@ -85,7 +85,7 @@ def selectFeatures(features, selection):
 
 if __name__=="__main__":
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False)
 
     models = (RandomForestClassifier(n_estimators = 100), ) #SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())

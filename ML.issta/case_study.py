@@ -57,24 +57,21 @@ def cv(model, features, labels):
 
         model.fit( trainFeatures, trainLabels )
         y_pred = model.predict( testFeatures )
-        print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testLabels))
-        print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
+        #if testLabels[0].lower() == "fakeinst" and y_pred.lower() == "benign":
+        #if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv" and str(y_pred[0]).lower() == "benign":
+        if testLabels[0].lower() == "proxytrojan/notcompatible/nioserv" or testLabels[0].lower() == "fakeinst":
+        #if testLabels[0].lower() == "golddream":
+        #if testLabels[0].lower() == "droidkungfu":
+        #if testLabels[0].lower() == "plankton":
+        #if testLabels[0].lower() == "malicious":
+        #if testLabels[0].lower() == "benign":
+            if testLabels[0] != y_pred[0]:
+                print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testLabels))
+                print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
         predicted_labels.append ( y_pred )
 
-    '''
-    for i in range(0, len(predicted_labels)):
-        #print type(predicted_labels[i])
-        if predicted_labels[i][0] not in big_families:
-            predicted_labels[i] = numpy.array(['MALICIOUS'])
-    '''
-
-    #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
-    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
-
-    #return confusion_matrix(labels, predicted_labels, labels=list(uniqLabels))
-    return confusion_matrix(sublabels, predicted_labels, labels=big_families)
-
+    return 0
 
 def selectFeatures(features, selection):
     featureSelect=[idx-1 for idx in selection]
@@ -85,28 +82,25 @@ def selectFeatures(features, selection):
 
 if __name__=="__main__":
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=False)
 
-    models = (RandomForestClassifier(n_estimators = 100), ) #SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    models = (RandomForestClassifier(n_estimators = 100),)#, SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     uniqLabels = set()
     for item in labels:
         uniqLabels.add (item)
 
-    #fh = sys.stdout
-    fh = file ('confusion_matrix_formajorfamilyonly_all-final-again.txt', 'w')
+    fh = file ('/tmp/temp', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        for fset in (FSET_FULL, FSET_YYY):
+        #for fset in (FSET_FULL, FSET_YYY):
+        #for fset in (FSET_FULL,):
+        for fset in (FSET_YYY,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = cv (model, selectFeatures( features, fset ), labels)
-            for row in ret:
-                for x in row:
-                    print >> fh, "%d\t" % (x),
-                print >> fh
 
     fh.flush()
     fh.close()

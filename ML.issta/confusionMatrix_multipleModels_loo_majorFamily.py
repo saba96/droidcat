@@ -62,15 +62,20 @@ def cv(model, features, labels):
 
         predicted_labels.append ( y_pred )
 
-    '''
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
+    #big_families=["Basebridge",  "Jifake", "Pjapps", "BENIGN",  "OpFake",  "Jsmshider/Xsider", "FakeInst",  "BackFlash/Crosate", "Plankton", "GoldDream", "ProxyTrojan/NotCompatible/NioServ", "Imlog", "GingerBreak", "DroidKungfu", "DroidDream", "MALICIOUS"]
+
+    for j in range(0, len(sublabels)):
+        if sublabels[j][0] not in big_families:
+            sublabels[j] = ['MALICIOUS']
+
     for i in range(0, len(predicted_labels)):
         #print type(predicted_labels[i])
         if predicted_labels[i][0] not in big_families:
             predicted_labels[i] = numpy.array(['MALICIOUS'])
-    '''
+
 
     #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
-    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
 
     #return confusion_matrix(labels, predicted_labels, labels=list(uniqLabels))
     return confusion_matrix(sublabels, predicted_labels, labels=big_families)
@@ -87,15 +92,14 @@ if __name__=="__main__":
 
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
 
-    models = (RandomForestClassifier(n_estimators = 100), ) #SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    models = (RandomForestClassifier(n_estimators = 100), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     uniqLabels = set()
     for item in labels:
         uniqLabels.add (item)
 
-    #fh = sys.stdout
-    fh = file ('confusion_matrix_formajorfamilyonly_all-final-again.txt', 'w')
+    fh = file ('confusion_matrix_ext_highcov_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     for model in models:
