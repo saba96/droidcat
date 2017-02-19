@@ -1,0 +1,1488 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=gb2312">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 14">
+<link id=Main-File rel=Main-File href="../metrics.htm">
+<link rel=File-List href=filelist.xml>
+<title>Metrics used in the systematic dynamic characterization of Android apps</title>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:.75in .7in .75in .7in;
+	mso-header-margin:.3in;
+	mso-footer-margin:.3in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(1);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../metrics.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]>
+</head>
+
+<body link=blue vlink=purple>
+
+<table border=0 cellpadding=0 cellspacing=0 width=1072 style='border-collapse:
+ collapse;table-layout:fixed;width:804pt'>
+ <col width=64 style='width:48pt'>
+ <col width=111 span=2 style='mso-width-source:userset;mso-width-alt:4059;
+ width:83pt'>
+ <col width=265 span=2 style='mso-width-source:userset;mso-width-alt:9691;
+ width:199pt'>
+ <col width=103 style='mso-width-source:userset;mso-width-alt:3766;width:77pt'>
+ <col width=89 style='mso-width-source:userset;mso-width-alt:3254;width:67pt'>
+ <col width=64 style='width:48pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td colspan=8 height=20 class=xl91 width=1072 style='height:15.0pt;
+  width:804pt'>The <font class="font20">D*</font><font class="font0"> set
+  consists of metrics with respect to which the mean of benign benchmark apps
+  and that of malicious benchmark apps differ by at least 2% (i.e., </font><font 
+  class="font20">noticeably different</font><font class="font0">)</font></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td colspan=8 height=20 class=xl91 style='height:15.0pt'>The <font
+  class="font20">D </font><font class="font0">set consists of metrics with
+  respect to which the mean of benign benchmark apps and that of malicious
+  benchmark apps differ by at least 5% (i.e., </font><font class="font20">disparately 
+  different</font><font class="font0">)</font></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'></td>
+  <td class=xl90>&nbsp;</td>
+  <td class=xl90>&nbsp;</td>
+  <td class=xl90>&nbsp;</td>
+  <td class=xl90>&nbsp;</td>
+  <td class=xl90>&nbsp;</td>
+  <td class=xl90>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'></td>
+  <td class=xl76 width=111 style='border-top:none;width:83pt'>Dimension</td>
+  <td class=xl85 width=111 style='border-top:none;border-left:none;width:83pt'>Id</td>
+  <td class=xl76 width=265 style='border-top:none;border-left:none;width:199pt'>Name</td>
+  <td class=xl76 width=265 style='border-top:none;border-left:none;width:199pt'>Description</td>
+  <td class=xl76 width=103 style='border-top:none;border-left:none;width:77pt'>in
+  <font class="font11">D*</font><font class="font7"> Set</font></td>
+  <td class=xl77 width=89 style='border-top:none;border-left:none;width:67pt'>in
+  <font class="font13">D</font><font class="font12"> Set</font></td>
+  <td></td>
+ </tr>
+ <tr height=21 style='height:15.75pt'>
+  <td height=21 style='height:15.75pt'></td>
+  <td rowspan=63 class=xl84 width=111 style='border-top:none;width:83pt'>General</td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>1</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>SDK-&gt;SDK</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from SDK to SDK</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>2</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>SDK-&gt;3rdLib</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from SDK to third-party library</td>
+  <td class=xl89 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td class=xl89 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>3</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>SDK-&gt;UserCode</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from SDK to user code</td>
+  <td class=xl89 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td class=xl89 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>4</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdLib-&gt;SDK</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from third-party library to SDK</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>5</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdLib-&gt;3rdLib</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from third-party library to third-party library</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>6</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdLib-&gt;UserCode</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from third-party library to user code</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=21 style='height:15.75pt'>
+  <td height=21 style='height:15.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>7</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>UserCode-&gt;SDK</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from user code to SDK</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>8</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>UserCode-&gt;3rdLib</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from user code to third-party library</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=35 style='height:26.25pt'>
+  <td height=35 style='height:26.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>9</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>UserCode-&gt;UserCode</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of calls from user code to user code</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>10</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>userCode-cls</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in user code, counting unique
+  class signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>11</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdLib-cls</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in third-party libraries,
+  counting unique class signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>12</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>sdk-cls</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in SDK, counting unique class
+  signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>13</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>userCode-me</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in user code, counting unique
+  method signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>14</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdlib-me</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in third-party libraries,
+  counting unique method signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>15</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>sdk-me</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in SDK, counting unique method
+  signatures only</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>16</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>userCode-clsIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in user code, counting all class
+  signature instances<span style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>17</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdLib-clsIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in third-party libraries,
+  counting all class signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>18</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>sdk-clsIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed classes that are defined in SDK, counting all class
+  signature instances<span style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>19</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>userCode-meIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in user code, counting all
+  method signature instances<span style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>20</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>3rdlib-meIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in third-party libraries,
+  counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>21</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>sdk-meIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are defined in SDK, counting all method
+  signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>22</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>activity</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are Activity components, counting unique
+  class signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>23</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>service</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are Service components, counting unique
+  class signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>24</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>receiver</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are BroadcastReceiver components,
+  counting unique class signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>25</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>provider</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are ContentProvider components, counting
+  unique class signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>26</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>activityIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are Activity components, counting all
+  class signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>27</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>serviceIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are Service components, counting all
+  class signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>28</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>receiverIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are BroadcastReceiver components,
+  counting all class signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>29</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>providerIns</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed components that are ContentProvider components, counting
+  all class signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>30</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>lc</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are lifecycle (callback) methods, counting
+  unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>31</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>eh</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are event handlers (callback) methods,
+  counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>32</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>lc-ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are lifecycle (callback) methods, counting
+  all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>33</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>eh-ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed methods that are event handlers (callback) methods,
+  counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>34</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Activity</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in Activity
+  components, counting unique method signatures<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>35</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Activity-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in Activity
+  components, counting all method signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>36</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Application</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  Application classes/subclasses, counting unique method signatures<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>37</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Application-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  Application classes/subclasses, counting all method signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>38</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>BroadcastReceiver</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  BroadcastReceiver components, counting unique method signatures<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>39</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>BroadcastReceiver-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  BroadcastReceiver components, counting all method signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>40</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>ContentProvider</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  ContentProvider components, counting unique method signatures<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>41</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>ContentProvider-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in
+  ContentProvider components, counting all method signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>42</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Service</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in Service
+  components, counting unique method signatures<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>43</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Service-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed lifecycle methods that are callbacks defined in Service
+  components, counting all method signature instances<span
+  style='mso-spacerun:yes'>&nbsp;</span></td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>44</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>APPLICATION_MANAGEMENT</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  for application management, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>45</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>APPLICATION_MANAGEMENT-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  for application management, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>46</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_STATUS</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  related to system status access and management, counting unique method
+  signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>47</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_STATUS-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  related to system status access and management, counting all method signature
+  instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>48</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_STATUS</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  related to location info access and management, counting unique method
+  signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>49</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_STATUS-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  related to location info access and management, counting all method signature
+  instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>50</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>HARDWARE_MANAGEMENT</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  relevant to hardware management, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>51</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>HARDWARE_MANAGEMENT-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  relevant to hardware management, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>52</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_MANAGEMENT</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  relevant to network management, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>53</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_MANAGEMENT-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling system events
+  relevant to network management, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>54</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>APP_BAR</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to application bars, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>55</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>APP_BAR-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling events UI
+  relevant to application bars, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>56</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>MEDIA_CONTROL</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to media controls, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>57</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>MEDIA_CONTROL-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to media controls, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>58</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>VIEW</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to Views, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>59</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>VIEW-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to Views, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>60</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>WIDGET</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to widgets, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>61</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>WIDGET-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to widgets, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>62</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>DIALOG</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to dialogs, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>63</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>DIALOG-Ins</td>
+  <td class=xl78 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all executed event handlers that are callbacks handling UI events
+  relevant to dialogs, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td rowspan=7 class=xl92 width=111 style='border-top:none;width:83pt'>ICC</td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>64</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>int_ex</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that are internal explicit ICCs (those that are
+  between components within the same app and have target specified explicitly)</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>65</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>int_im</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that are internal implicit ICCs (those that are
+  between components within the same app and do NOT have target specified
+  explicitly)</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>66</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>ext_ex</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that are external explicit ICCs (those that are
+  between components across two different apps and have target specified
+  explicitly)</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>67</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>ext_im</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  of all exercised ICCs that are internal implicit ICCs (those that are between
+  components across two different apps and do NOT have target specified
+  explicitly)</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>68</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>data_only</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that carry URI data only in the associated Intents
+  (i.e., the 'data' field of Intent objects are non-void)</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>69</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>extras_only</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that carry extras data only in the associated
+  Intents<span style='mso-spacerun:yes'>&nbsp; </span>(i.e., the 'extras' field
+  of Intent objects are non-void)</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>70</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>data_both</td>
+  <td class=xl82 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised ICCs that carry both URI and extras data only in the
+  associated Intents<span style='mso-spacerun:yes'>&nbsp; </span>(i.e., the
+  'data' and 'extras' fields of Intent objects are non-void)</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td rowspan=52 class=xl92 width=111 style='border-top:none;width:83pt'>Security</td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>71</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>src</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all call targets that are source APIs, counting unique method
+  signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>72</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>sink</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all call targets that are sink APIs, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>73</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>srcIns</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all call targets that are source APIs, counting all method signature
+  instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>74</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>sinkIns</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all call targets that are sink APIs, counting all method signature
+  instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>75</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>riskSrc</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that reach (via method-level control flows)
+  at least one sink API call, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>76</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>riskSink</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>77</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>riskSrcIns</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that reach (via method-level control flows)
+  at least one sink API call, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>78</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>riskSinkIns</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, counting all method signature
+  instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>79</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_INFORMATION</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access account information, counting
+  unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>80</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_INFORMATION-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access account information, counting
+  all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>81</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_INFORMATION-escape</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access account information, counting
+  unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>82</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_INFORMATION-escape-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access account information, counting
+  all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>83</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>CALENDAR_INFORMATION</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access calendar information, counting
+  unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>84</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>CALENDAR_INFORMATION-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access calendar information, counting
+  all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>85</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>CALENDAR_INFORMATION-escape</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access calendar information,
+  counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>86</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>CALENDAR_INFORMATION-escape-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access calendar information,
+  counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>87</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_INFORMATION</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access location information, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>88</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_INFORMATION-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access location information, counting
+  all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>89</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_INFORMATION-escape</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access location information,
+  counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>90</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOCATION_INFORMATION-escape-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access location information,
+  counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>91</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_INFORMATION</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access network information, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>92</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_INFORMATION-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access network information, counting
+  all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>93</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_INFORMATION-escape</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access network information, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>94</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK_INFORMATION-escape-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access network information, counting
+  all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>95</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access system settings, counting unique
+  method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>96</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised source APIs that access system settings, counting all
+  method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>97</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-escape</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access system settings, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>98</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-escape-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised source APIs that reach (via method-level control flows) at
+  least one sink API call, percentage that access system settings, counting all
+  method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>99</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_SETTINGS</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at operations on account settings,
+  counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=69 style='height:51.75pt'>
+  <td height=69 style='height:51.75pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>100</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_SETTINGS-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at operations on account settings,
+  counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>101</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_SETTINGS-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at operations
+  on account settings, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>102</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>ACCOUNT_SETTINGS-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at operations
+  on account settings, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>103</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>FILE</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at file operations, counting unique
+  method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>104</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>FILE-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at file operations, counting all
+  method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>105</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>FILE-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at file
+  operations, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>106</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>FILE-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at file
+  operations, counting all method signature instances</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>107</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOG</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at logging operations, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>108</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOG-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at logging operations, counting all
+  method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>109</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOG-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at logging
+  operations, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=86 style='height:64.5pt'>
+  <td height=86 style='height:64.5pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>110</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>LOG-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at logging
+  operations, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>111</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at networking operations, counting
+  unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>112</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at networking operations, counting
+  all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>113</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at networking
+  operations, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>114</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>NETWORK-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at networking
+  operations, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>115</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SMS_MMS</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at messaging operations, counting
+  unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>116</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SMS_MMS-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at messaging operations, counting
+  all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>117</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SMS_MMS-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at messaging
+  operations, counting unique method signatures</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>118</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SMS_MMS-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at messaging
+  operations, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl80 width=89 style='border-top:none;border-left:none;width:67pt'>&#10004; </td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>119</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at operations on system settings,
+  counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=52 style='height:39.0pt'>
+  <td height=52 style='height:39.0pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>120</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Percentage
+  out of all exercised sink APIs that aims at operations on system settings,
+  counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>121</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-reach</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at operations
+  on system settings, counting unique method signatures</td>
+  <td class=xl81 width=103 style='border-top:none;border-left:none;width:77pt'>&nbsp;</td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <tr height=103 style='height:77.25pt'>
+  <td height=103 style='height:77.25pt'></td>
+  <td class=xl84 width=111 style='border-top:none;border-left:none;width:83pt'>122</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>SYSTEM_SETTINGS-reach-Ins</td>
+  <td class=xl83 width=265 style='border-top:none;border-left:none;width:199pt'>Out
+  of the exercised sink APIs that are reachable (via method-level control
+  flows) from at least one source API call, percentage that aims at operations
+  on system settings, counting all method signature instances</td>
+  <td class=xl79 width=103 style='border-top:none;border-left:none;width:77pt'>&#10004; </td>
+  <td class=xl81 width=89 style='border-top:none;border-left:none;width:67pt'>&nbsp;</td>
+  <td></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=64 style='width:48pt'></td>
+  <td width=111 style='width:83pt'></td>
+  <td width=111 style='width:83pt'></td>
+  <td width=265 style='width:199pt'></td>
+  <td width=265 style='width:199pt'></td>
+  <td width=103 style='width:77pt'></td>
+  <td width=89 style='width:67pt'></td>
+  <td width=64 style='width:48pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>
