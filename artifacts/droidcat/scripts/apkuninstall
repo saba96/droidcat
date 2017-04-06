@@ -1,8 +1,0 @@
-#!/bin/bash
-(test $# -lt 1 ) && (echo "too few arguments") && exit 0
-apk=${1:-"-"}
-apk=`readlink -f $apk`
-echo "uninstall $apk..."
-res=`aapt list -a $apk | grep -E "(^Package Group)*(packageCount=1 name=)"`
-echo "actually uninstalling ${res##*=} ..."
-adb uninstall ${res##*=}
