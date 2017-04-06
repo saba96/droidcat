@@ -1,7 +1,0 @@
-allGeneralReport_implicit.sh first_rep 
-allGeneralReport_implicit.sh second_rep
-allGeneralReport_implicit.sh third_rep
-allGeneralReport_explicit.sh first_rep
-allGeneralReport_explicit.sh second_rep
-allGeneralReport_explicit.sh third_rep
-
