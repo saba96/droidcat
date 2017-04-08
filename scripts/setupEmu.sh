@@ -2,7 +2,8 @@
 
 did=${2:-"emulator-5554"}
 echo "- Killing All Emulators"
-killall emulator64-x86
+killall -9 emulator64-x86
+killall -9 emulator
 adb -s $did kill-server
 
 echo "- Deleting Emulator" $1
