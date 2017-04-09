@@ -114,7 +114,17 @@ def getpackname(fnapk):
         appname = subprocess.check_output([BIN_GETPACKNAME, fnapk])
     except Exception,e:
         print >> sys.stderr, "error occurred when executing getpackage.sh " + fnapk
-    return string.split(appname.lstrip().rstrip(),'\t')[1]
+    ret = string.split(appname.lstrip().rstrip(),'\t')
+    if len(ret) < 2:
+        print >> sys.stderr, "error in getting package name of %s: %s" % (fnapk, appname)
+        sys.exit(-1)
+
+    napk=fnapk
+    ri = string.rfind(fnapk, '/')
+    if ri != -1:
+        napk = fnapk[ri+1:]
+    #napk = napk[0: string.rfind(napk, ".apk")]
+    return napk+'.'+ret[1]
 
 def malwareCategorizeRough(resultDir,fnmapping):
     vtRes=dict()
@@ -180,6 +190,22 @@ def refineFamily(fullFamilyList, vtres):
             winFam = fam
     return winFam
 
+def majorvote(vtres):
+    f2n=dict()
+    for tool in vtres.keys():
+        res = vtres[tool].lower().lstrip("\"").rstrip("\"")
+        if res not in f2n.keys():
+            f2n[res]=0
+        f2n[res] = f2n[res]+1
+
+    winCnt=-sys.maxint
+    winFam=None
+    for fam in f2n.keys():
+        if f2n[fam] > winCnt:
+            winCnt = f2n[fam]
+            winFam = fam
+    return winFam
+
 def malwareCategorize(resultDir,fnmapping):
     fullFamilyList=list()
     for mf in file(malwareFamilyListFile).readlines():
@@ -236,17 +262,47 @@ def malwareCategorize(resultDir,fnmapping):
 
     return ret
 
-def getTrainingData(dichotomous=False, \
+def malwareCategorize(resultDir):
+    fullFamilyList=list()
+    for mf in file(malwareFamilyListFile).readlines():
+        mf = mf.lstrip().rstrip()
+        fullFamilyList.append( mf )
+    vtRes=dict()
+    for item in os.listdir(resultDir):
+        if not (item.endswith(".apk") and os.path.isfile(resultDir+"/"+item+".result")):
+            continue
+        apkfn = os.path.abspath(resultDir+'/'+item)
+        resfn = os.path.abspath(resultDir+'/'+item+".result")
+        # store VirusTotal results in a map: tool->result
+        vtResDetails=dict()
+        for res in file(resfn, 'r').readlines():
+            res = res.lstrip().rstrip()
+            toolres = string.split(res)
+            vtResDetails[toolres[0]] = toolres[1]
+        appname = getpackname(apkfn)
+        if appname==None:
+            print >> sys.stderr, "unable to figure out package name of " + apkfn
+            sys.exit(-1)
+        vtRes[appname] = vtResDetails
+
+    ret=dict()
+    for app in vtRes.keys():
+        finalFam = refineFamily(fullFamilyList, vtRes[app])
+        #print >> sys.stdout, "%s\t%s" % (app, finalFam)
+        if None==finalFam:
+            #print >> sys.stdout, "no family identified for %s -- %s" % (app, vtRes[app])
+            print >> sys.stdout, "no family identified for %s" % (app)
+            finalFam = majorvote( vtRes[app] )
+            print >> sys.stdout, "will use %s" % (finalFam)
+            #sys.exit(-2)
+        ret[app] = [finalFam, vtRes[app]]
+
+    return ret
+
+def getBenignTrainingData(\
         benign_g=FTXT_BENIGN_G,\
         benign_icc=FTXT_BENIGN_ICC,\
-        benign_sec=FTXT_BENIGN_SEC,\
-        mal_g=FTXT_MALWARE_G,\
-        mal_icc=FTXT_MALWARE_ICC,\
-        mal_sec=FTXT_MALWARE_SEC,\
-	pruneMinor=False):
-    '''
-    1. Assemble benign app features
-    '''
+        benign_sec=FTXT_BENIGN_SEC):
 
     gfeatures_benign = load_generalFeatures(benign_g)
     iccfeatures_benign = load_ICCFeatures(benign_icc)
@@ -268,7 +324,6 @@ def getTrainingData(dichotomous=False, \
         del secfeatures_benign[app]
 
     assert len(gfeatures_benign)==len(iccfeatures_benign) and len(iccfeatures_benign)==len(secfeatures_benign)
-    print str(len(gfeatures_benign)) + " valid benign app training samples to be used."
 
     allfeatures_benign = dict()
     for app in gfeatures_benign.keys():
@@ -280,9 +335,21 @@ def getTrainingData(dichotomous=False, \
     for app in allfeatures_benign.keys():
         benignLabels[app] = "BENIGN"
 
-    '''
-    2. Assemble malicious app features
-    '''
+    for app in allfeatures_benign.keys():
+        if sum(allfeatures_benign[app]) < 0.00005:
+            del allfeatures_benign[app]
+            del benignLabels[app]
+
+    print str(len(allfeatures_benign)) + " valid benign app training samples to be used."
+
+    return (allfeatures_benign, benignLabels)
+
+def getMalwareTrainingData(dichotomous=False, \
+        mal_g=FTXT_MALWARE_G,\
+        mal_icc=FTXT_MALWARE_ICC,\
+        mal_sec=FTXT_MALWARE_SEC,\
+	pruneMinor=False):
+
     gfeatures_malware = load_generalFeatures(mal_g)
     iccfeatures_malware = load_ICCFeatures(mal_icc)
     secfeatures_malware = load_securityFeatures(mal_sec)
@@ -291,7 +358,8 @@ def getTrainingData(dichotomous=False, \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
 
     #malFam = malwareCategorizeRough(malwareResultDir, malwareMappingFile)
-    malFam = malwareCategorize(malwareResultDir, malwareMappingFile)
+    #malFam = malwareCategorize(malwareResultDir, malwareMappingFile)
+    malFam = malwareCategorize(malwareResultDir)
 
     allapps_malware = allapps_malware.intersection( malFam.keys() )
 
@@ -303,7 +371,6 @@ def getTrainingData(dichotomous=False, \
         del secfeatures_malware[app]
 
     assert len(gfeatures_malware)==len(iccfeatures_malware) and len(iccfeatures_malware)==len(secfeatures_malware)
-    print str(len(gfeatures_malware)) + " valid malicious app training samples to be used."
 
     allfeatures_malware = dict()
     for app in gfeatures_malware.keys():
@@ -317,6 +384,55 @@ def getTrainingData(dichotomous=False, \
             malwareLabels[app] = 'MALICIOUS'
         else:
             malwareLabels[app] = str(malFam[app][0])
+
+    for app in allfeatures_malware.keys():
+        if sum(allfeatures_malware[app]) < 0.00005:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+
+    if pruneMinor:
+        purelabels = list()
+        for app in allfeatures_malware.keys():
+            purelabels.append (malwareLabels[app])
+        l2c = malwareCatStat(purelabels)
+        minorapps = list()
+        for app in allfeatures_malware.keys():
+            if pruneMinor and l2c[ malwareLabels[app] ] <= 1:
+                minorapps.append( app )
+        for app in minorapps:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+        print "%d minor apps pruned" % (len(minorapps))
+
+    print str(len(allfeatures_malware)) + " valid malicious app training samples to be used."
+
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "MALICIOUS"]
+    for app in malwareLabels.keys():
+        if malwareLabels[app] not in big_families:
+            pass
+            #malwareLabels[app] = "MALICIOUS"
+
+    return (allfeatures_malware,malwareLabels)
+
+def getTrainingData(dichotomous=False, \
+        benign_g=FTXT_BENIGN_G,\
+        benign_icc=FTXT_BENIGN_ICC,\
+        benign_sec=FTXT_BENIGN_SEC,\
+        mal_g=FTXT_MALWARE_G,\
+        mal_icc=FTXT_MALWARE_ICC,\
+        mal_sec=FTXT_MALWARE_SEC,\
+	pruneMinor=False):
+
+    '''
+    1. Assemble benign app features
+    '''
+    (allfeatures_benign, benignLabels) = getBenignTrainingData(benign_g, benign_icc, benign_sec)
+
+    '''
+    2. Assemble malicious app features
+    '''
+    (allfeatures_malware, malwareLabels) = getMalwareTrainingData(dichotomous, mal_g, mal_icc, mal_sec, pruneMinor)
+
 
     '''
     3. assemble into the entire training set (as a matrix)
@@ -339,23 +455,6 @@ def getTrainingData(dichotomous=False, \
     allLabels = benignLabels.copy()
     allLabels.update ( malwareLabels )
 
-    assert r == len (allLabels)
-
-    if pruneMinor:
-        purelabels = list()
-        for app in allfeatures.keys():
-            purelabels.append (allLabels[app])
-        l2c = malwareCatStat(purelabels)
-        minorapps = list()
-        for app in allfeatures.keys():
-            if pruneMinor and l2c[ allLabels[app] ] <= 1:
-                minorapps.append( app )
-        for app in minorapps:
-            del allfeatures[app]
-            del allLabels[app]
-        print "%d minor apps pruned" % (len(minorapps))
-        r -= len(minorapps)
-
     features = numpy.zeros( shape=(r,c) )
     labels = list()
     k=0
@@ -376,11 +475,6 @@ def getTrainingData(dichotomous=False, \
 
     assert len(Testfeatures)==len(Testlabels)
     assert len(features)==len(labels)
-
-    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
-    for j in range(0, len(labels)):
-        if labels[j] not in big_families:
-            labels[j] = "MALICIOUS"
 
     return (features, labels, Testfeatures, Testlabels)
 
