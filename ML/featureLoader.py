@@ -108,7 +108,7 @@ def load_securityFeatures(secfn):
         secfeatures[app] = allsets[0] # change to mapping: appname -> vector of average (element-wise) feature values
     return secfeatures
 
-def getpackname(fnapk):
+def getpackname(fnapk, prefix=False):
     appname=None
     try:
         appname = subprocess.check_output([BIN_GETPACKNAME, fnapk])
@@ -118,6 +118,9 @@ def getpackname(fnapk):
     if len(ret) < 2:
         print >> sys.stderr, "error in getting package name of %s: %s" % (fnapk, appname)
         sys.exit(-1)
+
+    if not prefix:
+        return ret[1]
 
     napk=fnapk
     ri = string.rfind(fnapk, '/')
@@ -262,7 +265,7 @@ def malwareCategorize(resultDir,fnmapping):
 
     return ret
 
-def malwareCategorize(resultDir):
+def newMalwareCategorize(resultDir):
     fullFamilyList=list()
     for mf in file(malwareFamilyListFile).readlines():
         mf = mf.lstrip().rstrip()
@@ -279,7 +282,7 @@ def malwareCategorize(resultDir):
             res = res.lstrip().rstrip()
             toolres = string.split(res)
             vtResDetails[toolres[0]] = toolres[1]
-        appname = getpackname(apkfn)
+        appname = getpackname(apkfn, True)
         if appname==None:
             print >> sys.stderr, "unable to figure out package name of " + apkfn
             sys.exit(-1)
@@ -344,6 +347,76 @@ def getBenignTrainingData(\
 
     return (allfeatures_benign, benignLabels)
 
+def getMalwareTestingData(dichotomous=False, \
+        mal_g=FTXT_MALWARE_G_NEW,\
+        mal_icc=FTXT_MALWARE_ICC_NEW,\
+        mal_sec=FTXT_MALWARE_SEC_NEW,\
+	pruneMinor=False):
+
+    gfeatures_malware = load_generalFeatures(mal_g)
+    iccfeatures_malware = load_ICCFeatures(mal_icc)
+    secfeatures_malware = load_securityFeatures(mal_sec)
+
+    malFam = newMalwareCategorize(malwareResultDirNew)
+
+    allapps_malware = \
+        set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
+
+    allapps_malware = allapps_malware.intersection( malFam.keys() )
+
+    for app in set(gfeatures_malware.keys()).difference(allapps_malware):
+        del gfeatures_malware[app]
+    for app in set(iccfeatures_malware.keys()).difference(allapps_malware):
+        del iccfeatures_malware[app]
+    for app in set(secfeatures_malware.keys()).difference(allapps_malware):
+        del secfeatures_malware[app]
+
+    assert len(gfeatures_malware)==len(iccfeatures_malware) and len(iccfeatures_malware)==len(secfeatures_malware)
+
+    allfeatures_malware = dict()
+    for app in gfeatures_malware.keys():
+        allfeatures_malware[app] = gfeatures_malware[app] + iccfeatures_malware[app] + secfeatures_malware[app]
+
+    malwareLabels={}
+    #for app in allfeatures_malware.keys():
+    #    malwareLabels.append( str(malFam[app][0]) )
+    for app in allfeatures_malware.keys():
+        if dichotomous:
+            malwareLabels[app] = 'MALICIOUS'
+        else:
+            malwareLabels[app] = str(malFam[app][0])
+
+    for app in allfeatures_malware.keys():
+        if sum(allfeatures_malware[app]) < 0.00005:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+
+    if pruneMinor:
+        purelabels = list()
+        for app in allfeatures_malware.keys():
+            purelabels.append (malwareLabels[app])
+        l2c = malwareCatStat(purelabels)
+        minorapps = list()
+        for app in allfeatures_malware.keys():
+            if pruneMinor and l2c[ malwareLabels[app] ] <= 1:
+                minorapps.append( app )
+        for app in minorapps:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+        print "%d minor apps pruned" % (len(minorapps))
+
+    print str(len(allfeatures_malware)) + " valid malicious app testing samples to be used."
+
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst"]
+    for app in malwareLabels.keys():
+        if malwareLabels[app] not in big_families:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+            #pass
+            #malwareLabels[app] = "MALICIOUS"
+
+    return (allfeatures_malware,malwareLabels)
+
 def getMalwareTrainingData(dichotomous=False, \
         mal_g=FTXT_MALWARE_G,\
         mal_icc=FTXT_MALWARE_ICC,\
@@ -354,12 +427,20 @@ def getMalwareTrainingData(dichotomous=False, \
     iccfeatures_malware = load_ICCFeatures(mal_icc)
     secfeatures_malware = load_securityFeatures(mal_sec)
 
+    #malFam = malwareCategorizeRough(malwareResultDir, malwareMappingFile)
+    malFam = malwareCategorize(malwareResultDir, malwareMappingFile)
+
+
+    '''
+    gfeatures_malware.update ( load_generalFeatures (FTXT_MALWARE_G_NEW) )
+    iccfeatures_malware.update ( load_ICCFeatures( FTXT_MALWARE_ICC_NEW) )
+    secfeatures_malware.update ( load_securityFeatures (FTXT_MALWARE_SEC_NEW) )
+    newmalFam = newMalwareCategorize(malwareResultDirNew)
+    malFam.update (newmalFam)
+    '''
+
     allapps_malware = \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
-
-    #malFam = malwareCategorizeRough(malwareResultDir, malwareMappingFile)
-    #malFam = malwareCategorize(malwareResultDir, malwareMappingFile)
-    malFam = malwareCategorize(malwareResultDir)
 
     allapps_malware = allapps_malware.intersection( malFam.keys() )
 
@@ -406,10 +487,13 @@ def getMalwareTrainingData(dichotomous=False, \
 
     print str(len(allfeatures_malware)) + " valid malicious app training samples to be used."
 
-    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "MALICIOUS"]
+    #big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "MALICIOUS"]
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst"]
     for app in malwareLabels.keys():
         if malwareLabels[app] not in big_families:
-            pass
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+            #pass
             #malwareLabels[app] = "MALICIOUS"
 
     return (allfeatures_malware,malwareLabels)
@@ -432,6 +516,8 @@ def getTrainingData(dichotomous=False, \
     2. Assemble malicious app features
     '''
     (allfeatures_malware, malwareLabels) = getMalwareTrainingData(dichotomous, mal_g, mal_icc, mal_sec, pruneMinor)
+
+    #(allfeatures_newmalware, newmalwareLabels) = getMalwareTrainingData(dichotomous, FTXT_MALWARE_G_NEW, FTXT_MALWARE_ICC_NEW, FTXT_MALWARE_SEC_NEW, pruneMinor)
 
 
     '''

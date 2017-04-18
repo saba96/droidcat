@@ -19,22 +19,20 @@ FTXT_BENIGN_SEC = FTXT_DIR+"securityfeatures-benign.txt"
 '''
 malware feature text files
 '''
-'''
 FTXT_MALWARE_G = FTXT_DIR+"gfeatures-malware.txt"
 FTXT_MALWARE_ICC = FTXT_DIR+"iccfeatures-malware.txt"
 FTXT_MALWARE_SEC = FTXT_DIR+"securityfeatures-malware.txt"
-'''
 
-FTXT_MALWARE_G = os.getcwd()+"/features/newmalware/gfeatures.txt"
-FTXT_MALWARE_ICC = os.getcwd()+"/features/newmalware/iccfeatures.txt"
-FTXT_MALWARE_SEC = os.getcwd()+"/features/newmalware/securityfeatures.txt"
+FTXT_MALWARE_G_NEW = os.getcwd()+"/features/newmalware/gfeatures.txt"
+FTXT_MALWARE_ICC_NEW = os.getcwd()+"/features/newmalware/iccfeatures.txt"
+FTXT_MALWARE_SEC_NEW = os.getcwd()+"/features/newmalware/securityfeatures.txt"
 
 
 '''
 VirusTotal malware detection results
 '''
-#malwareResultDir="/home/hcai/testbed/cg.instrumented/malware/installed"
-malwareResultDir="/home/hcai/testbed/cg.instrumented/newmalwareall/installed"
+malwareResultDir="/home/hcai/testbed/cg.instrumented/malware/installed"
+malwareResultDirNew="/home/hcai/testbed/cg.instrumented/newmalwareall/installed"
 malwareMappingFile="/home/hcai/testbed/mapping.malware"
 
 malwareFamilyListFile="/home/hcai/testbed/malwareFamilies.txt"
