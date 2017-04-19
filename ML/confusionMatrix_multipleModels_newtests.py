@@ -72,8 +72,8 @@ def cv(model, features, labels):
     #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
     big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
 
-    return confusion_matrix(labels, predicted_labels, labels=list(uniqLabels))
-    #return confusion_matrix(sublabels, predicted_labels, labels=big_families)
+    #return confusion_matrix(labels, predicted_labels, labels=list(uniqLabels))
+    return confusion_matrix(sublabels, predicted_labels, labels=big_families)
 
 
 def selectFeatures(features, selection):
@@ -87,23 +87,50 @@ if __name__=="__main__":
 
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
 
+    (allfeatures_malware, malwareLabels) = getMalwareTestingData( False, FTXT_MALWARE_G_NEW, FTXT_MALWARE_ICC_NEW, FTXT_MALWARE_SEC_NEW, pruneMinor=True)
+    r=0
+    c=None
+    for app in allfeatures_malware.keys():
+        r+=1
+        if c==None:
+            c = len (allfeatures_malware[app])
+            print "feature vector length=%d" % (c)
+            continue
+        if c != len (allfeatures_malware[app]):
+            print "inconsistent feature vector length for app: %s --- %d" % (app, len(allfeatures_malware[app]))
+        assert c == len (allfeatures_malware[app])
+    newtestfeatures = numpy.zeros( shape=(r,c) )
+    newtestlabels = list()
+    k=0
+    for app in allfeatures_malware.keys():
+        newtestfeatures[k] = allfeatures_malware[app]
+        newtestlabels.append ( malwareLabels[app] )
+        k+=1
+
     models = (RandomForestClassifier(n_estimators = 100), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     uniqLabels = set()
-    for item in labels:
+    for item in newtestlabels:
         uniqLabels.add (item)
 
-    #fh = sys.stdout
-    fh = file ('confusion_matrix_formajorfamilyonly_withnewsamples.txt', 'w')
+    fh = sys.stdout
     print >> fh, '\t'.join(uniqLabels)
+    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN"]
 
     for model in models:
-        for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        #for fset in (FSET_FULL, FSET_YYY):
-        #for fset in (FSET_FULL,):
+        #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
+        for fset in (FSET_FULL, FSET_YYY):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
-            ret = cv (model, selectFeatures( features, fset ), labels)
+
+            model.fit( selectFeatures(features,fset), labels )
+            predicted_labels = model.predict( selectFeatures(newtestfeatures,fset) )
+
+            print newtestlabels
+            print predicted_labels
+
+            ret = confusion_matrix(newtestlabels, predicted_labels, labels=["ProxyTrojan/NotCompatible/NioServ", "FakeInst"] )
+
             for row in ret:
                 for x in row:
                     print >> fh, "%d\t" % (x),
