@@ -20,6 +20,9 @@ import string
 from configs import *
 from featureLoader import *
 
+#HOLDOUT_RATE=0.33
+HOLDOUT_RATE=0.4
+
 # hold-out 20% evaluation
 def holdout(model, features, labels):
     sr=len(features)
@@ -42,7 +45,7 @@ def holdout(model, features, labels):
     allidx2rm=list()
     for lab in lab2idx.keys():
         sz = len(lab2idx[lab])
-        nrm = int(sz*0.2);
+        nrm = int(sz*HOLDOUT_RATE);
         idxrm = set()
         while len(idxrm) < nrm:
             t = random.randint(0,sz-1)
@@ -67,8 +70,8 @@ def holdout(model, features, labels):
 
     for j in range(0, len(testlabels)):
         y_pred = model.predict( testfeatures[j] )
-        print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
-        print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
+        #print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
+        #print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
         predicted_labels.append ( y_pred )
 
@@ -110,8 +113,8 @@ if __name__=="__main__":
 
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        #for fset in (FSET_FULL, FSET_YYY):
-        for fset in (FSET_FULL,):
+        for fset in (FSET_FULL, FSET_YYY):
+        #for fset in (FSET_FULL,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = holdout (model, selectFeatures( features, fset ), labels)
             for row in ret:

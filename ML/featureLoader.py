@@ -543,7 +543,8 @@ def getTrainingData(dichotomous=False, \
     '''
     3. assemble into the entire training set (as a matrix)
     '''
-    allfeatures = allfeatures_benign.copy()
+    allfeatures = dict() #allfeatures_benign.copy()
+    #allfeatures = allfeatures_benign.copy()
     allfeatures.update ( allfeatures_malware )
     # sanity check
     r=0
@@ -584,7 +585,7 @@ def getTrainingData(dichotomous=False, \
 
     return (features, labels, Testfeatures, Testlabels)
 
-def getTestingData( app_g, app_icc, app_sec):
+def getTestingData( app_g, app_icc, app_sec ):
     '''
     1. Assemble app features
     '''
