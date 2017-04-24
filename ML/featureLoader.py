@@ -543,8 +543,8 @@ def getTrainingData(dichotomous=False, \
     '''
     3. assemble into the entire training set (as a matrix)
     '''
-    allfeatures = dict() #allfeatures_benign.copy()
-    #allfeatures = allfeatures_benign.copy()
+    #allfeatures = dict() #allfeatures_benign.copy()
+    allfeatures = allfeatures_benign.copy()
     allfeatures.update ( allfeatures_malware )
     # sanity check
     r=0
@@ -616,6 +616,18 @@ def getTestingData( app_g, app_icc, app_sec ):
         allfeatures_app[app] = gfeatures_app[app] + iccfeatures_app[app] + secfeatures_app[app]
 
     return allfeatures_app
+
+def getFeatureMapping (fn_fmap = featureMappingFile):
+    fh = file (fn_fmap, 'r')
+    contents = fh.readlines()
+    fh.close()
+    idx2featurenames=dict()
+    for line in contents:
+        line=line.lstrip().rstrip()
+        items = string.split(line)
+        assert len(items)>=3
+        idx2featurenames[(int)(items[0])] = (items[1], items[2])
+    return idx2featurenames
 
 def malwareCatStat(labels):
     l2c={}

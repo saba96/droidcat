@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score
 
 from sklearn.metrics import confusion_matrix
+from sklearn.feature_selection import RFE, SelectPercentile, SelectKBest, SelectFromModel, chi2
 
 import numpy
 import random
@@ -21,8 +22,16 @@ from featureLoader import *
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
 
+def selCols(a,b):
+    return [a[i] for i in b]
+
 # hold-out 20% evaluation
 def holdout(model, features, labels):
+    # select the best features to use
+    #selector = SelectFromModel (model, threshold=0.001)
+    selector = SelectFromModel (model)
+    features = selector.fit_transform ( features, labels )
+
     sr=len(features)
     assert sr==len(labels)
 
@@ -37,9 +46,12 @@ def holdout(model, features, labels):
             lab2idx[lab] = list()
         lab2idx[lab].append (k)
 
+    trainfeatures=list()
+    trainlabels=list()
     testfeatures=list()
     testlabels=list()
 
+    # hold out HOLDOUT_RATE of each family for testing
     allidx2rm=list()
     for lab in lab2idx.keys():
         sz = len(lab2idx[lab])
@@ -53,17 +65,16 @@ def holdout(model, features, labels):
             testlabels.append ( labels[idx] )
             allidx2rm.append(idx)
 
-    trainfeatures=list()
-    trainlabels=list()
     for l in range(0, sr):
         if l in allidx2rm:
             continue
-        trainfeatures.append(features[l])
-        trainlabels.append(labels[l])
+        trainfeatures.append( features[l] )
+        trainlabels.append( labels[l] )
 
     print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
 
     predicted_labels=list()
+
     model.fit ( trainfeatures, trainlabels )
 
     for j in range(0, len(testlabels)):

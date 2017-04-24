@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score
 
 from sklearn.metrics import confusion_matrix
+from sklearn.feature_selection import RFE, SelectPercentile, SelectKBest, SelectFromModel
 
 import numpy
 import random
@@ -20,6 +21,9 @@ from featureLoader import *
 
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
+
+def selCols(a,b):
+    return [a[i] for i in b]
 
 # hold-out 20% evaluation
 def holdout(model, features, labels):
@@ -37,9 +41,13 @@ def holdout(model, features, labels):
             lab2idx[lab] = list()
         lab2idx[lab].append (k)
 
-    testfeatures=list()
-    testlabels=list()
 
+    _trainfeatures=list()
+    _trainlabels=list()
+    _testfeatures=list()
+    _testlabels=list()
+
+    # hold out HOLDOUT_RATE of each family for testing
     allidx2rm=list()
     for lab in lab2idx.keys():
         sz = len(lab2idx[lab])
@@ -49,21 +57,44 @@ def holdout(model, features, labels):
             t = random.randint(0,sz-1)
             idxrm.add ( lab2idx[lab][t] )
         for idx in idxrm:
-            testfeatures.append ( features[idx] )
-            testlabels.append ( labels[idx] )
+            _testfeatures.append ( features[idx] )
+            _testlabels.append ( labels[idx] )
             allidx2rm.append(idx)
 
-    trainfeatures=list()
-    trainlabels=list()
     for l in range(0, sr):
         if l in allidx2rm:
             continue
-        trainfeatures.append(features[l])
-        trainlabels.append(labels[l])
+        _trainfeatures.append( features[l] )
+        _trainlabels.append( labels[l] )
+
+    # select the best features to use
+    selector = RFE ( model )
+    selector.fit ( _trainfeatures, _trainlabels)
+    fsel = []
+    for idx in range(0, len(selector.ranking_)):
+        if selector.ranking_[idx]==1:
+            fsel.append ( idx )
+    print >> sys.stdout, "%d top features selected: %s" % (len(fsel), fsel)
+
+
+    trainfeatures=list()
+    trainlabels=list()
+    testfeatures=list()
+    testlabels=list()
+
+    for j in range(0, len(_trainfeatures)):
+        trainfeatures.append ( selCols(_trainfeatures[j], fsel) )
+        trainlabels.append (_trainlabels[j] )
+
+    for k in range(0, len(_testfeatures)):
+        testfeatures.append ( selCols(_testfeatures[k], fsel) )
+        testlabels.append (_testlabels[k] )
+
 
     print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
 
     predicted_labels=list()
+
     model.fit ( trainfeatures, trainlabels )
 
     for j in range(0, len(testlabels)):

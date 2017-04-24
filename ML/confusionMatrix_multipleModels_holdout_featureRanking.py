@@ -9,7 +9,9 @@ from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,
 
 from sklearn.metrics import confusion_matrix
 
-import numpy
+import matplotlib.pyplot as plt
+
+import numpy as np
 import random
 import os
 import sys
@@ -66,26 +68,43 @@ def holdout(model, features, labels):
     predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
 
-    for j in range(0, len(testlabels)):
-        y_pred = model.predict( testfeatures[j] )
-        #print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
-        #print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
+    importances = model.feature_importances_
+    std = np.std([tree.feature_importances_ for tree in model.estimators_],
+            axis=0)
+    indices = np.argsort(importances)[::-1]
 
-        predicted_labels.append ( y_pred )
+    idx2featurenames = getFeatureMapping()
+    # Print the feature ranking
+    print("Feature ranking:")
+
+    sc=len(features[0])
+    fnames=list()
+    for f in range(0, sc):
+        #print("Rank %d: feature %s (%f)" % (f + 1, idx2featurenames[indices[f]+1][0], importances[indices[f]]))
+        print("%d: %s\t%f" % (f + 1, idx2featurenames[indices[f]+1][0], importances[indices[f]]))
+        fnames.append( idx2featurenames[indices[f]+1][0] )
+
+    # Plot the feature importances of the forest
+    plt.figure()
+    plt.title("Feature importances")
+    '''
+    plt.bar(range(0, sc), importances[indices],
+            color="r", yerr=std[indices], align="center")
+    plt.xticks(range(0,sc), indices)
+    plt.xlim([-1, sc])
+    '''
+
+    #plt.barh(range(0, sc), importances[indices], color="r", xerr=std[indices], align="center")
 
     '''
-    for i in range(0, len(predicted_labels)):
-        #print type(predicted_labels[i])
-        if predicted_labels[i][0] not in big_families:
-            predicted_labels[i] = numpy.array(['MALICIOUS'])
+    plt.barh(range(sc-1, -1,-1), importances[indices])
+    plt.yticks(range(sc, 0, -1), fnames)
     '''
 
-    #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
-    big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
+    plt.barh(range(29, -1,-1), importances[indices[0:30]])
+    plt.yticks(range(30, 0, -1), fnames[0:30])
 
-    return confusion_matrix(testlabels, predicted_labels, labels=list(uniqLabels))
-    #return confusion_matrix(sublabels, predicted_labels, labels=big_families)
-
+    plt.show()
 
 def selectFeatures(features, selection):
     featureSelect=[idx-1 for idx in selection]
@@ -99,30 +118,14 @@ if __name__=="__main__":
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
 
     models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-    #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),) # AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (ExtraTreesClassifier(n_estimators=250, random_state=0),) # AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-
-    uniqLabels = set()
-    for item in labels:
-        uniqLabels.add (item)
-
-    fh = sys.stdout
-    #fh = file ('confusion_matrix_formajorfamilyonly_withnewsamples.txt', 'w')
-    print >> fh, '\t'.join(uniqLabels)
 
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
         for fset in (FSET_FULL, FSET_YYY):
         #for fset in (FSET_FULL,):
-            print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
-            ret = holdout (model, selectFeatures( features, fset ), labels)
-            for row in ret:
-                for x in row:
-                    print >> fh, "%d\t" % (x),
-                print >> fh
-
-    fh.flush()
-    fh.close()
+            holdout (model, selectFeatures( features, fset ), labels)
 
     sys.exit(0)
 

@@ -49,6 +49,7 @@ malbenignapps=["com.ictap.casm", "com.aob", "com.vaishnavism.vishnusahasranaamam
 '''
 Feature sets
 '''
+featureMappingFile="/home/hcai/testbed/featureMapping.txt"
 FSET_FULL = range(1,123)
 
 FSET_G = range(1,30)+range(89,123)
