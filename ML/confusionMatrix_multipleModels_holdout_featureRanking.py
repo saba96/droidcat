@@ -23,8 +23,8 @@ from featureLoader import *
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
 
-# hold-out 20% evaluation
-def holdout(model, features, labels):
+# hold-out 40% evaluation
+def holdout(model, features, labels, fset):
     sr=len(features)
     assert sr==len(labels)
 
@@ -73,7 +73,13 @@ def holdout(model, features, labels):
             axis=0)
     indices = np.argsort(importances)[::-1]
 
-    idx2featurenames = getFeatureMapping()
+    idx2featurenames_ = getFeatureMapping()
+    idx2featurenames = dict()
+    x=1
+    for idx in fset:
+        idx2featurenames[x] = idx2featurenames_[fset[x-1]]
+        x+=1
+
     # Print the feature ranking
     print("Feature ranking:")
 
@@ -116,6 +122,7 @@ def selectFeatures(features, selection):
 if __name__=="__main__":
 
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    #(features, labels, Testfeatures, Testlabels) = getTrainingData( True, pruneMinor=False)
 
     models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=250, random_state=0),) # AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
@@ -125,7 +132,7 @@ if __name__=="__main__":
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
         for fset in (FSET_FULL, FSET_YYY):
         #for fset in (FSET_FULL,):
-            holdout (model, selectFeatures( features, fset ), labels)
+            holdout (model, selectFeatures( features, fset ), labels, fset)
 
     sys.exit(0)
 

@@ -391,13 +391,15 @@ def getMalwareTestingData(dichotomous=False, \
         allfeatures_malware[app] = gfeatures_malware[app] + iccfeatures_malware[app] + secfeatures_malware[app]
 
     malwareLabels={}
-    #for app in allfeatures_malware.keys():
-    #    malwareLabels.append( str(malFam[app][0]) )
+    '''
     for app in allfeatures_malware.keys():
         if dichotomous:
             malwareLabels[app] = 'MALICIOUS'
         else:
             malwareLabels[app] = str(malFam[app][0])
+    '''
+    for app in allfeatures_malware.keys():
+        malwareLabels[app] = str(malFam[app][0])
 
     for app in allfeatures_malware.keys():
         if sum(allfeatures_malware[app]) < 0.00005:
@@ -427,6 +429,10 @@ def getMalwareTestingData(dichotomous=False, \
             del malwareLabels[app]
             #pass
             #malwareLabels[app] = "MALICIOUS"
+
+    if dichotomous:
+        for app in malwareLabels.keys():
+            malwareLabels[app] = 'MALICIOUS'
 
     return (allfeatures_malware,malwareLabels)
 
@@ -471,11 +477,16 @@ def getMalwareTrainingData(dichotomous=False, \
     malwareLabels={}
     #for app in allfeatures_malware.keys():
     #    malwareLabels.append( str(malFam[app][0]) )
+    '''
     for app in allfeatures_malware.keys():
         if dichotomous:
             malwareLabels[app] = 'MALICIOUS'
         else:
             malwareLabels[app] = str(malFam[app][0])
+        #print "%s\t%s" % (app, malwareLabels[app])
+    '''
+    for app in allfeatures_malware.keys():
+        malwareLabels[app] = str(malFam[app][0])
 
     for app in allfeatures_malware.keys():
         if sum(allfeatures_malware[app]) < 0.00005:
@@ -514,6 +525,10 @@ def getMalwareTrainingData(dichotomous=False, \
             del allfeatures_malware[app]
             del malwareLabels[app]
 
+    if dichotomous:
+        for app in malwareLabels.keys():
+            malwareLabels[app] = 'MALICIOUS'
+
     print str(len(allfeatures_malware)) + " valid malicious app training samples to be used."
     return (allfeatures_malware,malwareLabels)
 
@@ -524,7 +539,8 @@ def getTrainingData(dichotomous=False, \
         mal_g=FTXT_MALWARE_G,\
         mal_icc=FTXT_MALWARE_ICC,\
         mal_sec=FTXT_MALWARE_SEC,\
-	pruneMinor=False):
+	pruneMinor=False,
+        malwareCategorizationOnly=False):
 
     '''
     1. Assemble benign app features
@@ -543,8 +559,9 @@ def getTrainingData(dichotomous=False, \
     '''
     3. assemble into the entire training set (as a matrix)
     '''
-    #allfeatures = dict() #allfeatures_benign.copy()
-    allfeatures = allfeatures_benign.copy()
+    allfeatures = dict() #allfeatures_benign.copy()
+    if not malwareCategorizationOnly:
+        allfeatures = allfeatures_benign.copy()
     allfeatures.update ( allfeatures_malware )
     # sanity check
     r=0

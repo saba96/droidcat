@@ -96,18 +96,24 @@ def selectFeatures(features, selection):
 
 if __name__=="__main__":
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    # for unified classification
+    #(features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
 
-    models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    # for binary classification
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( True, pruneMinor=False)
+
+    models = (RandomForestClassifier(n_estimators = 128, random_state=0), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),) # AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+
+    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     uniqLabels = set()
     for item in labels:
         uniqLabels.add (item)
 
     fh = sys.stdout
-    #fh = file ('confusion_matrix_formajorfamilyonly_withnewsamples.txt', 'w')
+    #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     for model in models:

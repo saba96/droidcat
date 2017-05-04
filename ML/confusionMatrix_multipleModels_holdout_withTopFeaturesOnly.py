@@ -127,7 +127,8 @@ def selectFeatures(features, selection):
 
 if __name__=="__main__":
 
-    (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    #(features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    (features, labels, Testfeatures, Testlabels) = getTrainingData( True, pruneMinor=False)
 
     models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),) # AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
