@@ -3,7 +3,7 @@ ROOT=/home/hcai/
 curpath=`pwd`
 
 #:$ROOT/libs/rt.jar
-MAINCP=".:$ROOT/libs/polyglot.jar:$ROOT/libs/sootclasses-trunk.jar:$ROOT/libs/jasminclasses-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
+MAINCP=".:$ROOT/libs/polyglot.jar:$ROOT/libs/sootclasses-trunk.jar:$ROOT/libs/jasminclasses-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/droidfax/bin:$ROOT/libs/java_cup.jar"
 
 export SIREUM_HOME=/home/hcai/Sireum
 

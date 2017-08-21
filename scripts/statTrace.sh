@@ -6,7 +6,7 @@ fi
 
 tracefile=$1
 
-MAINCP=".:/etc/alternatives/java_sdk/jre/lib/rt.jar:/home/hcai/workspace/iac/bin:/home/hcai/libs/jgrapht-ext-0.9.1-uber.jar:/home/hcai/libs/android--1/android.jar"
+MAINCP=".:/etc/alternatives/java_sdk/jre/lib/rt.jar:/home/hcai/workspace/droidfax/bin:/home/hcai/libs/jgrapht-ext-0.9.1-uber.jar:/home/hcai/libs/android--1/android.jar"
 
 starttime=`date +%s%N | cut -b1-13`
 

@@ -13,8 +13,8 @@ echo "- Copying emulator template"
 cp -r ~/.android/avd/template/$1.* ~/.android/avd/
 
 echo "- Starting emulator"
-#emulator -avd $1 -scale .3 -no-boot-anim &
-emulator -avd $1 -scale .3 -ports 5237,5555 &
+emulator -avd $1 -scale .3 -no-boot-anim &
+#emulator -avd $1 -scale .3 -ports 5237,5555 &
 
 date1=$(date +"%s")
 

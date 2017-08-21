@@ -7,6 +7,8 @@ import string
 import subprocess
 
 from configs import *
+from os import listdir
+from os.path import isfile, join
 
 verbose=False
 
@@ -23,9 +25,16 @@ def load_generalFeatures(gfn):
     contents = fh.readlines()
     fh.close()
     gfeatures=dict()
+    n=0
     for line in contents:
         line=line.lstrip().rstrip()
         items = string.split(line)
+        n=n+1
+        '''
+        if len(items)!=30:
+            print "%s\n%s at line %d" % (gfn, line,n)
+            continue
+        '''
         assert len(items)==30
         appname = items[0]
         if items[0] not in gfeatures.keys():
@@ -85,9 +94,17 @@ def load_securityFeatures(secfn):
     contents = fh.readlines()
     fh.close()
     secfeatures=dict()
+    n=0
     for line in contents:
         line=line.lstrip().rstrip()
         items = string.split(line)
+        '''
+        n=n+1
+        if len(items)!=87:
+            print "%s\n%s at line %d" % (secfn, line,n)
+            continue
+        '''
+
         assert len(items)==87
         appname = items[0]
         if items[0] not in secfeatures.keys():
@@ -128,6 +145,14 @@ def getpackname(fnapk, prefix=False):
         napk = fnapk[ri+1:]
     #napk = napk[0: string.rfind(napk, ".apk")]
     return napk+'.'+ret[1]
+
+def getapkname(fnapk):
+    napk=fnapk
+    ri = string.rfind(fnapk, '/')
+    if ri != -1:
+        napk = fnapk[ri+1:]
+    ri = string.rfind(napk, '.')
+    return napk[:ri]
 
 def malwareCategorizeRough(resultDir,fnmapping):
     vtRes=dict()
@@ -278,7 +303,7 @@ def malwareCategorize(resultDir,fnmapping):
 
     return ret
 
-def newMalwareCategorize(resultDir):
+def newMalwareCategorize(resultDir,obf,prefix=False):
     fullFamilyList=list()
     for mf in file(malwareFamilyListFile).readlines():
         mf = mf.lstrip().rstrip()
@@ -295,7 +320,9 @@ def newMalwareCategorize(resultDir):
             res = res.lstrip().rstrip()
             toolres = string.split(res)
             vtResDetails[toolres[0]] = toolres[1]
-        appname = getpackname(apkfn, True)
+        appname = getpackname(apkfn, prefix)
+        if obf==True:
+            appname = getapkname(apkfn)
         if appname==None:
             print >> sys.stderr, "unable to figure out package name of " + apkfn
             sys.exit(-1)
@@ -312,6 +339,24 @@ def newMalwareCategorize(resultDir):
             print >> sys.stdout, "will use %s" % (finalFam)
             #sys.exit(-2)
         ret[app] = [finalFam, vtRes[app]]
+
+    return ret
+
+def DrebinMalwareCategorize(fnfamilymap="/home/hcai/Downloads/Drebin/sha256_family.csv",fnpkg2name="/home/hcai/Downloads/Drebin/pkg2name.txt"):
+    name2fam=dict()
+    for line in file (fnfamilymap).readlines():
+        line = line.lstrip().rstrip()
+        res = string.split(line,sep=',')
+        name2fam[ res[0] ] = res[1]
+    pkg2name=dict()
+    for line in file (fnpkg2name).readlines():
+        line = line.lstrip().rstrip()
+        res = string.split(line,sep='\t')
+        pkg2name[ res[0] ] = res[1]
+
+    ret=dict()
+    for app in pkg2name.keys():
+        ret[app] = [ name2fam[ pkg2name[app] ], {} ]
 
     return ret
 
@@ -360,17 +405,31 @@ def getBenignTrainingData(\
 
     return (allfeatures_benign, benignLabels)
 
+def loadBenignData(rootdir):
+    return getBenignTrainingData ( os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt') )
+
+def loadMalwareData(dichotomous, rootdir, malwareResultDir, pruneMinor, drebin, obf):
+    return getMalwareTestingData(dichotomous, os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt'), \
+            malwareResultDir, pruneMinor, drebin, obf)
+
 def getMalwareTestingData(dichotomous=False, \
         mal_g=FTXT_MALWARE_G_NEW,\
         mal_icc=FTXT_MALWARE_ICC_NEW,\
         mal_sec=FTXT_MALWARE_SEC_NEW,\
-	pruneMinor=False):
+        malwareResultDir=malwareResultDirNew,
+	pruneMinor=False,
+        drebin=False,
+        obf=False):
 
     gfeatures_malware = load_generalFeatures(mal_g)
     iccfeatures_malware = load_ICCFeatures(mal_icc)
     secfeatures_malware = load_securityFeatures(mal_sec)
 
-    malFam = newMalwareCategorize(malwareResultDirNew)
+    malFam = None
+    if drebin==True:
+        malFam = DrebinMalwareCategorize(fnfamilymap=os.path.join(malwareResultDir, 'sha256_family.csv'), fnpkg2name=os.path.join(malwareResultDir,'pkg2name.txt'))
+    else:
+        malFam = newMalwareCategorize(malwareResultDir,obf)
 
     allapps_malware = \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
@@ -399,7 +458,8 @@ def getMalwareTestingData(dichotomous=False, \
             malwareLabels[app] = str(malFam[app][0])
     '''
     for app in allfeatures_malware.keys():
-        malwareLabels[app] = str(malFam[app][0])
+        malwareLabels[app] = str(malFam[app][0]).lower()
+        #print "%s 's malware label: %s" % (app, malwareLabels[app])
 
     for app in allfeatures_malware.keys():
         if sum(allfeatures_malware[app]) < 0.00005:
@@ -422,6 +482,7 @@ def getMalwareTestingData(dichotomous=False, \
 
     print str(len(allfeatures_malware)) + " valid malicious app testing samples to be used."
 
+    '''
     big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst"]
     for app in malwareLabels.keys():
         if malwareLabels[app] not in big_families:
@@ -429,6 +490,7 @@ def getMalwareTestingData(dichotomous=False, \
             del malwareLabels[app]
             #pass
             #malwareLabels[app] = "MALICIOUS"
+    '''
 
     if dichotomous:
         for app in malwareLabels.keys():
@@ -453,7 +515,7 @@ def getMalwareTrainingData(dichotomous=False, \
     gfeatures_malware.update ( load_generalFeatures (FTXT_MALWARE_G_NEW) )
     iccfeatures_malware.update ( load_ICCFeatures( FTXT_MALWARE_ICC_NEW) )
     secfeatures_malware.update ( load_securityFeatures (FTXT_MALWARE_SEC_NEW) )
-    newmalFam = newMalwareCategorize(malwareResultDirNew)
+    newmalFam = newMalwareCategorize(malwareResultDirNew, False, True)
     malFam.update (newmalFam)
 
     allapps_malware = \
@@ -486,7 +548,7 @@ def getMalwareTrainingData(dichotomous=False, \
         #print "%s\t%s" % (app, malwareLabels[app])
     '''
     for app in allfeatures_malware.keys():
-        malwareLabels[app] = str(malFam[app][0])
+        malwareLabels[app] = str(malFam[app][0]).lower()
 
     for app in allfeatures_malware.keys():
         if sum(allfeatures_malware[app]) < 0.00005:
@@ -519,7 +581,9 @@ def getMalwareTrainingData(dichotomous=False, \
             '''
             pass
 
-    exfamilies=["Malap", "Pjapps", "BackFlash/Crosate"]
+    _exfamilies=["Malap", "Pjapps", "BackFlash/Crosate"]
+    exfamilies=[x.lower for x in _exfamilies]
+
     for app in malwareLabels.keys():
         if malwareLabels[app] in exfamilies:
             del allfeatures_malware[app]
@@ -602,6 +666,29 @@ def getTrainingData(dichotomous=False, \
 
     return (features, labels, Testfeatures, Testlabels)
 
+def adapt (featureDict, labelDict):
+    r=0
+    c=None
+    for app in featureDict.keys():
+        r+=1
+        if c==None:
+            c = len (featureDict[app])
+            print "feature vector length=%d" % (c)
+            continue
+        if c != len (featureDict[app]):
+            print "inconsistent feature vector length for app: %s --- %d" % (app, len(featureDict[app]))
+        assert c == len (featureDict[app])
+
+    features = numpy.zeros( shape=(r,c) )
+    labels = list()
+    k=0
+    for app in featureDict.keys():
+        features[k] = featureDict[app]
+        labels.append (labelDict[app])
+        k+=1
+
+    return (features, labels)
+
 def getTestingData( app_g, app_icc, app_sec ):
     '''
     1. Assemble app features
@@ -653,6 +740,35 @@ def malwareCatStat(labels):
             l2c[lab]=0
         l2c[lab]=l2c[lab]+1
     return l2c
+
+def loadMamaFeatures(featurefile, label, prefix=""):
+    allfeatures = dict()
+    #allfiles = [f for f listdir(rootdir) if isfile(join(rootdir, f))]
+    fh = file (featurefile, 'r')
+    contents = fh.readlines()
+    fh.close()
+    del contents[0]
+    for line in contents:
+        line=line.lstrip().rstrip()
+        items = string.split(line)
+        fvs = [float(x) for x in items[1:]]
+        allfeatures[ prefix+'/'+items[0] ] = fvs
+
+    alllabels={}
+    for app in allfeatures.keys():
+        alllabels[app] = "BENIGN"
+
+    '''
+    for app in allfeatures.keys():
+        if sum(allfeatures[app]) < 0.00005:
+            del allfeatures[app]
+            del alllabels[app]
+    '''
+
+    print str(len(allfeatures)) + " valid " + label + " app training samples to be used by MamaDroid."
+
+    return (allfeatures, alllabels)
+
 
 if __name__=="__main__":
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)

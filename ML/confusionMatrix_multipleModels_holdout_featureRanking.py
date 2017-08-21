@@ -72,6 +72,7 @@ def holdout(model, features, labels, fset):
     std = np.std([tree.feature_importances_ for tree in model.estimators_],
             axis=0)
     indices = np.argsort(importances)[::-1]
+    print [indices[i] for i in range(0, len(indices))]
 
     idx2featurenames_ = getFeatureMapping()
     idx2featurenames = dict()

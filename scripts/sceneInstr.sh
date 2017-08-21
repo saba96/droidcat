@@ -9,9 +9,9 @@ apkfile=$1
 ROOT=/home/hcai/
 subjectloc=`pwd`
 
-MAINCP=".:$ROOT/libs/rt.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
+MAINCP=".:$ROOT/libs/rt.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/droidfax/bin:$ROOT/libs/java_cup.jar"
 
-SOOTCP=".:$ROOT/workspace/iac/bin"
+SOOTCP=".:$ROOT/workspace/droidfax/bin"
 
 for i in $ROOT/libs/*.jar;
 do
@@ -22,7 +22,7 @@ done
 suffix=${apkfile##*/}
 suffix=${suffix%%.*}
 
-LOGDIR=out-dyniacInstr-scene
+LOGDIR=out-dyndroidfaxInstr-scene
 mkdir -p $LOGDIR
 logout=$LOGDIR/instr-$suffix.out
 logerr=$LOGDIR/instr-$suffix.err

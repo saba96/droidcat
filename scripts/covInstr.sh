@@ -11,9 +11,9 @@ subjectloc=`pwd`
 
 OUTDIR=${2:-"$subjectloc/cov.instrumented/"}
 
-MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
+MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/droidfax/bin:$ROOT/libs/java_cup.jar"
 
-SOOTCP="$ROOT/workspace/iac/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
+SOOTCP="$ROOT/workspace/droidfax/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
 
 for i in $ROOT/libs/*.jar;
 do
@@ -68,7 +68,7 @@ starttime=`date +%s%N | cut -b1-13`
 	#-validate \
 	#-force-android-jar /home/hcai/Android/Sdk/platforms/android-22/android.jar \
 	#-dumpJimple \
-cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.covInstr \
+cmd="java -Xmx4g -ea -cp ${MAINCP} covTracker.covInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \

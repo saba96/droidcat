@@ -11,9 +11,9 @@ subjectloc=`pwd`
 
 OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
 
-MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/iac/bin:$ROOT/libs/java_cup.jar"
+MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/droidfax/bin:$ROOT/libs/java_cup.jar"
 
-SOOTCP="$ROOT/workspace/iac/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
+SOOTCP="$ROOT/workspace/droidfax/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
 
 for i in $ROOT/libs/*.jar;
 do
@@ -53,15 +53,14 @@ starttime=`date +%s%N | cut -b1-13`
 	#-noMonitorICC \
 	#-dumpJimple \
     #-noMonitorCalls \
-cmd="java -Xmx4g -ea -cp ${MAINCP} dynCG.sceneInstr \
+    #-monitorEvents \
+	#-catcallback /home/hcai/libs/catCallbacks.txt \
+    #-instrlifecycle \
+cmd="java -Xmx14g -ea -cp ${MAINCP} dynCG.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \
-    -debug \
-    -monitorEvents \
-	-catcallback /home/hcai/libs/catCallbacks.txt \
 	-instr3rdparty \
-    -instrlifecycle \
 	-process-dir $apkfile"
 
 ($cmd | tee $logout) 3>&1 1>&2 2>&3 | tee $logerr
