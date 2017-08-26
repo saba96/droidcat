@@ -96,33 +96,40 @@ if __name__=="__main__":
     comlist17=[]
     for line in mamalist17:
         if line in melist17:
-            comlist17.append(line)
+            comlist17.append(line+".apk.txt")
 
     comlistdrebin=[]
     for line in mamalistdrebin:
         if line in melistdrebin:
-            comlistdrebin.append(line)
+            comlistdrebin.append(line+".apk.txt")
 
     print "common apps in benign17: %d, common apps in malwaredrebin: %d\n" % (len(comlist17), len(comlistdrebin))
 
     #bPrune = g_binary
+    mode = "family"
     bPrune = True
 
+    if len(sys.argv)>=3:
+        mode = sys.argv[2].lower()
+
     # training dataset
-    (bf1, bl1) = loadBenignData('features_large/benign-2017')
+    #(bf1, bl1) = loadMamaFeatures("benign-2014", mode, "BENIGN")
+    (bf1, bl1) = loadMamaFeatures("benign-2017", mode, "BENIGN")
     for app in bf1.keys():
         if app not in comlist17:
             del bf1[app]
             del bl1[app]
 
     '''
-    (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-2013','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf1, ml1) = loadMamaFeatures("malware-2013", mode, "MALICIOUS")
     bf1.update (mf1)
     bl1.update (ml1)
-    '''
 
-    '''
-    (mf3, ml3) = loadMalwareData(g_binary, 'features_large/malware-drebin','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
+    (mf2, ml2) = loadMamaFeatures("malware-2017", mode, "MALICIOUS")
+    bf1.update (mf2)
+    bl1.update (ml2)
+
+    (mf3, ml3) = loadMamaFeatures("malware-drebin", mode, "MALICIOUS")
     for app in mf3.keys():
         if app not in comlistdrebin:
             del mf3[app]
@@ -131,70 +138,60 @@ if __name__=="__main__":
     bl1.update (ml3)
     '''
 
-    (mf4, ml4) = loadMalwareData(g_binary, 'features_large/malware-zoo/2014','/home/hcai/testbed/cg.instrumented/AndroZoo/2014', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf4, ml4) = loadMamaFeatures("malware-zoo-2014", mode, "MALICIOUS")
     bf1.update (mf4)
     bl1.update (ml4)
 
     '''
-    (mf5, ml5) = loadMalwareData(g_binary, 'features_large/malware-zoo/2015','/home/hcai/testbed/cg.instrumented/AndroZoo/2015', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf5, ml5) = loadMamaFeatures("malware-zoo-2015", mode, "MALICIOUS")
     bf1.update (mf5)
     bl1.update (ml5)
 
-    (mf6, ml6) = loadMalwareData(g_binary, 'features_large/malware-zoo/2016','/home/hcai/testbed/cg.instrumented/AndroZoo/2016', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf6, ml6) = loadMamaFeatures("malware-zoo-2016", mode, "MALICIOUS")
     bf1.update (mf6)
     bl1.update (ml6)
     '''
 
-    # testing dataset
-    #(bf2, bl2) = loadBenignData('features_large/benign-2014')
-    (bf2, bl2) = loadBenignData('features_large/benign-2017')
+    # Testing
+    #(bf2, bl2) = loadMamaFeatures("benign-2014", mode, "BENIGN")
+    (bf2, bl2) = loadMamaFeatures("benign-2017", mode, "BENIGN")
     for app in bf2.keys():
         if app not in comlist17:
             del bf2[app]
             del bl2[app]
 
-    '''
-    (mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-2017','/home/hcai/testbed/cg.instrumented/newmalwareall/installed', pruneMinor=bPrune, drebin=False, obf=False)
-    bf2.update (mf2)
-    bl2.update (ml2)
-
-    (mf6, ml6) = loadMalwareData(g_binary, 'features_large/malware-zoo/2016','/home/hcai/testbed/cg.instrumented/AndroZoo/2016', pruneMinor=bPrune, drebin=False, obf=False)
-    bf2.update (mf6)
-    bl2.update (ml6)
-    '''
-
-    (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-2013','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf1, ml1) = loadMamaFeatures("malware-2013", mode, "MALICIOUS")
     bf2.update (mf1)
     bl2.update (ml1)
 
     '''
-    if not g_binary:
-        trainfeatures = bf1
-        trainlabels = bl1
-        testfeatures = bf2
-        testlabels = bl2
-        if not g_binary:
-            commonlabels = set (trainlabels.values()).intersection ( set (testlabels.values()) )
-            print commonlabels
-            trainapps2remove=[]
-            for app in trainlabels.keys():
-                if trainlabels[app] not in commonlabels:
-                    trainapps2remove.append( app )
-            testapps2remove=[]
-            for app in testlabels.keys():
-                if testlabels[app] not in commonlabels:
-                    testapps2remove.append( app )
-            for app in trainapps2remove:
-                del trainfeatures[app]
-                del trainlabels[app]
-            for app in testapps2remove:
-                del testfeatures[app]
-                del testlabels[app]
+    (mf2, ml2) = loadMamaFeatures("malware-2017", mode, "MALICIOUS")
+    bf2.update (mf2)
+    bl2.update (ml2)
+    '''
 
-        bf1 = trainfeatures
-        bl1 = trainlabels
-        bf2 = testfeatures
-        bl2 = testlabels
+    '''
+    (mf3, ml3) = loadMamaFeatures("malware-drebin", mode, "MALICIOUS")
+    for app in mf3.keys():
+        if app not in comlistdrebin:
+            del mf3[app]
+            del ml3[app]
+    bf2.update (mf3)
+    bl2.update (ml3)
+    '''
+
+    '''
+    (mf4, ml4) = loadMamaFeatures("malware-zoo-2016", mode, "MALICIOUS")
+    bf2.update (mf4)
+    bl2.update (ml4)
+
+    (mf5, ml5) = loadMamaFeatures("malware-zoo-2016", mode, "MALICIOUS")
+    bf2.update (mf5)
+    bl2.update (ml5)
+
+    (mf6, ml6) = loadMamaFeatures("malware-zoo-2016", mode, "MALICIOUS")
+    bf2.update (mf6)
+    bl2.update (ml6)
     '''
 
     (trainfeatures, trainlabels) = adapt (bf1, bl1)
@@ -214,21 +211,23 @@ if __name__=="__main__":
     for item in testlabels:
         uniqLabels.add (item)
 
+    if mode=="family":
+        nt = 51
+        dp  = 8
+    else:
+        nt = 101
+        dp = 64
+
+
+    models = (RandomForestClassifier(n_estimators = nt, max_depth= dp), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    #models = (RandomForestClassifier(n_estimators = 120), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-
-    #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
-    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-
-    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
-    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
-    #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, FSET_SEC)
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
@@ -236,14 +235,9 @@ if __name__=="__main__":
 
     model2ret={}
     for model in models:
-        #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        #for fset in (FSET_FULL, FSET_YYY, FSET_G):
-        #for fset in (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G):
-        for fset in fsets:
-        #for fset in (FSET_G,):
-            print >> fh, 'model ' + str(model) + "\t" + "feature set " + FSET_NAMES[str(fset)]
-            ret = holdout (model, selectFeatures( trainfeatures, fset ), trainlabels, selectFeatures( testfeatures, fset), testlabels)
-            model2ret[str(model)+str(fset)] = ret
+        print >> fh, 'model ' + str(model)
+        ret = holdout (model, trainfeatures, trainlabels, testfeatures, testlabels)
+        model2ret[str(model)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
     for i in (0,1,2,3):
@@ -252,9 +246,8 @@ if __name__=="__main__":
         for model in models:
             #print 'model ' + str(model)
             col=list()
-            for fset in fsets:
-                ret = model2ret[str(model)+str(fset)]
-                col.append(ret[i])
+            ret = model2ret[str(model)]
+            col.append(ret[i])
             cols.append(col)
         for r in range(0,len(cols[0])):
             for c in range(0,len(cols)):

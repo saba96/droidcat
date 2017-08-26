@@ -473,7 +473,7 @@ def getMalwareTestingData(dichotomous=False, \
         l2c = malwareCatStat(purelabels)
         minorapps = list()
         for app in allfeatures_malware.keys():
-            if pruneMinor and l2c[ malwareLabels[app] ] <= 1:
+            if pruneMinor and l2c[ malwareLabels[app] ] <= 0:
                 minorapps.append( app )
         for app in minorapps:
             del allfeatures_malware[app]
@@ -741,22 +741,31 @@ def malwareCatStat(labels):
         l2c[lab]=l2c[lab]+1
     return l2c
 
-def loadMamaFeatures(featurefile, label, prefix=""):
+def loadMamaFeatures(featurefilesuffix, mode, label):
+    featurefile = "features_mama/"+mode+"/"+featurefilesuffix+".csv"
+    #prefix=featurefilesuffix+'/'
+    prefix=""
     allfeatures = dict()
     #allfiles = [f for f listdir(rootdir) if isfile(join(rootdir, f))]
     fh = file (featurefile, 'r')
     contents = fh.readlines()
     fh.close()
-    del contents[0]
+    #del contents[0]
+    inv=0
     for line in contents:
         line=line.lstrip().rstrip()
-        items = string.split(line)
-        fvs = [float(x) for x in items[1:]]
-        allfeatures[ prefix+'/'+items[0] ] = fvs
+        #print line
+        items = string.split(line,sep=", ")
+        try:
+            fvs = [float(x.lstrip('\' []').rstrip('\' []')) for x in items[1:]]
+        except:
+            inv+=1
+            continue
+        allfeatures[ prefix+items[0].lstrip('\' []').rstrip('\' []') ] = fvs
 
     alllabels={}
     for app in allfeatures.keys():
-        alllabels[app] = "BENIGN"
+        alllabels[app] = label
 
     '''
     for app in allfeatures.keys():
@@ -765,6 +774,7 @@ def loadMamaFeatures(featurefile, label, prefix=""):
             del alllabels[app]
     '''
 
+    print str(inv) + " invalid lines skipped"
     print str(len(allfeatures)) + " valid " + label + " app training samples to be used by MamaDroid."
 
     return (allfeatures, alllabels)
@@ -772,6 +782,8 @@ def loadMamaFeatures(featurefile, label, prefix=""):
 
 if __name__=="__main__":
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
+    #(features, labels) = loadMamaFeatures( featurefile="features_mama/family/benign-2015.csv", label="BENIGN", prefix="benign-2015")
+    (features, labels) = loadMamaFeatures( "benign-2014", "family", "BENIGN")
 
     l2c = malwareCatStat(labels)
     for lab in l2c.keys():

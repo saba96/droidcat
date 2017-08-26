@@ -126,7 +126,8 @@ points( meanalldIns, seq_along(meanalldIns), col='gold', pch=18, cex=0.5 )
 stdalldIns <- apply( t(alldIns), 2, sd )
 for (k in 1:ncol(t(alldIns))) {
 	#print( paste(snames[k], meanalls[k], "% (", stdalls[k], "%)") )
-	cat(sprintf("%s\t%.2f%% (%.2f%%)\n", dnamesIns[k], as.numeric(meanalldIns[k]), as.numeric(stdalldIns[k])))
+	#cat(sprintf("%s\t%.2f%% (%.2f%%)\n", dnamesIns[k], as.numeric(meanalldIns[k]), as.numeric(stdalldIns[k])))
+	cat(sprintf("%s\t%.2f%%\t%.2f%%\t(%.2f%%)\n", dnamesIns[k], as.numeric(meanalldIns[k]), as.numeric(2*stdalldIns[k]/sqrt(r)), as.numeric(stdalldIns[k])))
 }
 cat("\n")
 

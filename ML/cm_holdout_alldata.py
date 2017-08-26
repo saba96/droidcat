@@ -138,13 +138,13 @@ if __name__=="__main__":
         global g_binary
         g_binary = sys.argv[1].lower()=='true'
 
-    (bf1, bl1) = loadBenignData('features_large/benign-2015')
+    (bf1, bl1) = loadBenignData('features_large/benign-2014')
 
     (bf2, bl2) = loadBenignData('features_large/benign-2017')
     bf1.update(bf2)
     bl1.update(bl2)
 
-    (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-2012','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=True, drebin=False, obf=False)
+    (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-2013','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=True, drebin=False, obf=False)
     bf1.update (mf1)
     bl1.update (ml1)
 
