@@ -1,122 +1,122 @@
-1   SDK->SDK    Percentage of calls from SDK to SDK ✔   ✔   
-2   SDK->3rdLib Percentage of calls from SDK to third-party library         
-3   SDK->UserCode   Percentage of calls from SDK to user code           
-4   3rdLib->SDK Percentage of calls from third-party library to SDK ✔   ✔   
-5   3rdLib->3rdLib  Percentage of calls from third-party library to third-party library         
-6   3rdLib->UserCode    Percentage of calls from third-party library to user code           
-7   UserCode->SDK   Percentage of calls from user code to SDK   ✔   ✔   
-8   UserCode->3rdLib    Percentage of calls from user code to third-party library           
-9   UserCode->UserCode  Percentage of calls from user code to user code         
-10  userCode-cls    Percentage out of all executed classes that are defined in user code, counting unique class signatures only ✔   ✔   
-11  3rdLib-cls  Percentage out of all executed classes that are defined in third-party libraries, counting unique class signatures only ✔       
-12  sdk-cls Percentage out of all executed classes that are defined in SDK, counting unique class signatures only   ✔       
-13  userCode-me Percentage out of all executed methods that are defined in user code, counting unique method signatures only    ✔   ✔   
-14  3rdlib-me   Percentage out of all executed methods that are defined in third-party libraries, counting unique method signatures only    ✔       
-15  sdk-me  Percentage out of all executed methods that are defined in SDK, counting unique method signatures only  ✔       
-16  userCode-clsIns Percentage out of all executed classes that are defined in user code, counting all class signature instances    ✔   ✔   
-17  3rdLib-clsIns   Percentage out of all executed classes that are defined in third-party libraries, counting all class signature instances            
-18  sdk-clsIns  Percentage out of all executed classes that are defined in SDK, counting all class signature instances          
-19  userCode-meIns  Percentage out of all executed methods that are defined in user code, counting all method signature instances   ✔   ✔   
-20  3rdlib-meIns    Percentage out of all executed methods that are defined in third-party libraries, counting all method signature instances           
-21  sdk-meIns   Percentage out of all executed methods that are defined in SDK, counting all method signature instances         
-22  activity    Percentage out of all executed components that are Activity components, counting unique class signatures    ✔       
-23  service Percentage out of all executed components that are Service components, counting unique class signatures ✔       
-24  receiver    Percentage out of all executed components that are BroadcastReceiver components, counting unique class signatures   ✔       
-25  provider    Percentage out of all executed components that are ContentProvider components, counting unique class signatures         
-26  activityIns Percentage out of all executed components that are Activity components, counting all class signature instances          
-27  serviceIns  Percentage out of all executed components that are Service components, counting all class signature instances           
-28  receiverIns Percentage out of all executed components that are BroadcastReceiver components, counting all class signature instances ✔       
-29  providerIns Percentage out of all executed components that are ContentProvider components, counting all class signature instances           
-30  lc  Percentage out of all executed methods that are lifecycle (callback) methods, counting unique method signatures         
-31  eh  Percentage out of all executed methods that are event handlers (callback) methods, counting unique method signatures            
-32  lc-ins  Percentage out of all executed methods that are lifecycle (callback) methods, counting all method signature instances           
-33  eh-ins  Percentage out of all executed methods that are event handlers (callback) methods, counting all method signature instances          
-34  Activity    Percentage out of all executed lifecycle methods that are callbacks defined in Activity components, counting unique method signatures   ✔   ✔   
-35  Activity-Ins    Percentage out of all executed lifecycle methods that are callbacks defined in Activity components, counting all method signature instances     ✔   ✔   
-36  Application Percentage out of all executed lifecycle methods that are callbacks defined in Application classes/subclasses, counting unique method signatures    ✔   ✔   
-37  Application-Ins Percentage out of all executed lifecycle methods that are callbacks defined in Application classes/subclasses, counting all method signature instances  ✔   ✔   
-38  BroadcastReceiver   Percentage out of all executed lifecycle methods that are callbacks defined in BroadcastReceiver components, counting unique method signatures          
-39  BroadcastReceiver-Ins   Percentage out of all executed lifecycle methods that are callbacks defined in BroadcastReceiver components, counting all method signature instances            
-40  ContentProvider Percentage out of all executed lifecycle methods that are callbacks defined in ContentProvider components, counting unique method signatures    ✔       
-41  ContentProvider-Ins Percentage out of all executed lifecycle methods that are callbacks defined in ContentProvider components, counting all method signature instances  ✔       
-42  Service Percentage out of all executed lifecycle methods that are callbacks defined in Service components, counting unique method signatures    ✔       
-43  Service-Ins Percentage out of all executed lifecycle methods that are callbacks defined in Service components, counting all method signature instances  ✔       
-44  APPLICATION_MANAGEMENT  Percentage out of all executed event handlers that are callbacks handling system events for application management, counting unique method signatures   ✔       
-45  APPLICATION_MANAGEMENT-Ins  Percentage out of all executed event handlers that are callbacks handling system events for application management, counting all method signature instances ✔       
-46  SYSTEM_STATUS   Percentage out of all executed event handlers that are callbacks handling system events related to system status access and management, counting unique method signatures   ✔   ✔   
-47  SYSTEM_STATUS-Ins   Percentage out of all executed event handlers that are callbacks handling system events related to system status access and management, counting all method signature instances ✔   ✔   
-48  LOCATION_STATUS Percentage out of all executed event handlers that are callbacks handling system events related to location info access and management, counting unique method signatures   ✔       
-49  LOCATION_STATUS-Ins Percentage out of all executed event handlers that are callbacks handling system events related to location info access and management, counting all method signature instances ✔       
-50  HARDWARE_MANAGEMENT Percentage out of all executed event handlers that are callbacks handling system events relevant to hardware management, counting unique method signatures          
-51  HARDWARE_MANAGEMENT-Ins Percentage out of all executed event handlers that are callbacks handling system events relevant to hardware management, counting all method signature instances            
-52  NETWORK_MANAGEMENT  Percentage out of all executed event handlers that are callbacks handling system events relevant to network management, counting unique method signatures           
-53  NETWORK_MANAGEMENT-Ins  Percentage out of all executed event handlers that are callbacks handling system events relevant to network management, counting all method signature instances         
-54  APP_BAR Percentage out of all executed event handlers that are callbacks handling UI events relevant to application bars, counting unique method signatures         
-55  APP_BAR-Ins Percentage out of all executed event handlers that are callbacks handling events UI relevant to application bars, counting all method signature instances           
-56  MEDIA_CONTROL   Percentage out of all executed event handlers that are callbacks handling UI events relevant to media controls, counting unique method signatures           
-57  MEDIA_CONTROL-Ins   Percentage out of all executed event handlers that are callbacks handling UI events relevant to media controls, counting all method signature instances         
-58  VIEW    Percentage out of all executed event handlers that are callbacks handling UI events relevant to Views, counting unique method signatures    ✔   ✔   
-59  VIEW-Ins    Percentage out of all executed event handlers that are callbacks handling UI events relevant to Views, counting all method signature instances  ✔   ✔   
-60  WIDGET  Percentage out of all executed event handlers that are callbacks handling UI events relevant to widgets, counting unique method signatures          
-61  WIDGET-Ins  Percentage out of all executed event handlers that are callbacks handling UI events relevant to widgets, counting all method signature instances            
-62  DIALOG  Percentage out of all executed event handlers that are callbacks handling UI events relevant to dialogs, counting unique method signatures          
-63  DIALOG-Ins  Percentage out of all executed event handlers that are callbacks handling UI events relevant to dialogs, counting all method signature instances            
-64  int_ex  Percentage out of all exercised ICCs that are internal explicit ICCs (those that are between components within the same app and have target specified explicitly)   ✔       
-65  int_im  Percentage out of all exercised ICCs that are internal implicit ICCs (those that are between components within the same app and do NOT have target specified explicitly)            
-66  ext_ex  Percentage out of all exercised ICCs that are external explicit ICCs (those that are between components across two different apps and have target specified explicitly) ✔       
-67  ext_im  Percentage of all exercised ICCs that are internal implicit ICCs (those that are between components across two different apps and do NOT have target specified explicitly)          
-68  data_only   Percentage out of all exercised ICCs that carry URI data only in the associated Intents (i.e., the 'data' field of Intent objects are non-void) ✔       
-69  extras_only Percentage out of all exercised ICCs that carry extras data only in the associated Intents  (i.e., the 'extras' field of Intent objects are non-void)   ✔       
-70  data_both   Percentage out of all exercised ICCs that carry both URI and extras data only in the associated Intents  (i.e., the 'data' and 'extras' fields of Intent objects are non-void)  ✔       
-71  src Percentage out of all call targets that are source APIs, counting unique method signatures  ✔   ✔   
-72  sink    Percentage out of all call targets that are sink APIs, counting unique method signatures    ✔       
-73  srcIns  Percentage out of all call targets that are source APIs, counting all method signature instances    ✔   ✔   
-74  sinkIns Percentage out of all call targets that are sink APIs, counting all method signature instances  ✔       
-75  riskSrc Percentage out of all exercised source APIs that reach (via method-level control flows) at least one sink API call, counting unique method signatures   ✔   ✔   
-76  riskSink    Percentage out of all exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, counting unique method signatures  ✔       
-77  riskSrcIns  Percentage out of all exercised source APIs that reach (via method-level control flows) at least one sink API call, counting all method signature instances ✔       
-78  riskSinkIns Percentage out of all exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, counting all method signature instances    ✔       
-79  ACCOUNT_INFORMATION Percentage out of all exercised source APIs that access account information, counting unique method signatures          
-80  ACCOUNT_INFORMATION-Ins Percentage out of all exercised source APIs that access account information, counting all method signature instances            
-81  ACCOUNT_INFORMATION-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access account information, counting unique method signatures          
-82  ACCOUNT_INFORMATION-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access account information, counting all method signature instances            
-83  CALENDAR_INFORMATION    Percentage out of all exercised source APIs that access calendar information, counting unique method signatures         
-84  CALENDAR_INFORMATION-Ins    Percentage out of all exercised source APIs that access calendar information, counting all method signature instances           
-85  CALENDAR_INFORMATION-escape Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access calendar information, counting unique method signatures         
-86  CALENDAR_INFORMATION-escape-Ins Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access calendar information, counting all method signature instances           
-87  LOCATION_INFORMATION    Percentage out of all exercised source APIs that access location information, counting unique method signatures ✔   ✔   
-88  LOCATION_INFORMATION-Ins    Percentage out of all exercised source APIs that access location information, counting all method signature instances   ✔       
-89  LOCATION_INFORMATION-escape Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access location information, counting unique method signatures ✔   ✔   
-90  LOCATION_INFORMATION-escape-Ins Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access location information, counting all method signature instances   ✔       
-91  NETWORK_INFORMATION Percentage out of all exercised source APIs that access network information, counting unique method signatures  ✔   ✔   
-92  NETWORK_INFORMATION-Ins Percentage out of all exercised source APIs that access network information, counting all method signature instances    ✔   ✔   
-93  NETWORK_INFORMATION-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access network information, counting unique method signatures  ✔   ✔   
-94  NETWORK_INFORMATION-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access network information, counting all method signature instances    ✔   ✔   
-95  SYSTEM_SETTINGS Percentage out of all exercised source APIs that access system settings, counting unique method signatures  ✔   ✔   
-96  SYSTEM_SETTINGS-Ins Percentage out of all exercised source APIs that access system settings, counting all method signature instances    ✔       
-97  SYSTEM_SETTINGS-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access system settings, counting unique method signatures  ✔   ✔   
-98  SYSTEM_SETTINGS-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access system settings, counting all method signature instances    ✔       
-99  ACCOUNT_SETTINGS    Percentage out of all exercised sink APIs that aims at operations on account settings, counting unique method signatures    ✔       
-100 ACCOUNT_SETTINGS-Ins    Percentage out of all exercised sink APIs that aims at operations on account settings, counting all method signature instances          
-101 ACCOUNT_SETTINGS-reach  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on account settings, counting unique method signatures ✔       
-102 ACCOUNT_SETTINGS-reach-Ins  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on account settings, counting all method signature instances           
-103 FILE    Percentage out of all exercised sink APIs that aims at file operations, counting unique method signatures           
-104 FILE-Ins    Percentage out of all exercised sink APIs that aims at file operations, counting all method signature instances         
-105 FILE-reach  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at file operations, counting unique method signatures            
-106 FILE-reach-Ins  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at file operations, counting all method signature instances          
-107 LOG Percentage out of all exercised sink APIs that aims at logging operations, counting unique method signatures    ✔   ✔   
-108 LOG-Ins Percentage out of all exercised sink APIs that aims at logging operations, counting all method signature instances  ✔   ✔   
-109 LOG-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at logging operations, counting unique method signatures ✔   ✔   
-110 LOG-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at logging operations, counting all method signature instances   ✔   ✔   
-111 NETWORK Percentage out of all exercised sink APIs that aims at networking operations, counting unique method signatures         
-112 NETWORK-Ins Percentage out of all exercised sink APIs that aims at networking operations, counting all method signature instances   ✔   ✔   
-113 NETWORK-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at networking operations, counting unique method signatures          
-114 NETWORK-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at networking operations, counting all method signature instances    ✔   ✔   
-115 SMS_MMS Percentage out of all exercised sink APIs that aims at messaging operations, counting unique method signatures  ✔   ✔   
-116 SMS_MMS-Ins Percentage out of all exercised sink APIs that aims at messaging operations, counting all method signature instances    ✔   ✔   
-117 SMS_MMS-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at messaging operations, counting unique method signatures   ✔   ✔   
-118 SMS_MMS-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at messaging operations, counting all method signature instances ✔   ✔   
-119 SYSTEM_SETTINGS Percentage out of all exercised sink APIs that aims at operations on system settings, counting unique method signatures         
-120 SYSTEM_SETTINGS-Ins Percentage out of all exercised sink APIs that aims at operations on system settings, counting all method signature instances   ✔       
-121 SYSTEM_SETTINGS-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on system settings, counting unique method signatures          
-122 SYSTEM_SETTINGS-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on system settings, counting all method signature instances
+0	  SDK->SDK    Percentage of calls from SDK to SDK ✔   ✔   
+1	  SDK->3rdLib Percentage of calls from SDK to third-party library         
+2	  SDK->UserCode   Percentage of calls from SDK to user code           
+3	  3rdLib->SDK Percentage of calls from third-party library to SDK ✔   ✔   
+4	  3rdLib->3rdLib  Percentage of calls from third-party library to third-party library         
+5	  3rdLib->UserCode    Percentage of calls from third-party library to user code           
+6	  UserCode->SDK   Percentage of calls from user code to SDK   ✔   ✔   
+7	  UserCode->3rdLib    Percentage of calls from user code to third-party library           
+8	  UserCode->UserCode  Percentage of calls from user code to user code         
+9	 userCode-cls    Percentage out of all executed classes that are defined in user code, counting unique class signatures only ✔   ✔   
+10	 3rdLib-cls  Percentage out of all executed classes that are defined in third-party libraries, counting unique class signatures only ✔       
+11	 sdk-cls Percentage out of all executed classes that are defined in SDK, counting unique class signatures only   ✔       
+12	 userCode-me Percentage out of all executed methods that are defined in user code, counting unique method signatures only    ✔   ✔   
+13	 3rdlib-me   Percentage out of all executed methods that are defined in third-party libraries, counting unique method signatures only    ✔       
+14	 sdk-me  Percentage out of all executed methods that are defined in SDK, counting unique method signatures only  ✔       
+15	 userCode-clsIns Percentage out of all executed classes that are defined in user code, counting all class signature instances    ✔   ✔   
+16	 3rdLib-clsIns   Percentage out of all executed classes that are defined in third-party libraries, counting all class signature instances            
+17	 sdk-clsIns  Percentage out of all executed classes that are defined in SDK, counting all class signature instances          
+18	 userCode-meIns  Percentage out of all executed methods that are defined in user code, counting all method signature instances   ✔   ✔   
+19	 3rdlib-meIns    Percentage out of all executed methods that are defined in third-party libraries, counting all method signature instances           
+20	 sdk-meIns   Percentage out of all executed methods that are defined in SDK, counting all method signature instances         
+21	 activity    Percentage out of all executed components that are Activity components, counting unique class signatures    ✔       
+22	 service Percentage out of all executed components that are Service components, counting unique class signatures ✔       
+23	 receiver    Percentage out of all executed components that are BroadcastReceiver components, counting unique class signatures   ✔       
+24	 provider    Percentage out of all executed components that are ContentProvider components, counting unique class signatures         
+25	 activityIns Percentage out of all executed components that are Activity components, counting all class signature instances          
+26	 serviceIns  Percentage out of all executed components that are Service components, counting all class signature instances           
+27	 receiverIns Percentage out of all executed components that are BroadcastReceiver components, counting all class signature instances ✔       
+28	 providerIns Percentage out of all executed components that are ContentProvider components, counting all class signature instances           
+29	 int_ex  Percentage out of all exercised ICCs that are internal explicit ICCs (those that are between components within the same app and have target specified explicitly)   ✔       
+30	 int_im  Percentage out of all exercised ICCs that are internal implicit ICCs (those that are between components within the same app and do NOT have target specified explicitly)            
+31	 ext_ex  Percentage out of all exercised ICCs that are external explicit ICCs (those that are between components across two different apps and have target specified explicitly) ✔       
+32	 ext_im  Percentage of all exercised ICCs that are internal implicit ICCs (those that are between components across two different apps and do NOT have target specified explicitly)          
+33	 data_only   Percentage out of all exercised ICCs that carry URI data only in the associated Intents (i.e., the 'data' field of Intent objects are non-void) ✔       
+34	 extras_only Percentage out of all exercised ICCs that carry extras data only in the associated Intents  (i.e., the 'extras' field of Intent objects are non-void)   ✔       
+35	 data_both   Percentage out of all exercised ICCs that carry both URI and extras data only in the associated Intents  (i.e., the 'data' and 'extras' fields of Intent objects are non-void)  ✔       
+36	 src Percentage out of all call targets that are source APIs, counting unique method signatures  ✔   ✔   
+37	 sink    Percentage out of all call targets that are sink APIs, counting unique method signatures    ✔       
+38	 srcIns  Percentage out of all call targets that are source APIs, counting all method signature instances    ✔   ✔   
+39	 sinkIns Percentage out of all call targets that are sink APIs, counting all method signature instances  ✔       
+40	 riskSrc Percentage out of all exercised source APIs that reach (via method-level control flows) at least one sink API call, counting unique method signatures   ✔   ✔   
+41	 riskSink    Percentage out of all exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, counting unique method signatures  ✔       
+42	 riskSrcIns  Percentage out of all exercised source APIs that reach (via method-level control flows) at least one sink API call, counting all method signature instances ✔       
+43	 riskSinkIns Percentage out of all exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, counting all method signature instances    ✔       
+44	 ACCOUNT_INFORMATION Percentage out of all exercised source APIs that access account information, counting unique method signatures          
+45	 ACCOUNT_INFORMATION-Ins Percentage out of all exercised source APIs that access account information, counting all method signature instances            
+46	 ACCOUNT_INFORMATION-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access account information, counting unique method signatures          
+47	 ACCOUNT_INFORMATION-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access account information, counting all method signature instances            
+48	 CALENDAR_INFORMATION    Percentage out of all exercised source APIs that access calendar information, counting unique method signatures         
+49	 CALENDAR_INFORMATION-Ins    Percentage out of all exercised source APIs that access calendar information, counting all method signature instances           
+50	 CALENDAR_INFORMATION-escape Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access calendar information, counting unique method signatures         
+51	 CALENDAR_INFORMATION-escape-Ins Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access calendar information, counting all method signature instances           
+52	 LOCATION_INFORMATION    Percentage out of all exercised source APIs that access location information, counting unique method signatures ✔   ✔   
+53	 LOCATION_INFORMATION-Ins    Percentage out of all exercised source APIs that access location information, counting all method signature instances   ✔       
+54	 LOCATION_INFORMATION-escape Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access location information, counting unique method signatures ✔   ✔   
+55	 LOCATION_INFORMATION-escape-Ins Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access location information, counting all method signature instances   ✔       
+56	 NETWORK_INFORMATION Percentage out of all exercised source APIs that access network information, counting unique method signatures  ✔   ✔   
+57	 NETWORK_INFORMATION-Ins Percentage out of all exercised source APIs that access network information, counting all method signature instances    ✔   ✔   
+58	 NETWORK_INFORMATION-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access network information, counting unique method signatures  ✔   ✔   
+59	 NETWORK_INFORMATION-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access network information, counting all method signature instances    ✔   ✔   
+60	 SYSTEM_SETTINGS Percentage out of all exercised source APIs that access system settings, counting unique method signatures  ✔   ✔   
+61	 SYSTEM_SETTINGS-Ins Percentage out of all exercised source APIs that access system settings, counting all method signature instances    ✔       
+62	 SYSTEM_SETTINGS-escape  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access system settings, counting unique method signatures  ✔   ✔   
+63	 SYSTEM_SETTINGS-escape-Ins  Out of the exercised source APIs that reach (via method-level control flows) at least one sink API call, percentage that access system settings, counting all method signature instances    ✔       
+64	 ACCOUNT_SETTINGS    Percentage out of all exercised sink APIs that aims at operations on account settings, counting unique method signatures    ✔       
+65	ACCOUNT_SETTINGS-Ins    Percentage out of all exercised sink APIs that aims at operations on account settings, counting all method signature instances          
+66	ACCOUNT_SETTINGS-reach  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on account settings, counting unique method signatures ✔       
+67	ACCOUNT_SETTINGS-reach-Ins  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on account settings, counting all method signature instances           
+68	FILE    Percentage out of all exercised sink APIs that aims at file operations, counting unique method signatures           
+69	FILE-Ins    Percentage out of all exercised sink APIs that aims at file operations, counting all method signature instances         
+70	FILE-reach  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at file operations, counting unique method signatures            
+71	FILE-reach-Ins  Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at file operations, counting all method signature instances          
+72	LOG Percentage out of all exercised sink APIs that aims at logging operations, counting unique method signatures    ✔   ✔   
+73	LOG-Ins Percentage out of all exercised sink APIs that aims at logging operations, counting all method signature instances  ✔   ✔   
+74	LOG-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at logging operations, counting unique method signatures ✔   ✔   
+75	LOG-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at logging operations, counting all method signature instances   ✔   ✔   
+76	NETWORK Percentage out of all exercised sink APIs that aims at networking operations, counting unique method signatures         
+77	NETWORK-Ins Percentage out of all exercised sink APIs that aims at networking operations, counting all method signature instances   ✔   ✔   
+78	NETWORK-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at networking operations, counting unique method signatures          
+79	NETWORK-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at networking operations, counting all method signature instances    ✔   ✔   
+80	SMS_MMS Percentage out of all exercised sink APIs that aims at messaging operations, counting unique method signatures  ✔   ✔   
+81	SMS_MMS-Ins Percentage out of all exercised sink APIs that aims at messaging operations, counting all method signature instances    ✔   ✔   
+82	SMS_MMS-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at messaging operations, counting unique method signatures   ✔   ✔   
+83	SMS_MMS-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at messaging operations, counting all method signature instances ✔   ✔   
+84	SYSTEM_SETTINGS Percentage out of all exercised sink APIs that aims at operations on system settings, counting unique method signatures         
+85	SYSTEM_SETTINGS-Ins Percentage out of all exercised sink APIs that aims at operations on system settings, counting all method signature instances   ✔       
+86	SYSTEM_SETTINGS-reach   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on system settings, counting unique method signatures          
+87	SYSTEM_SETTINGS-reach-Ins   Out of the exercised sink APIs that are reachable (via method-level control flows) from at least one source API call, percentage that aims at operations on system settings, counting all method signature instances
+88	 lc  Percentage out of all executed methods that are lifecycle (callback) methods, counting unique method signatures         
+89	 eh  Percentage out of all executed methods that are event handlers (callback) methods, counting unique method signatures            
+90	 lc-ins  Percentage out of all executed methods that are lifecycle (callback) methods, counting all method signature instances           
+91	 eh-ins  Percentage out of all executed methods that are event handlers (callback) methods, counting all method signature instances          
+92	 Activity    Percentage out of all executed lifecycle methods that are callbacks defined in Activity components, counting unique method signatures   ✔   ✔   
+93	 Activity-Ins    Percentage out of all executed lifecycle methods that are callbacks defined in Activity components, counting all method signature instances     ✔   ✔   
+94	 Application Percentage out of all executed lifecycle methods that are callbacks defined in Application classes/subclasses, counting unique method signatures    ✔   ✔   
+95	 Application-Ins Percentage out of all executed lifecycle methods that are callbacks defined in Application classes/subclasses, counting all method signature instances  ✔   ✔   
+96	 BroadcastReceiver   Percentage out of all executed lifecycle methods that are callbacks defined in BroadcastReceiver components, counting unique method signatures          
+97	 BroadcastReceiver-Ins   Percentage out of all executed lifecycle methods that are callbacks defined in BroadcastReceiver components, counting all method signature instances            
+98	 ContentProvider Percentage out of all executed lifecycle methods that are callbacks defined in ContentProvider components, counting unique method signatures    ✔       
+99	 ContentProvider-Ins Percentage out of all executed lifecycle methods that are callbacks defined in ContentProvider components, counting all method signature instances  ✔       
+100	 Service Percentage out of all executed lifecycle methods that are callbacks defined in Service components, counting unique method signatures    ✔       
+101	 Service-Ins Percentage out of all executed lifecycle methods that are callbacks defined in Service components, counting all method signature instances  ✔       
+102	 APPLICATION_MANAGEMENT  Percentage out of all executed event handlers that are callbacks handling system events for application management, counting unique method signatures   ✔       
+103	 APPLICATION_MANAGEMENT-Ins  Percentage out of all executed event handlers that are callbacks handling system events for application management, counting all method signature instances ✔       
+104	 SYSTEM_STATUS   Percentage out of all executed event handlers that are callbacks handling system events related to system status access and management, counting unique method signatures   ✔   ✔   
+105	 SYSTEM_STATUS-Ins   Percentage out of all executed event handlers that are callbacks handling system events related to system status access and management, counting all method signature instances ✔   ✔   
+106	 LOCATION_STATUS Percentage out of all executed event handlers that are callbacks handling system events related to location info access and management, counting unique method signatures   ✔       
+107	 LOCATION_STATUS-Ins Percentage out of all executed event handlers that are callbacks handling system events related to location info access and management, counting all method signature instances ✔       
+108	 HARDWARE_MANAGEMENT Percentage out of all executed event handlers that are callbacks handling system events relevant to hardware management, counting unique method signatures          
+109	 HARDWARE_MANAGEMENT-Ins Percentage out of all executed event handlers that are callbacks handling system events relevant to hardware management, counting all method signature instances            
+110	 NETWORK_MANAGEMENT  Percentage out of all executed event handlers that are callbacks handling system events relevant to network management, counting unique method signatures           
+111	 NETWORK_MANAGEMENT-Ins  Percentage out of all executed event handlers that are callbacks handling system events relevant to network management, counting all method signature instances         
+112	 APP_BAR Percentage out of all executed event handlers that are callbacks handling UI events relevant to application bars, counting unique method signatures         
+113	 APP_BAR-Ins Percentage out of all executed event handlers that are callbacks handling events UI relevant to application bars, counting all method signature instances           
+114	 MEDIA_CONTROL   Percentage out of all executed event handlers that are callbacks handling UI events relevant to media controls, counting unique method signatures           
+115	 MEDIA_CONTROL-Ins   Percentage out of all executed event handlers that are callbacks handling UI events relevant to media controls, counting all method signature instances         
+116	 VIEW    Percentage out of all executed event handlers that are callbacks handling UI events relevant to Views, counting unique method signatures    ✔   ✔   
+117	 VIEW-Ins    Percentage out of all executed event handlers that are callbacks handling UI events relevant to Views, counting all method signature instances  ✔   ✔   
+118	 WIDGET  Percentage out of all executed event handlers that are callbacks handling UI events relevant to widgets, counting unique method signatures          
+119	 WIDGET-Ins  Percentage out of all executed event handlers that are callbacks handling UI events relevant to widgets, counting all method signature instances            
+120	 DIALOG  Percentage out of all executed event handlers that are callbacks handling UI events relevant to dialogs, counting unique method signatures          
+121	 DIALOG-Ins  Percentage out of all executed event handlers that are callbacks handling UI events relevant to dialogs, counting all method signature instances            
