@@ -69,7 +69,7 @@ def holdout(model, features, labels):
     model.fit ( trainfeatures, trainlabels )
 
     for j in range(0, len(testlabels)):
-        y_pred = model.predict( testfeatures[j] )
+        y_pred = model.predict( [ testfeatures[j] ] )
         #print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
         #print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
 
@@ -125,16 +125,23 @@ if __name__=="__main__":
         global g_binary
         g_binary = sys.argv[1].lower()=='true'
 
-    (bf1, bl1) = loadBenignData('features_large/benign-2015')
+    (bf1, bl1) = loadBenignData('features_large/benign-2014')
 
+    '''
     (bf2, bl2) = loadBenignData('features_large/benign-2017')
     bf1.update(bf2)
     bl1.update(bl2)
+    '''
 
     #(mf1, ml1) = loadMalwareData(False, 'features/malware-obf','/home/hcai/testbed/cg.instrumented/Contagio', pruneMinor=True, drebin=False, obf=True)
+    #(mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-obf2','/home/hcai/testbed/cg.instrumented/PraguardMalgenome', pruneMinor=True, drebin=False, obf=True, malgenome=True)
     (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-obf','/home/hcai/testbed/cg.instrumented/Contagio', pruneMinor=True, drebin=False, obf=True)
     bf1.update (mf1)
     bl1.update (ml1)
+
+    (mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-obf2','/home/hcai/testbed/cg.instrumented/PraguardMalgenome', pruneMinor=True, drebin=False, obf=True, malgenome=True)
+    bf1.update (mf2)
+    bl1.update (ml2)
 
     (features, labels) = adapt (bf1, bl1)
 
@@ -154,13 +161,13 @@ if __name__=="__main__":
         print "%s\t%s" % (lab, l2c[lab])
 
     fh = sys.stdout
-    #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
+    #fh = file ('a', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     for model in models:
         #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
         #for fset in (FSET_FULL, FSET_YYY, FSET_G):
-        for fset in (FSET_G,):
+        for fset in (FSET_FULL,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + str(fset)
             ret = holdout (model, selectFeatures( features, fset ), labels)
             for row in ret:

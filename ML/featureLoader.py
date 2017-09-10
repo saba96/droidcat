@@ -360,6 +360,27 @@ def DrebinMalwareCategorize(fnfamilymap="/home/hcai/Downloads/Drebin/sha256_fami
 
     return ret
 
+def MalgenomeMalwareCategorize(fnapklist="malgenome_apks.txt",fnfamilylist="malgenome_families.txt"):
+    famlist=[]
+    for line in file (fnfamilylist).readlines():
+        fam = line.lstrip().rstrip()
+        famlist.append (fam)
+    def getfamily(apkname):
+        for fam in famlist:
+            if fam.lower() in apkname.lower():
+                return fam
+        return None
+
+    ret=dict()
+    for line in file (fnapklist).readlines():
+        app = line.lstrip().rstrip()
+        fam = getfamily(app)
+        if fam == None:
+            raise ValueError("could not find right family for Malgenome app: " + app)
+        ret [app] = [ fam, {} ]
+
+    return ret
+
 def getBenignTrainingData(\
         benign_g=FTXT_BENIGN_G,\
         benign_icc=FTXT_BENIGN_ICC,\
@@ -408,9 +429,9 @@ def getBenignTrainingData(\
 def loadBenignData(rootdir):
     return getBenignTrainingData ( os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt') )
 
-def loadMalwareData(dichotomous, rootdir, malwareResultDir, pruneMinor, drebin, obf):
+def loadMalwareData(dichotomous, rootdir, malwareResultDir, pruneMinor, drebin, obf, malgenome=False):
     return getMalwareTestingData(dichotomous, os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt'), \
-            malwareResultDir, pruneMinor, drebin, obf)
+            malwareResultDir, pruneMinor, drebin, obf, malgenome)
 
 def getMalwareTestingData(dichotomous=False, \
         mal_g=FTXT_MALWARE_G_NEW,\
@@ -419,7 +440,8 @@ def getMalwareTestingData(dichotomous=False, \
         malwareResultDir=malwareResultDirNew,
 	pruneMinor=False,
         drebin=False,
-        obf=False):
+        obf=False,
+        malgenome=False):
 
     gfeatures_malware = load_generalFeatures(mal_g)
     iccfeatures_malware = load_ICCFeatures(mal_icc)
@@ -428,6 +450,8 @@ def getMalwareTestingData(dichotomous=False, \
     malFam = None
     if drebin==True:
         malFam = DrebinMalwareCategorize(fnfamilymap=os.path.join(malwareResultDir, 'sha256_family.csv'), fnpkg2name=os.path.join(malwareResultDir,'pkg2name.txt'))
+    elif malgenome==True:
+        malFam = MalgenomeMalwareCategorize(fnapklist="/home/hcai/gitrepo/droidcat/ML/malgenome_apks.txt", fnfamilylist="/home/hcai/gitrepo/droidcat/ML/malgenome_families.txt")
     else:
         malFam = newMalwareCategorize(malwareResultDir,obf)
 
