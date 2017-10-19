@@ -1,9 +1,18 @@
+/* Code from MaMaDroid */
 package dynCG;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,7 +22,10 @@ import soot.PackManager;
 import soot.Scene;
 import soot.SootMethod;
 import soot.jimple.infoflow.android.SetupApplication;
+import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
+import soot.util.queue.QueueReader;
 
 public class Appgraph {
 	public static void main(String[] args) {
