@@ -28,7 +28,7 @@ logerr=$LOGDIR/instr-$suffix.err
 starttime=`date +%s%N | cut -b1-13`
 
     #/home/hcai/Android/Sdk/platforms/android-21/android.jar"
-cmd="java -Xmx220g -ea -cp ${MAINCP} dynCG.Appgraph \
+cmd="java -Xmx100g -ea -cp ${MAINCP} dynCG.enumCallSeq \
     $apkfile \
     /home/hcai/Android/Sdk/platforms/"
 

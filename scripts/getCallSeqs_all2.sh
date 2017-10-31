@@ -19,7 +19,7 @@ timeout() {
 getgraph()
 {
     mkdir -p $2
-    > $2/log.getAppGraph
+    > $2/log.getCallSeqs_all2
     i=0
     for apk in $1/*.apk
     do
@@ -28,7 +28,7 @@ getgraph()
             continue;
         fi
 
-        timeout 1800 "bash getAppGraph.sh $apk >> $2/log.getAppGraph"
+        timeout 1800 "bash getCallSeqs.sh $apk >> $2/log.getCallSeqs_all2"
         mv $apk.txt $2/
 
         # for now, compute 2000 samples at most
@@ -37,8 +37,6 @@ getgraph()
     done
 }
 
-getgraph /home/hcai/mama/vs-2016 /home/hcai/mama/graphs/vs-2016
-getgraph /home/hcai/mama/vs-2015 /home/hcai/mama/graphs/vs-2015
-getgraph /home/hcai/mama/benign-2014 /home/hcai/mama/graphs/benign-2014
-getgraph /home/hcai/mama/benign-2016 /home/hcai/mama/graphs/benign-2016
+getgraph /home/hcai/testbed/input/pairs.thirdset /home/hcai/mama/seqs/benign-201214
+
 
