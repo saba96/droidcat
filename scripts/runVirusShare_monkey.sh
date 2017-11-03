@@ -1,10 +1,7 @@
 #!/bin/bash
 
-#tmv=${1:-"300"}
-#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
-port=${2:-"5554"}
-did="emulator-$port"
+did=${2:-"emulator-5554"}
 
 timeout() {
 
@@ -45,7 +42,7 @@ profile()
 
 		echo "tracing $fnapk ..."
 		#/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
-		/home/hcai/testbed/setupEmu.sh Nexus-One-10 $port
+		/home/hcai/testbed/setupEmu.sh Nexus-One-10
         sleep 3
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
@@ -61,12 +58,6 @@ profile()
         timeout $tmv "adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${fnapk##*/}.monkey"
         killall -9 adb
         killall -9 emulator
-        #killall -9 qemu-system-i386
-
-        pid=`ps axf | grep -v grep | grep -a -E "qemu-system-i386 -avd Nexus-One-10 -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
-        echo "killing pid $pid, the process of emulator at port $port, from runVirusShare_monkey.sh..."
-        kill -9 $pid
-
 		k=`expr $k + 1`
 
         rm -rf /tmp/android-hcai/*
@@ -80,7 +71,7 @@ profile()
 s=0
 
 #for cate in 2016 2015 2014
-for cate in 2014
+for cate in 2016
 do
     c=0
     echo "================================="

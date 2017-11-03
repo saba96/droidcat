@@ -22,7 +22,9 @@ timeout() {
 s=0
 #for year in 2016 2015 2014
 #for year in 2013 2011 2010
-for year in "benign-2016"
+#for year in "benign-2016"
+#for year in "benign-2010" "benign-2011" "benign-2012" "benign-2013"
+for year in 2012
 do
     logfile=log.instr.androzoo.$year
     >$logfile
@@ -35,11 +37,12 @@ do
 
     tgtdir=/home/hcai/testbed/cg.instrumented/AndroZoo/$year
     mkdir -p $tgtdir
-    ls /home/hcai/Downloads/AndroZoo/$year/*.apk | while read apk;
+    for apk in /home/hcai/Downloads/AndroZoo/$year/*.apk; 
     do
         timeout 1800 "cgInstr.sh $apk $tgtdir >> $logfile"
         echo "$apk instrumented."
         ((c+=1))
+        if [ $c -ge 2500 ];then break;fi
     done
     echo "$c apps in year $year instrumented successfully."
 

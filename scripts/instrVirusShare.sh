@@ -21,7 +21,7 @@ timeout() {
 
 s=0
 #for year in 2016 2015 2014
-for year in 2013
+for year in 2016
 do
     local c=0
     echo "================================="
@@ -33,7 +33,7 @@ do
 
     tgtdir=/home/hcai/testbed/cg.instrumented/VirusShare/$year
     mkdir -p $tgtdir
-    for apk in /home/hcai/mama/vs-$year/*.apk
+    for apk in /home/hcai/Downloads/VirusShare/$year/*.apk
     do
         if [ -s $tgtdir/${apk##*/} ];then
             echo "$apk already instrumented, skipped"
@@ -42,7 +42,6 @@ do
         timeout 3600 "cgInstr.sh $apk $tgtdir 2>/dev/null >>log.instr.virusshare.$year"
         echo "$apk instrumented."
         ((c+=1))
-        if [ $c -ge 2000 ];then break; fi
     done
     echo "$c apps in year $year instrumented successfully."
 
