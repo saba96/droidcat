@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#tmv=${1:-"300"}
+#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
-port=${2:-"5556"}
+port=${2:-"5554"}
+avd=${3:-"Nexus-One-10"}
+year=${4:-"2010"}
 did="emulator-$port"
 
 timeout() {
@@ -19,21 +23,28 @@ timeout() {
     fi
 
 }
-
-profile()
+tryInstall()
 {
     cate=$1
 
-    srcdir=/home/hcai/testbed/cg.instrumented/VirusShare/$cate
+    srcdir=/home/hcai/testbed/cg.instrumented/AndroZoo/$cate
     finaldir=$srcdir
 
-    OUTDIR=/home/hcai/testbed/virusShareLogs/$cate
+    OUTDIR=/home/hcai/testbed/androZooLogs/$cate
     mkdir -p $OUTDIR
 
 	k=1
 
+    flag=false
     for fnapk in $finaldir/*.apk;
 	do
+        #if [ ${fnapk##*/} = "00E957EB3E3928FF90C77824AD441A2630E9FE8708CD6D179A96FF4362197154.apk" ];then
+        #    flag=true
+        #fi
+        #if [ "$flag" != true ];then
+        #    continue
+        #fi
+
         echo "================ RUN INDIVIDUAL APP: ${fnapk##*/} ==========================="
         if [ -s $OUTDIR/${fnapk##*/}.logcat ];
         then
@@ -42,20 +53,20 @@ profile()
         fi
 
 		echo "tracing $fnapk ..."
-		#/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
-		/home/hcai/testbed/setupEmu.sh "Nexus-One-1010" $port
+		/home/hcai/testbed/setupEmu.sh ${avd} $port
         sleep 3
-        pidemu=`ps axf | grep -v grep | grep -a -E "qemu-system-i386 -avd Nexus-One-1010 -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+        pidemu=`ps axf | grep -v grep | grep -a -E "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
-            #killall -9 emulator
-            #killall -9 adb
-            echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey_2.sh... becasue of app installation failure"
+            echo "killing pid $pidemu, the process of emulator at port $port, from runAndroZooApks_monkey.sh... because app cannot be installed successfully"
             kill -9 $pidemu
             continue
         fi
+
+		# try running it and seeing if it immediately crashes (in one minute)
+
 
         adb -s $did logcat -v raw -s "hcai-intent-monitor" "hcai-cg-monitor" &>$OUTDIR/${fnapk##*/}.logcat &
         pidadb=$!
@@ -63,38 +74,35 @@ profile()
         timeout $tmv "adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${fnapk##*/}.monkey"
         #killall -9 adb
         #killall -9 emulator
-        #killall -9 qemu-system-i386
 
-        echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey_2.sh..."
+        echo "killing pid $pidemu, the process of emulator at port $port, from runAndroZooApks_monkey.sh..."
         kill -9 $pidemu
-        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from runVirusShare_monkey_2.sh..."
+        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from runAndroZooApks_monkey.sh..."
         kill -9 $pidadb
 
 		k=`expr $k + 1`
-
         rm -rf /tmp/android-hcai/*
 	done
 
 	echo "totally $k apps in category $cate successfully traced."
 }
 
-#bash instrVirusShare.sh
 
 s=0
 
 #for cate in 2016 2015 2014
-for cate in 2013
+#for cate in 2013 2011 2010
+for cate in "benign-$year"
 do
     c=0
     echo "================================="
-    echo "profiling apps from year $cate ..."
+    echo "try installing category $cate ..."
     echo "================================="
     echo
     echo
 
-    profile $cate
+    tryInstall $cate
     rm -rf /tmp/android-hcai/*
 done
 
 exit 0
-

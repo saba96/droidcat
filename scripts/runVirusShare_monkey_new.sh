@@ -1,7 +1,9 @@
 #!/bin/bash
 
+#tmv=${1:-"300"}
+#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
-port=${2:-"5556"}
+port=${2:-"5554"}
 did="emulator-$port"
 
 timeout() {
@@ -43,16 +45,16 @@ profile()
 
 		echo "tracing $fnapk ..."
 		#/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
-		/home/hcai/testbed/setupEmu.sh "Nexus-One-1010" $port
+		/home/hcai/testbed/setupEmu.sh Nexus-One-10 $port
         sleep 3
-        pidemu=`ps axf | grep -v grep | grep -a -E "qemu-system-i386 -avd Nexus-One-1010 -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+        pidemu=`ps axf | grep -v grep | grep -a -E "qemu-system-i386 -avd Nexus-One-10 -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
             #killall -9 emulator
             #killall -9 adb
-            echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey_2.sh... becasue of app installation failure"
+            echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey.sh... because app installation failed"
             kill -9 $pidemu
             continue
         fi
@@ -65,9 +67,9 @@ profile()
         #killall -9 emulator
         #killall -9 qemu-system-i386
 
-        echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey_2.sh..."
+        echo "killing pid $pidemu, the process of emulator at port $port, from runVirusShare_monkey.sh..."
         kill -9 $pidemu
-        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from runVirusShare_monkey_2.sh..."
+        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from runVirusShare_monkey.sh..."
         kill -9 $pidadb
 
 		k=`expr $k + 1`
@@ -83,7 +85,7 @@ profile()
 s=0
 
 #for cate in 2016 2015 2014
-for cate in 2013
+for cate in 2014
 do
     c=0
     echo "================================="

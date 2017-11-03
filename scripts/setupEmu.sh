@@ -2,12 +2,12 @@
 
 port=${2:-"5554"}
 did="emulator-$port"
-echo "- Killing All Emulators"
-killall -9 emulator64-x86
-killall -9 emulator
+echo "- Killing Emulator for avd $did"
+#killall -9 emulator64-x86
+#killall -9 emulator
 adb -s $did kill-server
 
-pid=`ps axf | grep -v grep | grep -a -E "-scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+pid=`ps axf | grep -v grep | grep "$1 -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 #killall -9 qemu-system-i386
 echo "killing pid $pid, the process of emulator at port $port, from setupEmu.sh..."
 kill -9 $pid
