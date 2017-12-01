@@ -1,11 +1,8 @@
 #!/bin/bash
 
-#tmv=${1:-"300"}
-#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
 port=${2:-"5554"}
 avd=${3:-"Nexus-One-10"}
-year=${4:-"2010"}
 did="emulator-$port"
 
 timeout() {
@@ -27,10 +24,10 @@ tryInstall()
 {
     cate=$1
 
-    srcdir=/home/hcai/testbed/cg.instrumented/AndroZoo/$cate
-    finaldir=$srcdir
+    srcdir=/home/hcai/testbed/cov.instrumented/apks$cate
+    finaldir=$srcdir/
 
-    OUTDIR=/home/hcai/testbed/androZooLogs/$cate
+    OUTDIR=/home/hcai/testbed/catcovLogs/$cate
     mkdir -p $OUTDIR
 
 	k=1
@@ -68,7 +65,7 @@ tryInstall()
 		# try running it and seeing if it immediately crashes (in one minute)
 
 
-        adb -s $did logcat -v raw -s "hcai-intent-monitor" "hcai-cg-monitor" &>$OUTDIR/${fnapk##*/}.logcat &
+        adb -s $did logcat -v raw -s "hcai-cov-monitor" &>$OUTDIR/${fnapk##*/}.logcat &
         pidadb=$!
         tgtp=`~/bin/getpackage.sh $fnapk | awk '{print $2}'`
         timeout $tmv "adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${fnapk##*/}.monkey"
@@ -88,16 +85,10 @@ tryInstall()
 }
 
 
-s=0
-
-#for cate in 2016 2015 2014
-#for cate in 2013 2011 2010
-#for cate in "benign-$year"
-for cate in "$year"
+for cate in 2017;
 do
-    c=0
     echo "================================="
-    echo "try installing category $cate ..."
+    echo "try installing category catapks$cate ..."
     echo "================================="
     echo
     echo

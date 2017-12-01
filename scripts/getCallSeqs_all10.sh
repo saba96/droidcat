@@ -19,7 +19,7 @@ timeout() {
 getgraph()
 {
     mkdir -p $2
-    > $2/log.getCallSeqs_allbenign
+    > $2/log.getCallSeqs_all10
     i=0
     for apk in $1/*.apk
     do
@@ -28,7 +28,7 @@ getgraph()
             continue;
         fi
 
-        timeout 1800 "bash getCallSeqs.sh $apk >> $2/log.getCallSeqs_allbenign"
+        timeout 1800 "bash getCallSeqs.sh $apk >> $2/log.getCallSeqs_all10"
         mv $apk.txt $2/
 
         # for now, compute 2000 samples at most
@@ -37,8 +37,9 @@ getgraph()
     done
 }
 
-getgraph /home/hcai/Downloads/AndroZoo/benign-2010 /home/hcai/mama/seqs/benign-2010
-getgraph /home/hcai/Downloads/AndroZoo/benign-2011 /home/hcai/mama/seqs/benign-2011
-getgraph /home/hcai/Downloads/AndroZoo/benign-2012 /home/hcai/mama/seqs/benign-2012
-getgraph /home/hcai/Downloads/AndroZoo/benign-2013 /home/hcai/mama/seqs/benign-2013
-getgraph /home/hcai/Downloads/AndroZoo/benign-2015 /home/hcai/mama/seqs/benign-2015
+for year in 2017
+do
+    getgraph /home/hcai/Downloads/AndroZoo/$year /home/hcai/mama/seqs/malware-androzoo-$year
+done
+
+

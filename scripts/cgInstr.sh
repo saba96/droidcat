@@ -56,7 +56,7 @@ starttime=`date +%s%N | cut -b1-13`
     #-monitorEvents \
 	#-catcallback /home/hcai/libs/catCallbacks.txt \
     #-instrlifecycle \
-cmd="java -Xmx14g -Xss1g -ea -cp ${MAINCP} dynCG.sceneInstr \
+cmd="java -Xmx100g -Xss1g -ea -cp ${MAINCP} dynCG.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \

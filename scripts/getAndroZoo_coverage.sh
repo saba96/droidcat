@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#tmv=${1:-"300"}
-#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
 port=${2:-"5554"}
 avd=${3:-"Nexus-One-10"}
@@ -27,10 +25,10 @@ tryInstall()
 {
     cate=$1
 
-    srcdir=/home/hcai/testbed/cg.instrumented/AndroZoo/$cate
+    srcdir=/home/hcai/testbed/cov.instrumented/AndroZoo/$cate
     finaldir=$srcdir
 
-    OUTDIR=/home/hcai/testbed/androZooLogs/$cate
+    OUTDIR=/home/hcai/testbed/androZooCovLogs/$cate
     mkdir -p $OUTDIR
 
 	k=1
@@ -60,7 +58,7 @@ tryInstall()
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
-            echo "killing pid $pidemu, the process of emulator at port $port, from runAndroZooApks_monkey.sh... because app cannot be installed successfully"
+            echo "killing pid $pidemu, the process of emulator at port $port, from getAndroZoo_coverage.sh... because app cannot be installed successfully"
             kill -9 $pidemu
             continue
         fi
@@ -68,16 +66,16 @@ tryInstall()
 		# try running it and seeing if it immediately crashes (in one minute)
 
 
-        adb -s $did logcat -v raw -s "hcai-intent-monitor" "hcai-cg-monitor" &>$OUTDIR/${fnapk##*/}.logcat &
+        adb -s $did logcat -v raw -s "hcai-cov-monitor" &>$OUTDIR/${fnapk##*/}.logcat &
         pidadb=$!
         tgtp=`~/bin/getpackage.sh $fnapk | awk '{print $2}'`
         timeout $tmv "adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 >$OUTDIR/${fnapk##*/}.monkey"
         #killall -9 adb
         #killall -9 emulator
 
-        echo "killing pid $pidemu, the process of emulator at port $port, from runAndroZooApks_monkey.sh..."
+        echo "killing pid $pidemu, the process of emulator at port $port, from getAndroZoo_coverage.sh..."
         kill -9 $pidemu
-        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from runAndroZooApks_monkey.sh..."
+        echo "killing pid $pidadb, the process of adb for monitoring emulator at port $port, from getAndroZoo_coverage.sh..."
         kill -9 $pidadb
 
 		k=`expr $k + 1`
@@ -92,12 +90,12 @@ s=0
 
 #for cate in 2016 2015 2014
 #for cate in 2013 2011 2010
-#for cate in "benign-$year"
-for cate in "$year"
+for cate in "benign-$year"
+#for cate in "$year"
 do
     c=0
     echo "================================="
-    echo "try installing category $cate ..."
+    echo "monitoring coverage for $cate ..."
     echo "================================="
     echo
     echo

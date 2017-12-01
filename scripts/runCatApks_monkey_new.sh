@@ -1,11 +1,10 @@
 #!/bin/bash
 
-#tmv=${1:-"300"}
-#did=${2:-"emulator-5554"}
 tmv=${1:-"300"}
 port=${2:-"5554"}
 avd=${3:-"Nexus-One-10"}
 year=${4:-"2010"}
+fncat=${5:-"cat-final.txt"}
 did="emulator-$port"
 
 timeout() {
@@ -27,10 +26,10 @@ tryInstall()
 {
     cate=$1
 
-    srcdir=/home/hcai/testbed/cg.instrumented/AndroZoo/$cate
-    finaldir=$srcdir
+    srcdir=/home/hcai/testbed/instrumentedapks/$cate
+    finaldir=$srcdir/installed
 
-    OUTDIR=/home/hcai/testbed/androZooLogs/$cate
+    OUTDIR=/home/hcai/testbed/catapkLogs/$cate
     mkdir -p $OUTDIR
 
 	k=1
@@ -89,11 +88,13 @@ tryInstall()
 
 
 s=0
+cats=""
+while read cate;
+do
+    cats="$cats""$cate""    "
+done < $fncat
 
-#for cate in 2016 2015 2014
-#for cate in 2013 2011 2010
-#for cate in "benign-$year"
-for cate in "$year"
+for cate in $cats;
 do
     c=0
     echo "================================="
