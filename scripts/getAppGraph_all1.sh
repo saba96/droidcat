@@ -23,11 +23,11 @@ cats=""
 while read cate;
 do
     cats="$cats""$cate""    "
-done < /home/hcai/testbed/cat-partial.txt
+done < /home/hcai/testbed/cat-final.txt
 
 for cate in $cats;
 do
-    getgraph /home/hcai/bin/apks2017/$cate /home/hcai/Downloads/Mamadroid/mamadroid_code/graphs/benign-2017
+    getgraph /home/hcai/bin/apks2017/$cate /home/hcai/mama/graphs/benign-2017
 done
 
 

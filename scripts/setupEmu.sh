@@ -2,6 +2,7 @@
 
 port=${2:-"5554"}
 did="emulator-$port"
+
 echo "- Killing Emulator for avd $did"
 #killall -9 emulator64-x86
 #killall -9 emulator

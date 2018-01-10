@@ -39,6 +39,12 @@ getgraph()
 
 #getgraph /home/hcai/mama/vs-2016 /home/hcai/mama/graphs/vs-2016
 #getgraph /home/hcai/mama/vs-2015 /home/hcai/mama/graphs/vs-2015
-getgraph /home/hcai/mama/benign-2014 /home/hcai/mama/graphs/benign-2014
-getgraph /home/hcai/mama/benign-2016 /home/hcai/mama/graphs/benign-2016
+#
+#getgraph /home/hcai/mama/benign-2014 /home/hcai/mama/graphs/benign-2014
+#getgraph /home/hcai/mama/benign-2016 /home/hcai/mama/graphs/benign-2016
 
+#for subdir in 2010  2011  2012  2013  2017 "benign-2010"  "benign-2011" "benign-2012"  "benign-2013"  "benign-2015"
+for subdir in "benign-2015"
+do
+    getgraph /home/hcai/Downloads/AndroZoo/$subdir /home/hcai/mama/graphs/AndroZoo/$subdir
+done
