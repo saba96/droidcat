@@ -138,26 +138,39 @@ def selectFeatures(features, selection):
 
 def loadFeatures(datatag):
     global g_fnames
-    f = open("static.pickle."+datatag, 'rb')
+    f = open(datatag, 'rb')
     sample_features = {}
+    sample_labels = {}
     while 1:
         try:
             sample = pickle.load(f)
             #sample.pprint()
-            fnames = [ft.name for ft in sample.features]
+            fnames = [ft.name.lstrip().rstrip().encode('ascii','replace') for ft in sample.features]
             #print sorted(fnames)
             #print len(fnames)
+            '''
+            if 'com.zws.inventorymng.permission.JPUSH_MESSAGE' in fnames:
+                print "got it: %s" % (sorted(fnames))
+                sys.exit(2)
             for fname in fnames:
                 g_fnames.add (fname)
+            '''
+            g_fnames = g_fnames.union (set(fnames))
 
             fdict={}
             for ft in sample.features:
                 fdict [ft.name] = ft.freq
             sample_features [ sample.md5 ] = fdict
+            if sample.malicious:
+                sample_labels [sample.md5] = sample.cli_classification.gt
+            else:
+                sample_labels [sample.md5] = 'BENIGN'
         except (EOFError, pickle.UnpicklingError):
             break
     f.close()
-    return sample_features
+    print >> sys.stderr, 'loaded from %s: %d feature vectors, %d labels, each sample having %d features' % (datatag, len (sample_features), len(sample_labels), len(g_fnames))
+    #print sorted(g_fnames)
+    return sample_features, sample_labels
 
 def regularizeFeatures(rawfeatures):
     tempret = {}
@@ -171,6 +184,39 @@ def regularizeFeatures(rawfeatures):
         ret[md5] = newfdict
     return ret
 
+def getfvec(fdict):
+    fvecs=dict()
+    for md5 in fdict.keys():
+        #print md5
+        #fnames = [fname for fname in fdict[md5].keys()]
+        fvalues = [freq for freq in fdict[md5].values()]
+        #print len(fnames), len(fvalues)
+        fvecs[md5] = fvalues
+    return fvecs
+
+def adapt (featureDict, labelDict):
+    r=0
+    c=None
+    for app in featureDict.keys():
+        r+=1
+        if c==None:
+            c = len (featureDict[app])
+            print "feature vector length=%d" % (c)
+            continue
+        if c != len (featureDict[app]):
+            print "inconsistent feature vector length for app: %s --- %d" % (app, len(featureDict[app]))
+        assert c == len (featureDict[app])
+
+    features = numpy.zeros( shape=(r,c) )
+    labels = list()
+    k=0
+    for app in featureDict.keys():
+        features[k] = featureDict[app]
+        labels.append (labelDict[app])
+        k+=1
+
+    return (features, labels)
+
 if __name__=="__main__":
     if len(sys.argv)<2:
         print >> sys.stderr, "%s malware-datatag benign-datatag [binary|multi]" % (sys.argv[0])
@@ -179,20 +225,18 @@ if __name__=="__main__":
     mtag = sys.argv[1]
     btag = sys.argv[2]
 
-    _mfeatures = loadFeatures ( mtag )
-    _bfeatures = loadFeatures ( btag )
+    _bfeatures, _blables  = loadFeatures ( btag )
+    _mfeatures, _mlables  = loadFeatures ( mtag )
 
     mfeatures = regularizeFeatures ( _mfeatures )
     bfeatures = regularizeFeatures ( _bfeatures )
-
-    for md5 in mfeatures.keys():
-        print md5
-        fnames = [fname for fname in mfeatures[md5].keys()]
-        fvalues = [freq for freq in mfeatures[md5].values()]
-        print len(fnames), len(fvalues)
-
     #print mfeatures
     #print bfeatures
+
+    mf, ml = adapt ( getfvec(mfeatures), _mlables )
+    bf, bl = adapt ( getfvec(bfeatures), _blables )
+
+    print len(mf), len(ml), len(bf), len(bl)
 
     sys.exit (0)
 
