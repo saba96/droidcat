@@ -33,6 +33,8 @@ g_binary = False # binary or multiple-class classification
 
 g_fnames = set()
 
+featureframe = {}
+
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
         m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
@@ -159,7 +161,7 @@ def loadFeatures(datatag):
 
             fdict={}
             for ft in sample.features:
-                fdict [ft.name] = ft.freq
+                fdict [ft.name.lstrip().rstrip().encode('ascii','replace')] = ft.freq
             sample_features [ sample.md5 ] = fdict
             if sample.malicious:
                 sample_labels [sample.md5] = sample.cli_classification.gt
@@ -173,13 +175,11 @@ def loadFeatures(datatag):
     return sample_features, sample_labels
 
 def regularizeFeatures(rawfeatures):
-    tempret = {}
-    for name in g_fnames:
-        tempret[name] = 0.0
     ret={}
     for md5 in rawfeatures.keys():
-        newfdict = tempret
+        newfdict = featureframe
         for fname in rawfeatures[md5].keys():
+            #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]
         ret[md5] = newfdict
     return ret
@@ -218,32 +218,42 @@ def adapt (featureDict, labelDict):
     return (features, labels)
 
 if __name__=="__main__":
-    if len(sys.argv)<2:
+    if len(sys.argv)<3:
         print >> sys.stderr, "%s malware-datatag benign-datatag [binary|multi]" % (sys.argv[0])
         sys.exit (-1)
 
-    mtag = sys.argv[1]
-    btag = sys.argv[2]
+    btag = sys.argv[1]
+    mtag = sys.argv[2]
 
     _bfeatures, _blables  = loadFeatures ( btag )
+    print >> sys.stdout, "%d benign samples loaded" % (len(_bfeatures))
     _mfeatures, _mlables  = loadFeatures ( mtag )
+    print >> sys.stdout, "%d malware samples loaded" % (len(_mfeatures))
+
+    #global featureframe
+    for name in g_fnames:
+        featureframe[name] = 0.0
 
     mfeatures = regularizeFeatures ( _mfeatures )
     bfeatures = regularizeFeatures ( _bfeatures )
     #print mfeatures
     #print bfeatures
 
+    '''
     mf, ml = adapt ( getfvec(mfeatures), _mlables )
     bf, bl = adapt ( getfvec(bfeatures), _blables )
-
     print len(mf), len(ml), len(bf), len(bl)
+    '''
+    bfeatures.update ( mfeatures )
+    _blables.update ( _mlables )
 
-    sys.exit (0)
+    bf, bl = adapt ( getfvec(bfeatures), _blables )
 
-    if len(sys.argv)>=3:
-        global g_binary
-        g_binary = sys.argv[1].lower()=='true'
+    if len(sys.argv)>=4:
+        #global g_binary
+        g_binary = sys.argv[3].lower()=='true'
 
+    '''
     mamalist17=[]
     for line in file('list.benign17').readlines():
         line=line.lstrip().rstrip()
@@ -273,13 +283,14 @@ if __name__=="__main__":
             comlistdrebin.append(line)
 
     print "common apps in benign17: %d, common apps in malwaredrebin: %d\n" % (len(comlist17), len(comlistdrebin))
+    '''
 
     #bPrune = g_binary
+    '''
     bPrune = True
 
     (bf1, bl1) = loadBenignData('features_large/benign-2017')
 
-    '''
     (bf2, bl2) = loadBenignData('features_large/benign-2017')
     for app in bf2.keys():
         if app not in comlist17:
@@ -291,13 +302,11 @@ if __name__=="__main__":
     (mf1, ml1) = loadMalwareData(g_binary, 'features_large/malware-2013','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf1)
     bl1.update (ml1)
-    '''
 
     (mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-2017','/home/hcai/testbed/cg.instrumented/newmalwareall/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf2)
     bl1.update (ml2)
 
-    '''
     (mf3, ml3) = loadMalwareData(g_binary, 'features_large/malware-drebin','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
     for app in mf3.keys():
         if app not in comlistdrebin:
@@ -317,9 +326,9 @@ if __name__=="__main__":
     (mf6, ml6) = loadMalwareData(g_binary, 'features_large/malware-zoo/2016','/home/hcai/testbed/cg.instrumented/AndroZoo/2016', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf6)
     bl1.update (ml6)
-    '''
 
     (features, labels) = adapt (bf1, bl1)
+    '''
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
@@ -328,7 +337,7 @@ if __name__=="__main__":
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-    models = (RandomForestClassifier(n_estimators = 300, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
@@ -336,30 +345,16 @@ if __name__=="__main__":
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
-    fsets = (FSET_FULL, FSET_SEC)
-
-    uniqLabels = set()
-    for item in labels:
-        uniqLabels.add (item)
-
-    l2c = malwareCatStat(labels)
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
+    #fsets = (FSET_FULL, FSET_SEC)
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
-    print >> fh, '\t'.join(uniqLabels)
 
     model2ret={}
     for model in models:
-        #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
-        #for fset in (FSET_FULL, FSET_YYY, FSET_G):
-        #for fset in (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G):
-        for fset in fsets:
-        #for fset in (FSET_G,):
-            print >> fh, 'model ' + str(model) + "\t" + "feature set " + FSET_NAMES[str(fset)]
-            ret = holdout (model, selectFeatures( features, fset ), labels)
-            model2ret[str(model)+str(fset)] = ret
+        print >> fh, 'model ' + str(model)
+        ret = holdout (model, bf, bl)
+        model2ret[str(model)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
     for i in (0,1,2,3):
@@ -368,9 +363,8 @@ if __name__=="__main__":
         for model in models:
             #print 'model ' + str(model)
             col=list()
-            for fset in fsets:
-                ret = model2ret[str(model)+str(fset)]
-                col.append(ret[i])
+            ret = model2ret[str(model)]
+            col.append(ret[i])
             cols.append(col)
         for r in range(0,len(cols[0])):
             for c in range(0,len(cols)):
