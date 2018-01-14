@@ -51,13 +51,13 @@ def buildFeatureFrame(fnAPIList, fnSyscallList):
         g_featureframe[line] = 0.0
     return len(g_featureframe)
 
-def loadFunctionCallTrace(fnFuncTrace):
+def loadAPICallTrace(fnFuncTrace):
     fvec = g_featureframe
     pattern = re.compile (r"<(?P<class1>):\s+.*\s+(?P<method1>)\(.*\)>\s+->\s+<(?P<class2>):\s+.*\s+(?P<method2>)\(.*\)>")
     for line in file (fnFuncTrace).readlines():
         line = line.lstrip().rstrip()
         if "->" not in line:
-            pass
+            continue
         res = pattern.match ( line )
         c1 = res.group ("class1")
         m1 = res.group ("method1")
@@ -77,84 +77,97 @@ def loadFunctionCallTrace(fnFuncTrace):
 
     return fvec
 
-def newMalwareCategorize(resultDir,obf,prefix=False):
-    fullFamilyList=list()
-    for mf in file(malwareFamilyListFile).readlines():
-        mf = mf.lstrip().rstrip()
-        fullFamilyList.append( mf )
-    vtRes=dict()
-    for item in os.listdir(resultDir):
-        if not (item.endswith(".apk") and os.path.isfile(resultDir+"/"+item+".result")):
-            continue
-        apkfn = os.path.abspath(resultDir+'/'+item)
-        resfn = os.path.abspath(resultDir+'/'+item+".result")
-        # store VirusTotal results in a map: tool->result
-        vtResDetails=dict()
-        for res in file(resfn, 'r').readlines():
-            res = res.lstrip().rstrip()
-            toolres = string.split(res)
-            if len(toolres) < 2:
-                #raise Exception ("wrong vt result line: %s in %s" % (res, apkfn))
-                print >> sys.stderr, "wrong vt result line: %s in %s" % (res, apkfn)
-                continue
-            vtResDetails[toolres[0]] = toolres[1]
-        appname = getpackname(apkfn, prefix)
-        if obf==True:
-            appname = getapkname(apkfn)
-        if appname==None:
-            print >> sys.stderr, "unable to figure out package name of " + apkfn
-            sys.exit(-1)
-        vtRes[appname] = vtResDetails
-
-    ret=dict()
-    for app in vtRes.keys():
-        finalFam = refineFamily(fullFamilyList, vtRes[app])
-        #print >> sys.stdout, "%s\t%s" % (app, finalFam)
-        if None==finalFam:
-            #print >> sys.stdout, "no family identified for %s -- %s" % (app, vtRes[app])
-            print >> sys.stderr, "no family identified for %s" % (app)
-            finalFam = majorvote( vtRes[app] )
-            if None==finalFam:
-                print >> sys.stderr, "cannot find family for %s" % (app)
-            else:
-                print >> sys.stderr, "will use %s" % (finalFam)
-            #sys.exit(-2)
-        ret[app] = [finalFam, vtRes[app]]
-
-    return ret
-
-
-def DrebinMalwareCategorizeMD5(resultDir, fnfamilymap="/home/hcai/Downloads/Drebin/sha256_family.csv"):
-    sha2fam=dict()
-    for line in file (fnfamilymap).readlines():
-        line = line.lstrip().rstrip()
-        res = string.split(line,sep=',')
-        sha2fam[ res[0] ] = res[1]
-
-    ret=dict()
-    for item in os.listdir(resultDir):
+def loadAllAPICallTraces(apkDir, traceDir):
+    retRes=dict()
+    for apk in os.listdir(apkDir):
         if not (item.endswith(".apk")):
             continue
-        apkfn = os.path.abspath(resultDir+'/'+item)
-        sha = getsha256 (apkfn)
-        md5 = io.get_md5 (apkfn)
-        ret[md5] = [ sha2fam[sha], {} ]
+        apkfn = os.path.abspath(apkDir+'/'+apk)
+        md5 = get_md5 (apkfn)
 
-    return ret
+        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.logcat')
+        if os.path.isfile(tracefn):
+            print >> sys.stderr, "no API call trace found for %s under directory %s" % (apkfn, traceDir)
+            continue
 
+        fvec = loadAPICallTrace (tracefn)
+        retRes [md5] = fvec
+
+    return retRes
+
+def loadSysCallTrace(fnSyscallTrace):
+    fvec = g_featureframe
+    start=False
+    end=False
+    iscf = 0 # number of extracted sys-call features
+    for line in file (fnSyscallTrace).readlines():
+        line = line.lstrip().rstrip()
+        #start = ("time     seconds  usecs/call     calls    errors syscall" in line)
+        if not start:
+            start = ("------ ----------- ----------- --------- --------- ----------------" in line)
+            if not start:
+                continue
+        end = ("------ ----------- ----------- --------- --------- ----------------" in line)
+        if end:
+            break
+
+        items = string.split (line)
+        if len(items) != 6:
+            continue
+
+        syscallname = items[5]
+        freq = float(items[3])
+
+        if syscallname not in g_featureframe.keys()
+            continue
+
+        assert syscallname in fvec.keys()
+
+        fvec [syscallname] = freq
+        iscf += 1
+
+    return iscf
+
+def loadAllSysCallTraces(apkDir, traceDir):
+    retRes=dict()
+    for apk in os.listdir(apkDir):
+        if not (item.endswith(".apk")):
+            continue
+        apkfn = os.path.abspath(apkDir+'/'+apk)
+        md5 = get_md5 (apkfn)
+
+        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.logcat')
+        if os.path.isfile(tracefn):
+            print >> sys.stderr, "no system call trace found for %s under directory %s" % (apkfn, traceDir)
+            continue
+
+        fvec = loadSysCallTrace(tracefn)
+        retRes [md5] = fvec
+
+    return retRes
 
 if __name__=="__main__":
-    malwareLabels = getMalwareFamily(sys.argv[1], sys.argv[2].lower()=="true", sys.argv[3].lower()=="true", sys.argv[4].lower()=="true")
+    if len(sys.argv) < 5:
+        print >> sys.stderr, "%s apkDir API-call-trace-dir Sys-call-trace-dir datatag"
+        sys.exit(1)
 
-    '''
-    labels = malwareLabels.values()
-    l2c = malwareCatStat(labels)
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
-    '''
+    apkDir = sys.argv[1]
+    apitraceDir = sys.argv[2]
+    systraceDir = sys.argv[3]
+    datatag = sys.argv[4]
+    outfn = 'afonso.pickle.' + datatag
 
-    for app in malwareLabels.keys():
-        print >> sys.stdout, "%s\t%s" % (app, malwareLabels[app])
+    apifvec = loadAllAPICallTraces(apkDir, apitraceDir)
+    sysfvec = loadAllSysCallTraces(apkDir, systraceDir)
+
+    finalfvec = apifvec
+    finalfvec.update (sysfvec)
+
+    fhpickle = file (outfn, 'wb')
+    pickle.dump (finalfvec, fhpickle)
+    fhpickle.close()
+
+    print >> sys.stdout, "%d features computed, and dumped to %s" % (len(finalfvec), outfn)
 
     sys.exit(0)
 
