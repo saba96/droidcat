@@ -6,7 +6,6 @@ import sys
 import string
 import subprocess
 
-from configs import *
 from os import listdir
 from os.path import isfile, join
 from handle_io import io
@@ -80,12 +79,12 @@ def loadAPICallTrace(fnFuncTrace):
 def loadAllAPICallTraces(apkDir, traceDir):
     retRes=dict()
     for apk in os.listdir(apkDir):
-        if not (item.endswith(".apk")):
+        if not (apk.endswith(".apk")):
             continue
         apkfn = os.path.abspath(apkDir+'/'+apk)
-        md5 = get_md5 (apkfn)
+        md5 = getmd5 (apkfn)
 
-        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.logcat')
+        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.apk.logcat')
         if os.path.isfile(tracefn):
             print >> sys.stderr, "no API call trace found for %s under directory %s" % (apkfn, traceDir)
             continue
@@ -118,7 +117,7 @@ def loadSysCallTrace(fnSyscallTrace):
         syscallname = items[5]
         freq = float(items[3])
 
-        if syscallname not in g_featureframe.keys()
+        if syscallname not in g_featureframe.keys():
             continue
 
         assert syscallname in fvec.keys()
@@ -131,7 +130,7 @@ def loadSysCallTrace(fnSyscallTrace):
 def loadAllSysCallTraces(apkDir, traceDir):
     retRes=dict()
     for apk in os.listdir(apkDir):
-        if not (item.endswith(".apk")):
+        if not (apk.endswith(".apk")):
             continue
         apkfn = os.path.abspath(apkDir+'/'+apk)
         md5 = get_md5 (apkfn)
@@ -148,7 +147,7 @@ def loadAllSysCallTraces(apkDir, traceDir):
 
 if __name__=="__main__":
     if len(sys.argv) < 5:
-        print >> sys.stderr, "%s apkDir API-call-trace-dir Sys-call-trace-dir datatag"
+        print >> sys.stderr, "usage:\n%s apkDir API-call-trace-dir Sys-call-trace-dir datatag\n" % (sys.argv[0])
         sys.exit(1)
 
     apkDir = sys.argv[1]
