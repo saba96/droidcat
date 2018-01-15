@@ -42,22 +42,32 @@ def getapkname(fnapk):
 
 def buildFeatureFrame(fnAPIList, fnSyscallList):
     global g_featureframe
-    for line in file (fnAPIlist).readlines():
+    for line in file (fnAPIList).readlines():
         line = line.lstrip().rstrip().replace('/','.')
-        g_featureframe[line] = 0.0
+        g_featureframe[line.lower()] = 0.0
     for line in file (fnSyscallList).readlines():
         line = line.lstrip().rstrip()
-        g_featureframe[line] = 0.0
+        g_featureframe[line.lower()] = 0.0
     return len(g_featureframe)
+
+#<com.opera.installer.c: java.lang.String a(java.lang.String)> -> <java.lang.String: char charAt(int)>
 
 def loadAPICallTrace(fnFuncTrace):
     fvec = g_featureframe
-    pattern = re.compile (r"<(?P<class1>):\s+.*\s+(?P<method1>)\(.*\)>\s+->\s+<(?P<class2>):\s+.*\s+(?P<method2>)\(.*\)>")
+    #pattern = re.compile (r"<(?P<class1>):\s+.+\s+(?P<method1>)\(.*\)>\s+->\s+<(?P<class2>):\s+.+\s+(?P<method2>)\(.*\)>")
+    pattern = re.compile (r"<(?P<class1>.+):\s+.+\s+(?P<method1>.+)\(.*\)>\s+->\s+<(?P<class2>.+):\s+.+\s+(?P<method2>.+)\(.*\)>")
+    #pattern = re.compile (r"<(?P<class1>.+): (.+) (?P<method1>.+)\(.*\)> -> <(?P<class2>.+): (.+) (?P<method2>.+)\(.*\)>")
+    ifcf = 0 # number of extracted function-call features
+    uniqAPI=set()
     for line in file (fnFuncTrace).readlines():
-        line = line.lstrip().rstrip()
+        line = line.lstrip().rstrip().lower()
         if "->" not in line:
             continue
         res = pattern.match ( line )
+        #res = pattern.search ( line )
+        if res == None:
+            print >> sys.stderr, "%s did not match the pattern." % (line)
+            continue
         c1 = res.group ("class1")
         m1 = res.group ("method1")
         c2 = res.group ("class2")
@@ -66,15 +76,19 @@ def loadAPICallTrace(fnFuncTrace):
         k1 = "%s->%s" % (c1, m1)
         k2 = "%s->%s" % (c2, m2)
 
-        print >> sys.stderr, "line: %s => %s\t%s" % (line, k1, k2)
+        #print >> sys.stderr, "line: %s => %s\t%s" % (line, k1, k2)
 
         if k1 in fvec.keys():
             fvec[k1] += 1
+            uniqAPI.add (k1)
 
         if k2 in fvec.keys():
             fvec[k2] += 1
+            uniqAPI.add (k2)
 
-    return fvec
+    ifcf = len(uniqAPI)
+
+    return fvec, ifcf
 
 def loadAllAPICallTraces(apkDir, traceDir):
     retRes=dict()
@@ -85,11 +99,12 @@ def loadAllAPICallTraces(apkDir, traceDir):
         md5 = getmd5 (apkfn)
 
         tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.apk.logcat')
-        if os.path.isfile(tracefn):
+        if not os.path.isfile(tracefn):
             print >> sys.stderr, "no API call trace found for %s under directory %s" % (apkfn, traceDir)
             continue
 
-        fvec = loadAPICallTrace (tracefn)
+        fvec,ifcf = loadAPICallTrace (tracefn)
+        print >> sys.stdout, "%d valid API features extracted from %s" % (ifcf, apkfn)
         retRes [md5] = fvec
 
     return retRes
@@ -100,7 +115,7 @@ def loadSysCallTrace(fnSyscallTrace):
     end=False
     iscf = 0 # number of extracted sys-call features
     for line in file (fnSyscallTrace).readlines():
-        line = line.lstrip().rstrip()
+        line = line.lstrip().rstrip().lower()
         #start = ("time     seconds  usecs/call     calls    errors syscall" in line)
         if not start:
             start = ("------ ----------- ----------- --------- --------- ----------------" in line)
@@ -125,7 +140,7 @@ def loadSysCallTrace(fnSyscallTrace):
         fvec [syscallname] = freq
         iscf += 1
 
-    return iscf
+    return fvec,iscf
 
 def loadAllSysCallTraces(apkDir, traceDir):
     retRes=dict()
@@ -133,14 +148,15 @@ def loadAllSysCallTraces(apkDir, traceDir):
         if not (apk.endswith(".apk")):
             continue
         apkfn = os.path.abspath(apkDir+'/'+apk)
-        md5 = get_md5 (apkfn)
+        md5 = getmd5 (apkfn)
 
         tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.logcat')
-        if os.path.isfile(tracefn):
+        if not os.path.isfile(tracefn):
             print >> sys.stderr, "no system call trace found for %s under directory %s" % (apkfn, traceDir)
             continue
 
-        fvec = loadSysCallTrace(tracefn)
+        fvec,iscf = loadSysCallTrace(tracefn)
+        print >> sys.stdout, "%d valid Syscall features extracted from %s" % (iscf, apkfn)
         retRes [md5] = fvec
 
     return retRes
@@ -156,7 +172,10 @@ if __name__=="__main__":
     datatag = sys.argv[4]
     outfn = 'afonso.pickle.' + datatag
 
+    buildFeatureFrame ('APIlist.txt', 'syscallList.txt')
+
     apifvec = loadAllAPICallTraces(apkDir, apitraceDir)
+
     sysfvec = loadAllSysCallTraces(apkDir, systraceDir)
 
     finalfvec = apifvec
