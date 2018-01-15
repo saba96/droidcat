@@ -11,6 +11,7 @@ from os.path import isfile, join
 from handle_io import io
 
 import re
+import pickle
 
 verbose=False
 
@@ -119,12 +120,13 @@ def loadSysCallTrace(fnSyscallTrace):
         #start = ("time     seconds  usecs/call     calls    errors syscall" in line)
         if not start:
             start = ("------ ----------- ----------- --------- --------- ----------------" in line)
-            if not start:
-                continue
-        end = ("------ ----------- ----------- --------- --------- ----------------" in line)
-        if end:
-            break
+            continue
+        else:
+            end = ("------ ----------- ----------- --------- --------- ----------------" in line)
+            if end:
+                break
 
+        #print >> sys.stderr, "checking line %s" % (line)
         items = string.split (line)
         if len(items) != 6:
             continue
@@ -150,13 +152,13 @@ def loadAllSysCallTraces(apkDir, traceDir):
         apkfn = os.path.abspath(apkDir+'/'+apk)
         md5 = getmd5 (apkfn)
 
-        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.logcat')
+        tracefn = os.path.abspath(traceDir+'/'+getapkname(apkfn)+'.apk.logcat')
         if not os.path.isfile(tracefn):
             print >> sys.stderr, "no system call trace found for %s under directory %s" % (apkfn, traceDir)
             continue
 
         fvec,iscf = loadSysCallTrace(tracefn)
-        print >> sys.stdout, "%d valid Syscall features extracted from %s" % (iscf, apkfn)
+        print >> sys.stdout, "%d valid Syscall features extracted from %s" % (iscf, tracefn)
         retRes [md5] = fvec
 
     return retRes
@@ -175,7 +177,6 @@ if __name__=="__main__":
     buildFeatureFrame ('APIlist.txt', 'syscallList.txt')
 
     apifvec = loadAllAPICallTraces(apkDir, apitraceDir)
-
     sysfvec = loadAllSysCallTraces(apkDir, systraceDir)
 
     finalfvec = apifvec
