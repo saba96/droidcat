@@ -1,0 +1,48 @@
+DEBUG:root:[Agent]:Obfuscators Initialize: /home/hcai/Downloads/aamo/obfuscators/ /home/hcai/Downloads/aamo/obfuscators/temp/Agent/app
+DEBUG:root:[Agent]:Obfuscate Request: dir_with_apks_to_obfuscate/Agent.apk - ['Lib', 'Manifest'] - /home/hcai/Downloads/aamo/obfuscators/temp/Agent
+DEBUG:root:[Agent]:Directory cleaned: /home/hcai/Downloads/aamo/obfuscators/temp/Agent
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:Backsmali: dir_with_apks_to_obfuscate/Agent.apk into /home/hcai/Downloads/aamo/obfuscators/temp/Agent
+DEBUG:root:[Agent]:I: Using Apktool 2.0.2 on Agent.apk
+I: Loading resource table...
+I: Decoding AndroidManifest.xml with resources...
+I: Loading resource table from file: /home/hcai/apktool/framework/1.apk
+I: Regular manifest package...
+I: Decoding file-resources...
+I: Decoding values */* XMLs...
+I: Baksmaling classes.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:Obfuscate Start: 2018-01-16 02:42:20.333223
+DEBUG:root:[Agent]:Obfuscator Lib
+DEBUG:root:[Agent]:Python Obfuscator!
+DEBUG:root:[Agent]:Obfuscator Manifest
+DEBUG:root:[Agent]:Python Obfuscator!
+DEBUG:root:[Agent]:Obfuscate Stop: 2018-01-16 02:42:20.379003
+DEBUG:root:[Agent]:Obfuscate Time: 0:00:00.045780
+DEBUG:root:[Agent]:Smali: dir_with_apks_to_obfuscate/Agent.apkOb from /home/hcai/Downloads/aamo/obfuscators/temp/Agent
+DEBUG:root:[Agent]:I: Using Apktool 2.0.2
+I: Smaling smali folder into classes.dex...
+I: Building resources...
+I: Building apk file...
+
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:Sign: dir_with_apks_to_obfuscate/Agent.apkOb
+DEBUG:root:[Agent]:jar signed.
+
+Warning: 
+The signer certificate has expired.
+No -tsa or -tsacert is provided and this jar is not timestamped. Without a timestamp, users may not be able to validate this jar after the signer certificate's expiration date (2014-05-13) or after any future revocation date.
+
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:Directory cleaned: /home/hcai/Downloads/aamo/obfuscators/temp/Agent
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:Apk cleaned: dir_with_apks_to_obfuscate/Agent.apk
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:
+DEBUG:root:[Agent]:### SUCCESS ### {0:00:00.045780}
