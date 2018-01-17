@@ -5,7 +5,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
 
-from sklearn.cross_validation import cross_val_score
+#from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score
 
 from sklearn.metrics import confusion_matrix
@@ -23,17 +23,12 @@ import string
 
 import inspect, re
 
-from classes.sample import Sample
 import pickle
 
 HOLDOUT_RATE=0.33
 #HOLDOUT_RATE=0.4
 
 g_binary = False # binary or multiple-class classification
-
-g_fnames = set()
-
-featureframe = {}
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -138,51 +133,31 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
+def get_families(path_md5_families):
+    families = {}
+    metainfo = open(path_md5_families)
+    for line in metainfo.readlines():
+        split = line.split()
+        if len(split) == 2:
+            md5 = str(split[0]).strip()
+            date = str(split[1]).strip()
+            families[md5] = date
+    return families
+
 def loadFeatures(datatag):
-    global g_fnames
     f = open(datatag, 'rb')
     sample_features = {}
-    sample_labels = {}
-    while 1:
-        try:
-            sample = pickle.load(f)
-            #sample.pprint()
-            fnames = [ft.name.lstrip().rstrip().encode('ascii','replace') for ft in sample.features]
-            #print sorted(fnames)
-            #print len(fnames)
-            '''
-            if 'com.zws.inventorymng.permission.JPUSH_MESSAGE' in fnames:
-                print "got it: %s" % (sorted(fnames))
-                sys.exit(2)
-            for fname in fnames:
-                g_fnames.add (fname)
-            '''
-            g_fnames = g_fnames.union (set(fnames))
 
-            fdict={}
-            for ft in sample.features:
-                fdict [ft.name.lstrip().rstrip().encode('ascii','replace')] = ft.freq
-            sample_features [ sample.md5 ] = fdict
-            if sample.malicious:
-                sample_labels [sample.md5] = sample.cli_classification.gt
-            else:
-                sample_labels [sample.md5] = 'BENIGN'
-        except (EOFError, pickle.UnpicklingError):
-            break
+    try:
+        fdict = pickle.load (f)
+        sample_features = fdict
+    except (EOFError, pickle.UnpicklingError):
+        pass
+
     f.close()
-    print >> sys.stderr, 'loaded from %s: %d feature vectors, %d labels, each sample having %d features' % (datatag, len (sample_features), len(sample_labels), len(g_fnames))
-    #print sorted(g_fnames)
-    return sample_features, sample_labels
 
-def regularizeFeatures(rawfeatures):
-    ret={}
-    for md5 in rawfeatures.keys():
-        newfdict = featureframe
-        for fname in rawfeatures[md5].keys():
-            #assert fname in newfdict.keys()
-            newfdict[fname] = rawfeatures[md5][fname]
-        ret[md5] = newfdict
-    return ret
+    print >> sys.stderr, 'loaded from %s: %d feature vectors' % (datatag, len (sample_features))
+    return sample_features
 
 def getfvec(fdict):
     fvecs=dict()
@@ -218,43 +193,34 @@ def adapt (featureDict, labelDict):
     return (features, labels)
 
 if __name__=="__main__":
-    if len(sys.argv)<3:
-        print >> sys.stderr, "%s malware-datatag benign-datatag [binary|multi]" % (sys.argv[0])
+    if len(sys.argv)<4:
+        print >> sys.stderr, "Usage:\n%s malware-datatag malware-families benign-datatag [binary|multi]\n" % (sys.argv[0])
         sys.exit (-1)
 
     mtag = sys.argv[1]
-    btag = sys.argv[2]
-    if len(sys.argv)>=4:
+    mfam = get_families (sys.argv[2])
+    btag = sys.argv[3]
+    if len(sys.argv)>=5:
         #global g_binary
-        g_binary = sys.argv[3].lower()=='true'
+        g_binary = sys.argv[4].lower()=='true'
 
-    _bfeatures, _blabels  = loadFeatures ( btag )
-    print >> sys.stdout, "%d benign samples loaded" % (len(_bfeatures))
-    _mfeatures, _mlabels  = loadFeatures ( mtag )
-    print >> sys.stdout, "%d malware samples loaded" % (len(_mfeatures))
     if g_binary:
-        for md5 in _mlabels.keys():
-            _mlabels[md5] = 'MALICIOUS'
+        for md5 in mfam.keys():
+            mfam[md5] = 'MALICIOUS'
 
-    #global featureframe
-    for name in g_fnames:
-        featureframe[name] = 0.0
+    bfeatures = loadFeatures ( btag )
+    print >> sys.stdout, "%d benign samples loaded" % (len(bfeatures))
+    mfeatures = loadFeatures ( mtag )
+    print >> sys.stdout, "%d malware samples loaded" % (len(mfeatures))
 
-    mfeatures = regularizeFeatures ( _mfeatures )
-    bfeatures = regularizeFeatures ( _bfeatures )
-    #print mfeatures
-    #print bfeatures
+    blabels = {}
+    for md5 in bfeatures.keys():
+        blabels[md5] = 'BENIGN'
 
-
-    '''
-    mf, ml = adapt ( getfvec(mfeatures), _mlabels )
-    bf, bl = adapt ( getfvec(bfeatures), _blabels )
-    print len(mf), len(ml), len(bf), len(bl)
-    '''
     bfeatures.update ( mfeatures )
-    _blabels.update ( _mlabels )
+    blabels.update ( mfam )
 
-    bf, bl = adapt ( getfvec(bfeatures), _blabels )
+    bf, bl = adapt ( getfvec(bfeatures), blabels )
 
 
     '''
@@ -340,8 +306,8 @@ if __name__=="__main__":
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    #models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    #models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
