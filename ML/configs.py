@@ -35,7 +35,11 @@ malwareResultDir="/home/hcai/testbed/cg.instrumented/malware/installed"
 malwareResultDirNew="/home/hcai/testbed/cg.instrumented/newmalwareall/installed"
 malwareMappingFile="/home/hcai/testbed/mapping.malware"
 
-malwareFamilyListFile="/home/hcai/testbed/malwareFamilies.txt"
+#malwareFamilyListFile="/home/hcai/testbed/malwareFamilies.txt"
+malwareFamilyListFile="malwareFamilies.txt"
+
+'''threshold with which a family will be pruned if its size is under this value'''
+PRUNE_THRESHOLD=10
 
 '''
 shell script for retrieving package name of a given APK

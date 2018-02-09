@@ -152,7 +152,8 @@ def getapkname(fnapk):
     if ri != -1:
         napk = fnapk[ri+1:]
     ri = string.rfind(napk, '.')
-    return napk[:ri]
+    #return napk[:ri]
+    return napk[:ri]+'.apk'
 
 def malwareCategorizeRough(resultDir,fnmapping):
     vtRes=dict()
@@ -215,7 +216,7 @@ def refineFamily(fullFamilyList, vtres):
     for fam in f2n.keys():
         if f2n[fam] > winCnt:
             winCnt = f2n[fam]
-            winFam = fam
+            winFam = fam.lower()
     return winFam
 
 def majorvote(vtres):
@@ -231,7 +232,7 @@ def majorvote(vtres):
     for fam in f2n.keys():
         if f2n[fam] > winCnt:
             winCnt = f2n[fam]
-            winFam = fam
+            winFam = fam.lower()
     return winFam
 
 def malwareCategorize(resultDir,fnmapping):
@@ -319,10 +320,13 @@ def newMalwareCategorize(resultDir,obf,prefix=False):
         for res in file(resfn, 'r').readlines():
             res = res.lstrip().rstrip()
             toolres = string.split(res)
+            if len(toolres) < 2:
+                continue
             vtResDetails[toolres[0]] = toolres[1]
-        appname = getpackname(apkfn, prefix)
         if obf==True:
             appname = getapkname(apkfn)
+        else:
+            appname = getpackname(apkfn, prefix)
         if appname==None:
             print >> sys.stderr, "unable to figure out package name of " + apkfn
             sys.exit(-1)
@@ -334,9 +338,9 @@ def newMalwareCategorize(resultDir,obf,prefix=False):
         #print >> sys.stdout, "%s\t%s" % (app, finalFam)
         if None==finalFam:
             #print >> sys.stdout, "no family identified for %s -- %s" % (app, vtRes[app])
-            print >> sys.stdout, "no family identified for %s" % (app)
+            #print >> sys.stdout, "no family identified for %s" % (app)
             finalFam = majorvote( vtRes[app] )
-            print >> sys.stdout, "will use %s" % (finalFam)
+            #print >> sys.stdout, "will use %s" % (finalFam)
             #sys.exit(-2)
         ret[app] = [finalFam, vtRes[app]]
 
@@ -497,14 +501,13 @@ def getMalwareTestingData(dichotomous=False, \
         l2c = malwareCatStat(purelabels)
         minorapps = list()
         for app in allfeatures_malware.keys():
-            if pruneMinor and l2c[ malwareLabels[app] ] <= 0:
+            if pruneMinor and l2c[ malwareLabels[app] ] <= PRUNE_THRESHOLD:
                 minorapps.append( app )
         for app in minorapps:
             del allfeatures_malware[app]
             del malwareLabels[app]
         print "%d minor apps pruned" % (len(minorapps))
 
-    print str(len(allfeatures_malware)) + " valid malicious app testing samples to be used."
 
     '''
     big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst"]
@@ -515,6 +518,12 @@ def getMalwareTestingData(dichotomous=False, \
             #pass
             #malwareLabels[app] = "MALICIOUS"
     '''
+    for app in malwareLabels.keys():
+        if malwareLabels[app].lower()=="none":
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+
+    print str(len(allfeatures_malware)) + " valid malicious app testing samples to be used."
 
     if dichotomous:
         for app in malwareLabels.keys():
@@ -586,7 +595,7 @@ def getMalwareTrainingData(dichotomous=False, \
         l2c = malwareCatStat(purelabels)
         minorapps = list()
         for app in allfeatures_malware.keys():
-            if pruneMinor and l2c[ malwareLabels[app] ] < 5:
+            if pruneMinor and l2c[ malwareLabels[app] ] < PRUNE_THRESHOLD:
                 minorapps.append( app )
         for app in minorapps:
             del allfeatures_malware[app]
