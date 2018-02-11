@@ -22,6 +22,7 @@ import sys
 import string
 
 import inspect, re
+import pickle
 
 from configs import *
 from featureLoader import *
@@ -38,6 +39,33 @@ def varname(p):
             return m.group(1)
 
 # hold-out 20% evaluation
+def splitByRatio(features, labels):
+    l2a = {}
+    uniqLabels=set()
+    for a in labels.keys():
+        l = labels[a]
+        uniqLabels.add (l)
+        if l not in l2a.keys():
+            l2a[l] = list()
+        l2a[l].append (a)
+
+    testfeatures=list()
+    testlabels=list()
+    for l in uniqLabels:
+        sz = len (l2a[l])
+        nrm = int(sz*HOLDOUT_RATE);
+        rma = set()
+        while len(rma) < nrm:
+            t = random.randint(0,sz-1)
+            rma.add ( l2a[l][t] )
+        for a in rma:
+            testfeatures[a] = features[a]
+            testlabels[a] = labels[a]
+            del features[a]
+            del labels[a]
+
+    return (testfeatures, testlabels)
+
 def holdout(model, features, labels):
     sr=len(features)
     assert sr==len(labels)
@@ -147,17 +175,57 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
+                 #'malware-2013':['features_droidcat/malware-2013', '/home/hcai/testbed/inputs/uniqMalware'],
+malwaredatasets={'malware-2017':['features_droidcat/malware-2017','/home/hcai/testbed/newmalwareall'],
+                 'malware-2013':['features_droidcat/malware-2013', '/home/hcai/testbed/cg.instrumented/malware'],
+                 'zoo-2017':['features_droidcat/zoo-2017','/home/hcai/Downloads/AndroZoo/2017'],
+                 'zoo-2016':['features_droidcat/zoo-2016','/home/hcai/Downloads/AndroZoo/2016'],
+                 'zoo-2015':['features_droidcat/zoo-2015','/home/hcai/Downloads/AndroZoo/2015'],
+                 'zoo-2014':['features_droidcat/zoo-2014','/home/hcai/Downloads/AndroZoo/2014'],
+                 'zoo-2013':['features_droidcat/zoo-2013','/home/hcai/Downloads/AndroZoo/2013'],
+                 'zoo-2012':['features_droidcat/zoo-2012','/home/hcai/Downloads/AndroZoo/2012'],
+                 'zoo-2011':['features_droidcat/zoo-2011','/home/hcai/Downloads/AndroZoo/2011'],
+                 'zoo-2010':['features_droidcat/zoo-2010','/home/hcai/Downloads/AndroZoo/2010'],
+                 'vs-2015':['features_droidcat/vs-2015','/home/hcai/Downloads/VirusShare/2015'],
+                 'vs-2016':['features_droidcat/vs-2016','/home/hcai/Downloads/VirusShare/2016'],
+                 'drebin':['features_droidcat/drebin','/home/hcai/Downloads/Drebin']
+                 }
+
+def loadMalware(is_binary, tag, pruneMinor, drebin, obf, malgenome=False):
+    pfname = 'cache/pickle.'+tag
+    if os.path.isfile(pfname):
+        try:
+            pfh = open(pfname,'rb')
+            (mf, ml) = pickle.load (pfh)
+            pfh.close()
+            print >> sys.stdout, "%d malware samples loaded from cache" % (len(mf))
+            return (mf, ml)
+        except (EOFError, pickle.UnpicklingError):
+            pass
+        except Exception as e:
+            print >> sys.stderr, "unexpected exception: {0}".format(e)
+            raise
+
+    (mf, ml) = loadMalwareData(is_binary, malwaredatasets[tag][0], malwaredatasets[tag][1], pruneMinor, drebin, obf, malgenome)
+
+    pfh = file(pfname,'wb')
+    pickle.dump ( (mf, ml), pfh )
+    pfh.close()
+    return (mf, ml)
+
 if __name__=="__main__":
     if len(sys.argv)>=2:
         g_binary = sys.argv[1].lower()=='true'
 
-    bPrune = True
+
+    bPrune = False
     bf1, bl1 = {}, {}
 
-    (bf1, bl1) = loadBenignData('features_droidcat/benign-2017')
+    #(bf1, bl1) = loadBenignData('features_droidcat/benign-2017')
     #(bf1, bl1) = loadBenignData('features_droidcat/benign-2014')
     #(bf1, bl1) = loadBenignData('features_droidcat/zoobenign-2016')
 
+    '''
     (bf2, bl2) = loadBenignData('features_droidcat/zoobenign-2014')
     bf1.update(bf2)
     bl1.update(bl2)
@@ -173,69 +241,81 @@ if __name__=="__main__":
     (bf5, bl5) = loadBenignData('features_droidcat/benign-2014')
     bf1.update(bf5)
     bl1.update(bl5)
+    '''
 
     '''
-    (mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat/malware-2017','/home/hcai/testbed/newmalwareall', pruneMinor=bPrune, drebin=False, obf=False)
-    #(mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat/zoo-2016','/home/hcai/Downloads/AndroZoo/2016', pruneMinor=bPrune, drebin=False, obf=False)
-    #(mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat/zoo-2017','/home/hcai/Downloads/AndroZoo/2017', pruneMinor=bPrune, drebin=False, obf=True)
-    #(mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat/zoo-2011','/home/hcai/Downloads/AndroZoo/2011', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf1, ml1) = loadMalware(g_binary, 'malware-2017', pruneMinor=bPrune, drebin=False, obf=False)
+    #(mf1, ml1) = loadMalware(g_binary, 'zoo-2016', pruneMinor=bPrune, drebin=False, obf=False)
+    #(mf1, ml1) = loadMalware(g_binary, 'zoo-2017', pruneMinor=bPrune, drebin=False, obf=True)
+    #(mf1, ml1) = loadMalware(g_binary, 'zoo-2011', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf1)
     bl1.update (ml1)
 
-    (mf2, ml2) = loadMalwareData(g_binary, 'features_droidcat/zoo-2017','/home/hcai/Downloads/AndroZoo/2017', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf2, ml2) = loadMalware(g_binary, 'zoo-2017', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf2)
     bl1.update (ml2)
 
-    (mf3, ml3) = loadMalwareData(g_binary, 'features_droidcat/zoo-2016','/home/hcai/Downloads/AndroZoo/2016', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf3, ml3) = loadMalware(g_binary, 'zoo-2016', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf3)
     bl1.update (ml3)
 
-    (mf4, ml4) = loadMalwareData(g_binary, 'features_droidcat/zoo-2015','/home/hcai/Downloads/AndroZoo/2015', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf4, ml4) = loadMalware(g_binary, 'zoo-2015', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf4)
     bl1.update (ml4)
 
-    (mf5, ml5) = loadMalwareData(g_binary, 'features_droidcat/zoo-2014','/home/hcai/Downloads/AndroZoo/2014', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf5, ml5) = loadMalware(g_binary, 'zoo-2014', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf5)
     bl1.update (ml5)
 
-    (mf6, ml6) = loadMalwareData(g_binary, 'features_droidcat/zoo-2013','/home/hcai/Downloads/AndroZoo/2013', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf6, ml6) = loadMalware(g_binary, 'zoo-2013', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf6)
     bl1.update (ml6)
 
-    (mf7, ml7) = loadMalwareData(g_binary, 'features_droidcat/zoo-2012','/home/hcai/Downloads/AndroZoo/2012', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf7, ml7) = loadMalware(g_binary, 'zoo-2012', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf7)
     bl1.update (ml7)
 
-    '''
-    (mf8, ml8) = loadMalwareData(g_binary, 'features_droidcat/zoo-2011','/home/hcai/Downloads/AndroZoo/2011', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf8, ml8) = loadMalware(g_binary, 'zoo-2011', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf8)
     bl1.update (ml8)
 
-    (mf9, ml9) = loadMalwareData(g_binary, 'features_droidcat/zoo-2010','/home/hcai/Downloads/AndroZoo/2010', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf9, ml9) = loadMalware(g_binary, 'zoo-2010', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf9)
     bl1.update (ml9)
 
-    (mf10, ml10) = loadMalwareData(g_binary, 'features_droidcat/vs-2015','/home/hcai/Downloads/VirusShare/2015/', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf10, ml10) = loadMalware(g_binary, 'vs-2015', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf10)
     bl1.update (ml10)
 
-    (mf11, ml11) = loadMalwareData(g_binary, 'features_droidcat/vs-2016','/home/hcai/Downloads/VirusShare/2016/', pruneMinor=bPrune, drebin=False, obf=True)
+    (mf11, ml11) = loadMalware(g_binary, 'vs-2016', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf11)
     bl1.update (ml11)
 
-    '''
-    (mf12, ml12) = loadMalwareData(g_binary, 'features_droidcat/drebin','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
+    (mf12, ml12) = loadMalware(g_binary, 'drebin', pruneMinor=bPrune, drebin=True, obf=False)
     bf1.update (mf12)
     bl1.update (ml12)
     '''
 
+    (mf13, ml13) = loadMalware(g_binary, 'malware-2013', pruneMinor=bPrune, drebin=False, obf=False)
+    bf1.update (mf13)
+    bl1.update (ml13)
+
+    if not g_binary:
+        (bf1, bl1) = pruneMinorMalware(bf1, bl1)
+    #(bf1, bl1) = pruneMinorMalware(bf1, bl1)
+
     (features, labels) = adapt (bf1, bl1)
+
+    if g_binary:
+        for i in range(0, len(labels)):
+            if labels[i] != 'BENIGN':
+                labels[i] = 'MALICIOUS'
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    models = (RandomForestClassifier(n_estimators = 120, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
     #models = (RandomForestClassifier(n_estimators = 300, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())

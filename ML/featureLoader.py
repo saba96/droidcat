@@ -812,6 +812,20 @@ def loadMamaFeatures(featurefilesuffix, mode, label):
 
     return (allfeatures, alllabels)
 
+def pruneMinorMalware(features, labels):
+    purelabels = list()
+    for app in features.keys():
+        purelabels.append (labels[app])
+    l2c = malwareCatStat(purelabels)
+    minorapps = list()
+    for app in features.keys():
+        if l2c[ labels[app] ] < PRUNE_THRESHOLD:
+            minorapps.append( app )
+    for app in minorapps:
+        del features[app]
+        del labels[app]
+    print "%d minor apps pruned" % (len(minorapps))
+    return (features,labels)
 
 if __name__=="__main__":
     (features, labels, Testfeatures, Testlabels) = getTrainingData( False, pruneMinor=True)
