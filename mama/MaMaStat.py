@@ -9,8 +9,6 @@ import sys
 import multiprocessing
 import math
 
-packages=[]
-
 def writelists (tbwritten,filepath):
 	f = open(filepath, 'w')
 	for line in tbwritten:
@@ -56,25 +54,6 @@ else:
 print "starting rearranging the files"
 callsdatabase,appslist=TTC.main(dbs,wflag)
 
-def readpackages():
-    global packages
-    with open('FullPackages.txt') as packseq:
-        for line in packseq:
-            #assert line.startswith('.')
-            #line = line[1:]
-            packages.append(line.replace('\n',''))
-    packseq.close()
-
-def getindex(line):
-    global packages
-
-    for i in range(0, len(packages)):
-        #if line.lower() == packages[i].lower():
-        if line.lower().startswith(packages[i].lower()):
-            return i+1
-
-    print "no package found for %s" % (line)
-
 if wflag=='Y':
 	callsdatabase=None
 	print "starting the abstraction to families"
@@ -90,31 +69,18 @@ if wflag=='Y':
 	MC.main(dbs,wflag,'Packages')
 	print "Markov model in packages abstraction finished, features file created in Features/Packages/"
 else:
-	#print "starting the abstraction to families"
-	#famdatabase=cTF.main(dbs,wflag,cores,callsdatabase)
-	#print "abstraction to families is finished"
-
+	print "starting the abstraction to families"
+	famdatabase=cTF.main(dbs,wflag,cores,callsdatabase)
+	print "abstraction to families is finished"
 	print "starting the abstraction to packages"
 	packdatabase=cTP.main(dbs,wflag,cores,callsdatabase)
-
-        #print packdatabase
-        #sys.exit(1)
-
-        readpackages()
-        for dbi in range(0,len(packdatabase)):
-
-            fhret = file("features_" + dbs[dbi] + ".txt", 'w')
-            for appi in range(0, len(appslist[dbi])):
-                appnumcs=[]
-                for callseq in packdatabase[dbi][appi]:
-                    numcs=[]
-                    for item in callseq:
-                        numcs.append( getindex ( item ) )
-                    appnumcs.append (numcs )
-
-                print >> fhret, "%s\t%s" % (appslist[dbi][appi], appnumcs)
-            fhret.close()
-
-
-
-
+	callsdatabase=None
+	print "abstraction to packages is finished"
+	print "starting the Markov model creation in families abstraction"
+	MC.main(dbs,wflag,'Families',famdatabase,appslist)
+	famdatabase=None
+	print "Markov model in families abstraction finished, features file created in Features/Families/"
+	print "starting the Markov model creation in packages abstraction"
+	MC.main(dbs,wflag,'Packages',packdatabase,appslist)
+	packdatabase=None
+	print "Markov model in packages abstraction finished, features file created in Features/Packages/"
