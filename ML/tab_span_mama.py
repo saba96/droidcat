@@ -25,9 +25,6 @@ import inspect, re
 from configs import *
 from featureLoader import *
 
-#HOLDOUT_RATE=0.33
-HOLDOUT_RATE=0.4
-
 g_binary = False # binary or multiple-class classification
 
 def varname(p):
