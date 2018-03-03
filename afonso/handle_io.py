@@ -1,7 +1,6 @@
 import os, re, fnmatch, pickle
 import numpy as np
 from os.path import isfile, join
-import pandas as pd
 import hashlib
 
 
@@ -126,8 +125,8 @@ class io:
     @staticmethod
     def is_file(file_name):
         return os.path.isfile(file_name)
-        
-    
+
+
     @staticmethod
     def get_directories(directory_path):
         return os.listdir(directory_path)
