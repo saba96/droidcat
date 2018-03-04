@@ -775,6 +775,7 @@ def malwareCatStat(labels):
     return l2c
 
 def loadMamaFeatures(featurefilesuffix, mode, label):
+    print "loading features in %s in %s mode" % (featurefilesuffix, mode)
     featurefile = "features_mama/"+mode+"/"+featurefilesuffix+".csv"
     #prefix=featurefilesuffix+'/'
     prefix=""
