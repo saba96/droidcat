@@ -431,10 +431,48 @@ def getBenignTrainingData(\
     return (allfeatures_benign, benignLabels)
 
 def loadBenignData(rootdir):
-    return getBenignTrainingData ( os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt') )
+    return getBenignTrainingData ( os.path.join(rootdir, FTXT_G), os.path.join(rootdir, FTXT_ICC), os.path.join(rootdir, FTXT_SEC) )
 
+'''load malware features without malware family labels'''
+def loadMalwareNoFamily(rootdir):
+    mal_g = os.path.join(rootdir, FTXT_G)
+    mal_icc = os.path.join(rootdir, FTXT_ICC)
+    mal_sec = os.path.join(rootdir, FTXT_SEC)
+    gfeatures_malware = load_generalFeatures(mal_g)
+    iccfeatures_malware = load_ICCFeatures(mal_icc)
+    secfeatures_malware = load_securityFeatures(mal_sec)
+
+    allapps_malware = \
+        set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
+
+    for app in set(gfeatures_malware.keys()).difference(allapps_malware):
+        del gfeatures_malware[app]
+    for app in set(iccfeatures_malware.keys()).difference(allapps_malware):
+        del iccfeatures_malware[app]
+    for app in set(secfeatures_malware.keys()).difference(allapps_malware):
+        del secfeatures_malware[app]
+
+    assert len(gfeatures_malware)==len(iccfeatures_malware) and len(iccfeatures_malware)==len(secfeatures_malware)
+
+    allfeatures_malware = dict()
+    for app in gfeatures_malware.keys():
+        allfeatures_malware[app] = gfeatures_malware[app] + iccfeatures_malware[app] + secfeatures_malware[app]
+
+    malwareLabels={}
+    for app in allfeatures_malware.keys():
+        malwareLabels[app] = 'MALICIOUS'
+
+    for app in allfeatures_malware.keys():
+        if sum(allfeatures_malware[app]) < 0.00005:
+            del allfeatures_malware[app]
+            del malwareLabels[app]
+
+    print str(len(allfeatures_malware)) + " valid malicious app training samples to be used."
+    return (allfeatures_malware,malwareLabels)
+
+'''load malware features and associate with each sample the malware family label'''
 def loadMalwareData(dichotomous, rootdir, malwareResultDir, pruneMinor, drebin, obf, malgenome=False):
-    return getMalwareTestingData(dichotomous, os.path.join(rootdir, 'gfeatures.txt'), os.path.join(rootdir, 'iccfeatures.txt'), os.path.join(rootdir, 'securityfeatures.txt'), \
+    return getMalwareTestingData(dichotomous, os.path.join(rootdir, FTXT_G), os.path.join(rootdir, FTXT_ICC), os.path.join(rootdir, FTXT_SEC), \
             malwareResultDir, pruneMinor, drebin, obf, malgenome)
 
 def getMalwareTestingData(dichotomous=False, \

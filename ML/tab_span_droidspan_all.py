@@ -86,13 +86,13 @@ def predict(bf1, bl1, bf2, bl2, fh):
     for item in testlabels:
         uniqLabels.add (item)
 
-    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (RandomForestClassifier(n_estimators = 120, random_state=0), RandomForestClassifier(n_estimators = 128, random_state=0), RandomForestClassifier(n_estimators = 51, random_state=0), ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
@@ -100,7 +100,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, FSET_SEC)
+    fsets = (FSET_FULL, FSET_G, FSET_SEC)
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -139,10 +139,10 @@ if __name__=="__main__":
     #bPrune = g_binary
     bPrune = True
 
-    datasets = [ {"benign":["benign-2014"], "malware":["drebin"]},
-                  {"benign":["benign-2017"], "malware":["malware-2017"]} ]
-
     '''
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]} ]
+
     datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
                   {"benign":["zoobenign-2011"], "malware":["zoo-2011"]},
                   {"benign":["zoobenign-2012"], "malware":["zoo-2012", "malware-2013"]},
@@ -152,6 +152,14 @@ if __name__=="__main__":
                   {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
     '''
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]},
+                  {"benign":["zoobenign-2012"], "malware":["malware-2013"]},
+                  {"benign":["zoobenign-2013"], "malware":["drebin"]},
+                  {"benign":["zoobenign-2014", "benign-2014"], "malware":["vs-2014"]},
+                  {"benign":["zoobenign-2015"], "malware":["vs-2015"]},
+                  {"benign":["zoobenign-2016"], "malware":["vs-2016"]},
+                  {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')

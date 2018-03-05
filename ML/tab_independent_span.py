@@ -121,7 +121,6 @@ if __name__=="__main__":
     bl1.update (ml1)
     '''
 
-    '''
     (mf3, ml3) = loadMalwareData(g_binary, 'features_large/malware-drebin','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
     for app in mf3.keys():
         if app not in comlistdrebin:
@@ -129,11 +128,12 @@ if __name__=="__main__":
             del ml3[app]
     bf1.update (mf3)
     bl1.update (ml3)
-    '''
 
+    '''
     (mf4, ml4) = loadMalwareData(g_binary, 'features_large/malware-zoo/2014','/home/hcai/testbed/cg.instrumented/AndroZoo/2014', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf4)
     bl1.update (ml4)
+    '''
 
     '''
     (mf5, ml5) = loadMalwareData(g_binary, 'features_large/malware-zoo/2015','/home/hcai/testbed/cg.instrumented/AndroZoo/2015', pruneMinor=bPrune, drebin=False, obf=False)

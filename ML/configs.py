@@ -27,6 +27,11 @@ FTXT_MALWARE_G_NEW = os.getcwd()+"/features/newmalware/gfeatures.txt"
 FTXT_MALWARE_ICC_NEW = os.getcwd()+"/features/newmalware/iccfeatures.txt"
 FTXT_MALWARE_SEC_NEW = os.getcwd()+"/features/newmalware/securityfeatures.txt"
 
+FTXT_G = "gfeatures.txt"
+FTXT_ICC = "iccfeatures.txt"
+FTXT_SEC = "securityfeatures.txt"
+#FTXT_SEC = "securityfeatures.txt.org"
+
 
 '''
 VirusTotal malware detection results

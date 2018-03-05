@@ -149,6 +149,7 @@ if __name__=="__main__":
         global g_binary
         g_binary = sys.argv[1].lower()=='true'
 
+    '''
     mamalist17=[]
     for line in file('list.benign17').readlines():
         line=line.lstrip().rstrip()
@@ -178,11 +179,12 @@ if __name__=="__main__":
             comlistdrebin.append(line)
 
     print "common apps in benign17: %d, common apps in malwaredrebin: %d\n" % (len(comlist17), len(comlistdrebin))
+    '''
 
     #bPrune = g_binary
     bPrune = True
 
-    (bf1, bl1) = loadBenignData('features_large/benign-2017')
+    (bf1, bl1) = loadBenignData('features_droidcat/zoobenign-2010')
 
     '''
     (bf2, bl2) = loadBenignData('features_large/benign-2017')
@@ -198,7 +200,8 @@ if __name__=="__main__":
     bl1.update (ml1)
     '''
 
-    (mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-2017','/home/hcai/testbed/cg.instrumented/newmalwareall/installed', pruneMinor=bPrune, drebin=False, obf=False)
+    (mf2, ml2) = loadMalwareNoFamily('features_droidcat/zoo-2010')
+    #(mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-2017','/home/hcai/testbed/cg.instrumented/newmalwareall/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf2)
     bl1.update (ml2)
 
@@ -233,7 +236,7 @@ if __name__=="__main__":
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-    models = (RandomForestClassifier(n_estimators = 300, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (RandomForestClassifier(n_estimators = 120, random_state=0), )#ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
