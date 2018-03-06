@@ -191,19 +191,17 @@ def adapt (featureDict, labelDict):
 
     return (features, labels)
 
+def resetframe():
+    global featureframe
+    for name in g_fnames:
+        featureframe[name] = 0.0
+
 def loadFeatures(datatag, label):
     _features, _labels  = _loadFeatures ( datatag )
     for md5 in _labels.keys():
         _labels[md5] = label
 
-    global featureframe
-    for name in g_fnames:
-        featureframe[name] = 0.0
-
-    features = _regularizeFeatures ( _features )
-
-    return ( _getfvec(features), _labels)
-
+    return (_features, _labels)
 
 if __name__=="__main__":
     if len(sys.argv)>=2:
@@ -235,9 +233,12 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
+    global g_fnames
+
     for i in range(0, len(datasets)-1):
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
+        g_fnames=set()
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
@@ -248,8 +249,12 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
+        cur_fnames = g_fnames
+
         for j in range(i+1, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
+
+            g_fnames = cur_fnames
 
             # testing dataset
             (bfp, blp) = ({}, {})
@@ -262,8 +267,12 @@ if __name__=="__main__":
                 bfp.update (mf)
                 blp.update (ml)
 
+            resetframe()
 
-            predict(bft,blt, bfp,blp, fh)
+            _bft = _regularizeFeatures ( bft )
+            _bfp = _regularizeFeatures ( bfp )
+
+            predict(_getfvec(_bft),blt, _getfvec(_bfp),blp, fh)
 
     fh.flush()
     fh.close()
