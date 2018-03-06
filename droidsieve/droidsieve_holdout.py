@@ -23,7 +23,6 @@ import string
 
 import inspect, re
 
-from classes.sample import Sample
 import pickle
 
 HOLDOUT_RATE=0.33
