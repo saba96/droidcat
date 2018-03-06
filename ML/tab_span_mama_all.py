@@ -129,6 +129,7 @@ if __name__=="__main__":
     if len(sys.argv)>=2:
         g_binary = sys.argv[1].lower()=='true'
 
+    '''
     datasets = [ {"benign":["zoo-benign-2010"], "malware":["zoo-2010"]},
                   {"benign":["zoo-benign-2011"], "malware":["zoo-2011"]},
                   {"benign":["zoo-benign-2012"], "malware":["zoo-2012", "malware-2013"]},
@@ -137,8 +138,16 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
+    '''
 
-
+    datasets = [ {"benign":["zoo-benign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoo-benign-2011"], "malware":["zoo-2011"]},
+                  {"benign":["zoo-benign-2012"], "malware":["zoo-2012"]},
+                  {"benign":["zoo-benign-2013"], "malware":["vs-2013"]},
+                  {"benign":["zoo-benign-2014"], "malware":["vs-2014"]},
+                  {"benign":["zoo-benign-2015"], "malware":["vs-2015"]},
+                  {"benign":["zoo-benign-2016"], "malware":["vs-2016"]},
+                  {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
 
     #bPrune = g_binary
     mode = "family"
