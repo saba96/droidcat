@@ -43,6 +43,7 @@ meandall <- (colMeans(dall, na.rm=TRUE))
 points(meandall, 1:8, col="red", pch=18, cex=0.5)
 
 stddall <- apply( (dall), 2, sd )
+cat(sprintf("for %d samples\n", r))
 for (k in 1:ncol((dall))) {
 	#print( paste(snames[k], meanalls[k], "% (", stdalls[k], "%)") )
 	#cat(sprintf("%s\t%.2f%%\t%.2f%%\t%.2f%%\n", dnames[k], as.numeric(meandall[k]), as.numeric(meandall[k]-2*stddall[k]/sqrt(r)),  as.numeric(meandall[k]+2*stddall[k]/sqrt(r))))
