@@ -125,9 +125,13 @@ def _loadFeatures(datatag):
     f = open(tagprefix+datatag, 'rb')
     sample_features = {}
     sample_labels = {}
+    md5list = file ('../ML/samplelists/md5.apks.'+datatag).readlines()
     while 1:
         try:
             sample = pickle.load(f)
+            if sample.md5 not in md5list:
+                continue
+
             #sample.pprint()
             fnames = [ft.name.lstrip().rstrip().encode('ascii','replace') for ft in sample.features]
             #print sorted(fnames)
@@ -226,13 +230,13 @@ if __name__=="__main__":
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
     '''
 
-    datasets = [  {"benign":["benign2010"], "malware":["zoo2010"]},
-                  {"benign":["benign2011"], "malware":["zoo2011"]},
-                  {"benign":["benign2012"], "malware":["zoo2012"]},
-                  {"benign":["benign2013"], "malware":["vs2013"]},
-                  {"benign":["benign2014"], "malware":["vs2014"]},
-                  {"benign":["benign2015"], "malware":["vs2015"]},
-                  {"benign":["benign2016"], "malware":["vs2016"]},
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
+                  {"benign":["zoobenign2011"], "malware":["zoo2011"]},
+                  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
+                  {"benign":["zoobenign2013"], "malware":["vs2013"]},
+                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
+                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
+                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
     #bPrune = g_binary
