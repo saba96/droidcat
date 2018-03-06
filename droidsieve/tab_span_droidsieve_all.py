@@ -69,6 +69,14 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
+def malwareCatStat(labels):
+    l2c={}
+    for lab in labels:
+        if lab not in l2c.keys():
+            l2c[lab]=0
+        l2c[lab]=l2c[lab]+1
+    return l2c
+
 def predict(bf1, bl1, bf2, bl2, fh):
     (trainfeatures, trainlabels) = adapt (bf1, bl1)
     (testfeatures, testlabels) = adapt (bf2, bl2)
