@@ -125,7 +125,9 @@ def _loadFeatures(datatag):
     f = open(tagprefix+datatag, 'rb')
     sample_features = {}
     sample_labels = {}
-    md5list = file ('../ML/samplelists/md5.apks.'+datatag).readlines()
+    md5list=[]
+    for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
+        md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
     while 1:
         try:
             sample = pickle.load(f)
@@ -244,8 +246,6 @@ if __name__=="__main__":
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
-
-    global g_fnames
 
     for i in range(0, len(datasets)-1):
         # training dataset
