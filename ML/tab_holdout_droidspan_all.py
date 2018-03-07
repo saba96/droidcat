@@ -151,7 +151,8 @@ def predict(f, l, fh):
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    models = (RandomForestClassifier(n_estimators = 120, random_state=0), ExtraTreesClassifier(n_estimators=100), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    #models = (RandomForestClassifier(n_estimators = 120, random_state=0), ExtraTreesClassifier(n_estimators=100), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
@@ -160,7 +161,8 @@ def predict(f, l, fh):
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, FSET_SEC)
+    #fsets = (FSET_FULL, FSET_SEC)
+    fsets = (FSET_FULL, )
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -228,7 +230,6 @@ if __name__=="__main__":
                   {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
-    '''
 
     datasets = [ {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -238,15 +239,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
 
-    '''
-    datasets = [  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
-                  {"benign":["zoobenign2013"], "malware":["vs2013"]},
-                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
-                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
-                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
+    datasets = [  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')

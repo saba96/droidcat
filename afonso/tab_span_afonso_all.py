@@ -26,8 +26,6 @@ import inspect, re
 import pickle
 
 g_binary = False # binary or multiple-class classification
-featureframe = {}
-g_fnames = set()
 tagprefix="afonso.pickle."
 
 def varname(p):
@@ -228,7 +226,6 @@ if __name__=="__main__":
     for i in range(0, len(datasets)-1):
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
-        g_fnames=set()
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")

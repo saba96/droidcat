@@ -199,7 +199,6 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
-    '''
 
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -209,6 +208,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
+
+    datasets = [  {"benign":["zoobenign2011"], "malware":["zoo2011"]} ]
 
     #bPrune = g_binary
     mode = "family"
