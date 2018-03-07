@@ -118,6 +118,7 @@ def loadAllAPICallTraces(apkDir, traceDir):
         fvec,ifcf = loadAPICallTrace (tracefn)
         print >> sys.stdout, "%d valid API features extracted from %s" % (ifcf, apkfn)
         retRes [md5] = fvec
+        #print "\t %s: %s\n" % (md5, fvec.values())
 
     return retRes
 
@@ -201,7 +202,9 @@ if __name__=="__main__":
     sysfvec = loadAllSysCallTraces(apkDir, systraceDir)
 
     finalfvec = apifvec
-    finalfvec.update (sysfvec)
+    for md5 in finalfvec.keys():
+        if md5 in sysfvec.keys():
+            finalfvec[md5].update ( sysfvec[md5] )
 
     fhpickle = file (outfn, 'wb')
     pickle.dump (finalfvec, fhpickle)
