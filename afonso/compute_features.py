@@ -12,6 +12,7 @@ from handle_io import io
 
 import re
 import pickle
+import copy
 
 verbose=False
 
@@ -53,14 +54,13 @@ def buildFeatureFrame(fnAPIList, fnSyscallList):
 
 def resetframe():
     global g_featureframe
-    for key in g_featureframe:
+    for key in g_featureframe.keys():
         g_featureframe[key] = 0.0
 
 #<com.opera.installer.c: java.lang.String a(java.lang.String)> -> <java.lang.String: char charAt(int)>
 
 def loadAPICallTrace(fnFuncTrace):
-    resetframe()
-    fvec = g_featureframe
+    fvec = copy.deepcopy(g_featureframe)
     #pattern = re.compile (r"<(?P<class1>):\s+.+\s+(?P<method1>)\(.*\)>\s+->\s+<(?P<class2>):\s+.+\s+(?P<method2>)\(.*\)>")
     pattern = re.compile (r"<(?P<class1>.+):\s+.+\s+(?P<method1>.+)\(.*\)>\s+->\s+<(?P<class2>.+):\s+.+\s+(?P<method2>.+)\(.*\)>")
     #pattern = re.compile (r"<(?P<class1>.+): (.+) (?P<method1>.+)\(.*\)> -> <(?P<class2>.+): (.+) (?P<method2>.+)\(.*\)>")
@@ -123,8 +123,7 @@ def loadAllAPICallTraces(apkDir, traceDir):
     return retRes
 
 def loadSysCallTrace(fnSyscallTrace):
-    resetframe()
-    fvec = g_featureframe
+    fvec = copy.deepcopy(g_featureframe)
     start=False
     end=False
     iscf = 0 # number of extracted sys-call features
@@ -201,10 +200,27 @@ if __name__=="__main__":
     apifvec = loadAllAPICallTraces(apkDir, apitraceDir)
     sysfvec = loadAllSysCallTraces(apkDir, systraceDir)
 
+    '''
+    print "api features"
+    for a in apifvec.keys():
+        print apifvec[a].values()
+
+    print "sys features"
+    for a in sysfvec.keys():
+        print sysfvec[a].values()
+    '''
+
     finalfvec = apifvec
     for md5 in finalfvec.keys():
         if md5 in sysfvec.keys():
-            finalfvec[md5].update ( sysfvec[md5] )
+            for key in finalfvec[md5].keys():
+                finalfvec[md5][key] += sysfvec[md5][key]
+
+    '''
+    print "merged features"
+    for md5 in finalfvec.keys():
+        print finalfvec[md5].values()
+    '''
 
     fhpickle = file (outfn, 'wb')
     pickle.dump (finalfvec, fhpickle)
