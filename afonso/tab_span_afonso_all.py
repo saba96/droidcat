@@ -22,10 +22,13 @@ import string
 
 import inspect, re
 
-from configs import *
-from featureLoader import *
+#from classes.sample import Sample
+import pickle
 
 g_binary = False # binary or multiple-class classification
+featureframe = {}
+g_fnames = set()
+tagprefix="afonso.pickle."
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -66,6 +69,14 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
+def malwareCatStat(labels):
+    l2c={}
+    for lab in labels:
+        if lab not in l2c.keys():
+            l2c[lab]=0
+        l2c[lab]=l2c[lab]+1
+    return l2c
+
 def predict(bf1, bl1, bf2, bl2, fh):
     (trainfeatures, trainlabels) = adapt (bf1, bl1)
     (testfeatures, testlabels) = adapt (bf2, bl2)
@@ -84,23 +95,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     for item in testlabels:
         uniqLabels.add (item)
 
-    if mode=="family":
-        nt = 51
-        dp  = 8
-    else:
-        nt = 101
-        dp = 64
-
-
-    models = (RandomForestClassifier(n_estimators = nt, max_depth= dp), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-    #models = (RandomForestClassifier(n_estimators = 120), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-
-    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-    #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-    #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-
-    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-
+    models = (RandomForestClassifier(n_estimators = 100, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     print >> fh, '\t'.join(uniqLabels)
 
@@ -125,6 +120,70 @@ def predict(bf1, bl1, bf2, bl2, fh):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
 
+def loadFeatures(datatag, label):
+    f = open(tagprefix+datatag, 'rb')
+    sample_features = {}
+    sample_labels = {}
+
+    try:
+        fdict = pickle.load (f)
+        sample_features = fdict
+    except (EOFError, pickle.UnpicklingError):
+        pass
+
+    '''
+    for md5 in sample_features.keys():
+        sample_labels[md5] = label
+    '''
+
+    md5list=[]
+    for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
+        md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
+
+    for md5 in sample_features.keys():
+        if md5 not in md5list:
+            del sample_features[md5]
+        else:
+            sample_labels[md5] = label
+
+    f.close()
+
+    print >> sys.stderr, 'loaded from %s: %d feature vectors' % (datatag, len (sample_features))
+    return (sample_features, sample_labels)
+
+def getfvec(fdict):
+    fvecs=dict()
+    for md5 in fdict.keys():
+        #print md5
+        #fnames = [fname for fname in fdict[md5].keys()]
+        fvalues = [freq for freq in fdict[md5].values()]
+        #print len(fnames), len(fvalues)
+        fvecs[md5] = fvalues
+    return fvecs
+
+def adapt (featureDict, labelDict):
+    r=0
+    c=None
+    for app in featureDict.keys():
+        r+=1
+        if c==None:
+            c = len (featureDict[app])
+            print "feature vector length=%d" % (c)
+            continue
+        if c != len (featureDict[app]):
+            print "inconsistent feature vector length for app: %s --- %d" % (app, len(featureDict[app]))
+        assert c == len (featureDict[app])
+
+    features = numpy.zeros( shape=(r,c) )
+    labels = list()
+    k=0
+    for app in featureDict.keys():
+        features[k] = featureDict[app]
+        labels.append (labelDict[app])
+        k+=1
+
+    return (features, labels)
+
 if __name__=="__main__":
     if len(sys.argv)>=2:
         g_binary = sys.argv[1].lower()=='true'
@@ -138,7 +197,6 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
-    '''
 
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -149,12 +207,20 @@ if __name__=="__main__":
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
-    #bPrune = g_binary
-    mode = "family"
-    bPrune = True
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
+                  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
+                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
+                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
+                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
+                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
 
-    if len(sys.argv)>=3:
-        mode = sys.argv[2].lower()
+    datasets = [  {"benign":["zoobenign2014"], "malware":["vs2014"]},
+                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
+                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+
+    #bPrune = g_binary
+    bPrune = True
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
@@ -162,13 +228,14 @@ if __name__=="__main__":
     for i in range(0, len(datasets)-1):
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
+        g_fnames=set()
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
-            (bf, bl) = loadMamaFeatures(datasets[i]['benign'][k], mode, "BENIGN")
+            (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
             bft.update (bf)
             blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
-            (mf, ml) = loadMamaFeatures(datasets[i]['malware'][k], mode, "MALICIOUS")
+            (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
             bft.update (mf)
             blt.update (ml)
 
@@ -178,16 +245,15 @@ if __name__=="__main__":
             # testing dataset
             (bfp, blp) = ({}, {})
             for k in range(0, len(datasets[j]['benign'])):
-                (bf, bl) = loadMamaFeatures(datasets[j]['benign'][k], mode, "BENIGN")
+                (bf, bl) = loadFeatures(datasets[j]['benign'][k], "BENIGN")
                 bfp.update (bf)
                 blp.update (bl)
             for k in range(0, len(datasets[j]['malware'])):
-                (mf, ml) = loadMamaFeatures(datasets[j]['malware'][k], mode, "MALICIOUS")
+                (mf, ml) = loadFeatures(datasets[j]['malware'][k], "MALICIOUS")
                 bfp.update (mf)
                 blp.update (ml)
 
-
-            predict(bft,blt, bfp,blp, fh)
+            predict(getfvec(bft),blt, getfvec(bfp),blp, fh)
 
     fh.flush()
     fh.close()

@@ -27,6 +27,8 @@ from featureLoader import *
 
 g_binary = False # binary or multiple-class classification
 
+HOLDOUT_RATE=0.33
+
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
         m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
@@ -34,22 +36,85 @@ def varname(p):
             return m.group(1)
 
 # hold-out 20% evaluation
-def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
+def holdout(model, features, labels):
+    sr=len(features)
+    assert sr==len(labels)
 
-    print >> sys.stdout, "%d samples for training, %d samples for testing" % (len (trainfeatures), len(testfeatures))
+    uniqLabels = set()
+    for item in labels:
+        uniqLabels.add (item)
 
+    lab2idx=dict()
+    for k in range(0, sr):
+        lab = labels[k]
+        if lab not in lab2idx.keys():
+            lab2idx[lab] = list()
+        lab2idx[lab].append (k)
+
+    testfeatures=list()
+    testlabels=list()
+
+    allidx2rm=list()
+    for lab in lab2idx.keys():
+        sz = len(lab2idx[lab])
+        nrm = int(sz*HOLDOUT_RATE);
+        idxrm = set()
+        while len(idxrm) < nrm:
+            t = random.randint(0,sz-1)
+            idxrm.add ( lab2idx[lab][t] )
+        for idx in idxrm:
+            testfeatures.append ( features[idx] )
+            testlabels.append ( labels[idx] )
+            allidx2rm.append(idx)
+
+    trainfeatures=list()
+    trainlabels=list()
+    for l in range(0, sr):
+        if l in allidx2rm:
+            continue
+        trainfeatures.append(features[l])
+        trainlabels.append(labels[l])
+
+    print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
+
+    predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
 
-    y_pred = model.predict ( testfeatures )
+    for j in range(0, len(testlabels)):
+        y_pred = model.predict( [testfeatures[j]] )
+        #print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
+        #print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
+
+        predicted_labels.append ( y_pred )
+
+    '''
+    for i in range(0, len(predicted_labels)):
+        #print type(predicted_labels[i])
+        if predicted_labels[i][0] not in big_families:
+            predicted_labels[i] = numpy.array(['MALICIOUS'])
+    '''
+
+    #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
+    #big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
+
+    y_pred = predicted_labels
 
     if g_binary:
         prec=precision_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         rec=recall_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         f1=f1_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
+
     else:
         prec=precision_score(testlabels, y_pred, average='weighted')
         rec=recall_score(testlabels, y_pred, average='weighted')
         f1=f1_score(testlabels, y_pred, average='weighted')
+
+    '''
+    cvprec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='precision_weighted')
+    cvrec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='recall_weighted')
+    cvf1 = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='f1_weighted')
+    '''
+
 
     acc=accuracy_score( testlabels, y_pred )
 
@@ -58,6 +123,7 @@ def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
     #return confusion_matrix(testlabels, predicted_labels, labels=list(uniqLabels))
     #return confusion_matrix(sublabels, predicted_labels, labels=big_families)
     return (prec, rec, f1, acc)
+    #return (numpy.average(cvprec), numpy.average(cvrec), numpy.average(cvf1), acc)
 
 
 def selectFeatures(features, selection):
@@ -67,23 +133,16 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
-def predict(bf1, bl1, bf2, bl2, fh):
+def predict(f, l, fh):
+    (features, labels) = adapt (f, l)
 
-    (trainfeatures, trainlabels) = adapt (bf1, bl1)
-    (testfeatures, testlabels) = adapt (bf2, bl2)
-
-    print "======== in training dataset ======="
-    l2c = malwareCatStat(trainlabels)
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
-
-    print "======== in testing dataset ======="
-    l2c = malwareCatStat(testlabels)
+    print "======== in dataset ======="
+    l2c = malwareCatStat(labels)
     for lab in l2c.keys():
         print "%s\t%s" % (lab, l2c[lab])
 
     uniqLabels = set()
-    for item in testlabels:
+    for item in labels:
         uniqLabels.add (item)
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
@@ -114,7 +173,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
         for fset in fsets:
         #for fset in (FSET_G,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + FSET_NAMES[str(fset)]
-            ret = span_detect(model, selectFeatures( trainfeatures, fset ), trainlabels, selectFeatures( testfeatures, fset), testlabels)
+            ret = holdout(model, selectFeatures( features, fset ), labels)
             model2ret[str(model)+str(fset)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
@@ -169,6 +228,7 @@ if __name__=="__main__":
                   {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
+    '''
 
     datasets = [ {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -178,20 +238,21 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
 
+    '''
     datasets = [  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
                   {"benign":["zoobenign2013"], "malware":["vs2013"]},
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)-1):
-        # training dataset
+    for i in range(0, len(datasets)):
+        print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadBenignData("features_droidcat/"+datasets[i]['benign'][k])
@@ -202,21 +263,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        for j in range(i+1, len(datasets)):
-            print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
-            # testing dataset
-            (bfp, blp) = ({}, {})
-            for k in range(0, len(datasets[j]['benign'])):
-                (bf, bl) = loadBenignData("features_droidcat/"+datasets[j]['benign'][k])
-                bfp.update (bf)
-                blp.update (bl)
-            for k in range(0, len(datasets[j]['malware'])):
-                (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[j]['malware'][k])
-                bfp.update (mf)
-                blp.update (ml)
-
-            predict(bft,blt, bfp,blp, fh)
+        predict(bft,blt, fh)
 
     fh.flush()
     fh.close()

@@ -27,28 +27,94 @@ from featureLoader import *
 
 g_binary = False # binary or multiple-class classification
 
+HOLDOUT_RATE=0.33
+
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
         m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
         if m:
             return m.group(1)
 
-def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
+# hold-out 20% evaluation
+def holdout(model, features, labels):
+    sr=len(features)
+    assert sr==len(labels)
 
-    print >> sys.stdout, "%d samples for training, %d samples for testing" % (len (trainfeatures), len(testfeatures))
+    uniqLabels = set()
+    for item in labels:
+        uniqLabels.add (item)
 
+    lab2idx=dict()
+    for k in range(0, sr):
+        lab = labels[k]
+        if lab not in lab2idx.keys():
+            lab2idx[lab] = list()
+        lab2idx[lab].append (k)
+
+    testfeatures=list()
+    testlabels=list()
+
+    allidx2rm=list()
+    for lab in lab2idx.keys():
+        sz = len(lab2idx[lab])
+        nrm = int(sz*HOLDOUT_RATE);
+        idxrm = set()
+        while len(idxrm) < nrm:
+            t = random.randint(0,sz-1)
+            idxrm.add ( lab2idx[lab][t] )
+        for idx in idxrm:
+            testfeatures.append ( features[idx] )
+            testlabels.append ( labels[idx] )
+            allidx2rm.append(idx)
+
+    trainfeatures=list()
+    trainlabels=list()
+    for l in range(0, sr):
+        if l in allidx2rm:
+            continue
+        trainfeatures.append(features[l])
+        trainlabels.append(labels[l])
+
+    print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
+
+    predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
 
-    y_pred = model.predict ( testfeatures )
+    for j in range(0, len(testlabels)):
+        y_pred = model.predict( [testfeatures[j]] )
+        #print >> sys.stderr, "j=%d, testLabels: %s" % (j, str(testlabels[j]))
+        #print >> sys.stderr, "j=%d, predicted: %s" % (j, str(y_pred))
+
+        predicted_labels.append ( y_pred )
+
+    '''
+    for i in range(0, len(predicted_labels)):
+        #print type(predicted_labels[i])
+        if predicted_labels[i][0] not in big_families:
+            predicted_labels[i] = numpy.array(['MALICIOUS'])
+    '''
+
+    #print "%s\n%s\n" % (str(sublabels), str(predicted_labels))
+    #big_families=["DroidKungfu", "ProxyTrojan/NotCompatible/NioServ", "GoldDream", "Plankton", "FakeInst", "BENIGN", "MALICIOUS"]
+
+    y_pred = predicted_labels
 
     if g_binary:
         prec=precision_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         rec=recall_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         f1=f1_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
+
     else:
         prec=precision_score(testlabels, y_pred, average='weighted')
         rec=recall_score(testlabels, y_pred, average='weighted')
         f1=f1_score(testlabels, y_pred, average='weighted')
+
+    '''
+    cvprec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='precision_weighted')
+    cvrec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='recall_weighted')
+    cvf1 = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='f1_weighted')
+    '''
+
 
     acc=accuracy_score( testlabels, y_pred )
 
@@ -57,6 +123,7 @@ def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
     #return confusion_matrix(testlabels, predicted_labels, labels=list(uniqLabels))
     #return confusion_matrix(sublabels, predicted_labels, labels=big_families)
     return (prec, rec, f1, acc)
+    #return (numpy.average(cvprec), numpy.average(cvrec), numpy.average(cvf1), acc)
 
 
 def selectFeatures(features, selection):
@@ -66,22 +133,16 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
-def predict(bf1, bl1, bf2, bl2, fh):
-    (trainfeatures, trainlabels) = adapt (bf1, bl1)
-    (testfeatures, testlabels) = adapt (bf2, bl2)
+def predict(f, l, fh):
+    (features, labels) = adapt (f, l)
 
-    print "======== in training dataset ======="
-    l2c = malwareCatStat(trainlabels)
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
-
-    print "======== in testing dataset ======="
-    l2c = malwareCatStat(testlabels)
+    print "======== in dataset ======="
+    l2c = malwareCatStat(labels)
     for lab in l2c.keys():
         print "%s\t%s" % (lab, l2c[lab])
 
     uniqLabels = set()
-    for item in testlabels:
+    for item in labels:
         uniqLabels.add (item)
 
     if mode=="family":
@@ -107,7 +168,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     model2ret={}
     for model in models:
         print >> fh, 'model ' + str(model)
-        ret = span_detect (model, trainfeatures, trainlabels, testfeatures, testlabels)
+        ret = holdout(model, features, labels)
         model2ret[str(model)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
@@ -159,9 +220,8 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)-1):
-        # training dataset
-        #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
+    for i in range(0, len(datasets)):
+        print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadMamaFeatures(datasets[i]['benign'][k], mode, "BENIGN")
@@ -172,22 +232,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        for j in range(i+1, len(datasets)):
-            print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
-            # testing dataset
-            (bfp, blp) = ({}, {})
-            for k in range(0, len(datasets[j]['benign'])):
-                (bf, bl) = loadMamaFeatures(datasets[j]['benign'][k], mode, "BENIGN")
-                bfp.update (bf)
-                blp.update (bl)
-            for k in range(0, len(datasets[j]['malware'])):
-                (mf, ml) = loadMamaFeatures(datasets[j]['malware'][k], mode, "MALICIOUS")
-                bfp.update (mf)
-                blp.update (ml)
-
-
-            predict(bft,blt, bfp,blp, fh)
+        predict(bft, blt, fh)
 
     fh.flush()
     fh.close()

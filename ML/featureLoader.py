@@ -824,16 +824,24 @@ def loadMamaFeatures(featurefilesuffix, mode, label):
     fh.close()
     #del contents[0]
     inv=0
+
+    apklist=[]
+    for line in file ('samplelists/apks.'+featurefilesuffix).readlines():
+        apklist.append (line.lstrip('\r\n').rstrip('\r\n')+'.txt')
+
     for line in contents:
         line=line.lstrip().rstrip()
         #print line
         items = string.split(line,sep=", ")
+        appname = prefix+items[0].lstrip('\' []').rstrip('\' []')
+        if appname not in apklist:
+            continue
         try:
             fvs = [float(x.lstrip('\' []').rstrip('\' []')) for x in items[1:]]
         except:
             inv+=1
             continue
-        allfeatures[ prefix+items[0].lstrip('\' []').rstrip('\' []') ] = fvs
+        allfeatures[ appname  ] = fvs
 
     alllabels={}
     for app in allfeatures.keys():

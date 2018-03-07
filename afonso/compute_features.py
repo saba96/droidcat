@@ -51,9 +51,15 @@ def buildFeatureFrame(fnAPIList, fnSyscallList):
         g_featureframe[line.lower()] = 0.0
     return len(g_featureframe)
 
+def resetframe():
+    global g_featureframe
+    for key in g_featureframe:
+        g_featureframe[key] = 0.0
+
 #<com.opera.installer.c: java.lang.String a(java.lang.String)> -> <java.lang.String: char charAt(int)>
 
 def loadAPICallTrace(fnFuncTrace):
+    resetframe()
     fvec = g_featureframe
     #pattern = re.compile (r"<(?P<class1>):\s+.+\s+(?P<method1>)\(.*\)>\s+->\s+<(?P<class2>):\s+.+\s+(?P<method2>)\(.*\)>")
     pattern = re.compile (r"<(?P<class1>.+):\s+.+\s+(?P<method1>.+)\(.*\)>\s+->\s+<(?P<class2>.+):\s+.+\s+(?P<method2>.+)\(.*\)>")
@@ -93,9 +99,14 @@ def loadAPICallTrace(fnFuncTrace):
 
 def loadAllAPICallTraces(apkDir, traceDir):
     retRes=dict()
+    global apklist
     for apk in os.listdir(apkDir):
         if not (apk.endswith(".apk")):
             continue
+
+        if apk not in apklist:
+            continue
+
         apkfn = os.path.abspath(apkDir+'/'+apk)
         md5 = getmd5 (apkfn)
 
@@ -111,6 +122,7 @@ def loadAllAPICallTraces(apkDir, traceDir):
     return retRes
 
 def loadSysCallTrace(fnSyscallTrace):
+    resetframe()
     fvec = g_featureframe
     start=False
     end=False
@@ -146,9 +158,14 @@ def loadSysCallTrace(fnSyscallTrace):
 
 def loadAllSysCallTraces(apkDir, traceDir):
     retRes=dict()
+    global apklist
     for apk in os.listdir(apkDir):
         if not (apk.endswith(".apk")):
             continue
+
+        if apk not in apklist:
+            continue
+
         apkfn = os.path.abspath(apkDir+'/'+apk)
         md5 = getmd5 (apkfn)
 
@@ -173,6 +190,10 @@ if __name__=="__main__":
     systraceDir = sys.argv[3]
     datatag = sys.argv[4]
     outfn = 'afonso.pickle.' + datatag
+
+    apklist=[]
+    for line in file ('../ML/samplelists/apks.'+datatag).readlines():
+        apklist.append (line.lstrip('\r\n').rstrip('\r\n'))
 
     buildFeatureFrame ('APIlist.txt', 'syscallList.txt')
 
