@@ -154,6 +154,9 @@ def getfvec(fdict):
     for md5 in fdict.keys():
         #print md5
         #fnames = [fname for fname in fdict[md5].keys()]
+        for key in fdict[md5].keys():
+            if "->" in key:
+                fdict[md5][key]=0
         fvalues = [freq for freq in fdict[md5].values()]
         #print len(fnames), len(fvalues)
         fvecs[md5] = fvalues
@@ -195,6 +198,7 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
+    '''
 
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -205,17 +209,18 @@ if __name__=="__main__":
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
+    '''
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2012"], "malware":["zoo2012"]},
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
 
     datasets = [  {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
 
     #bPrune = g_binary
     bPrune = True

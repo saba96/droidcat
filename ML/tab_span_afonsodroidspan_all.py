@@ -25,7 +25,10 @@ import inspect, re
 from configs import *
 from featureLoader import *
 
+import pickle
+
 g_binary = False # binary or multiple-class classification
+tagprefix="../afonso/afonso.pickle."
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -92,18 +95,16 @@ def predict(bf1, bl1, bf2, bl2, fh):
 
     #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    #models = (RandomForestClassifier(n_estimators = 1000, random_state=0), ExtraTreesClassifier(n_estimators=200), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-
     models = (RandomForestClassifier(n_estimators = 120, random_state=0), ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
 
-    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
+    fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, FSET_SEC)
+    #fsets = (FSET_FULL, )#FSET_SEC)
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -116,7 +117,8 @@ def predict(bf1, bl1, bf2, bl2, fh):
         for fset in fsets:
         #for fset in (FSET_G,):
             print >> fh, 'model ' + str(model) + "\t" + "feature set " + FSET_NAMES[str(fset)]
-            ret = span_detect(model, selectFeatures( trainfeatures, fset ), trainlabels, selectFeatures( testfeatures, fset), testlabels)
+            #ret = span_detect(model, selectFeatures( trainfeatures, fset ), trainlabels, selectFeatures( testfeatures, fset), testlabels)
+            ret = span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels)
             model2ret[str(model)+str(fset)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
@@ -134,6 +136,86 @@ def predict(bf1, bl1, bf2, bl2, fh):
             for c in range(0,len(cols)):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
+
+def loadFeatures(datatag, label):
+    f = open(tagprefix+datatag, 'rb')
+    sample_features = {}
+    sample_labels = {}
+
+    try:
+        fdict = pickle.load (f)
+        sample_features = fdict
+    except (EOFError, pickle.UnpicklingError):
+        pass
+
+    '''
+    for md5 in sample_features.keys():
+        sample_labels[md5] = label
+    '''
+
+    md5list=[]
+    for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
+        md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
+
+    for md5 in sample_features.keys():
+        if md5 not in md5list:
+            del sample_features[md5]
+        else:
+            sample_labels[md5] = label
+
+    f.close()
+
+    print >> sys.stderr, 'loaded from %s: %d feature vectors' % (datatag, len (sample_features))
+    return (sample_features, sample_labels)
+
+def getfvec_org(fdict):
+    fvecs=dict()
+    for md5 in fdict.keys():
+        #print md5
+        #fnames = [fname for fname in fdict[md5].keys()]
+        fvalues = [freq for freq in fdict[md5].values()]
+        #print len(fnames), len(fvalues)
+        fvecs[md5] = fvalues
+    return fvecs
+
+def getfvec(fdict):
+    fvecs=dict()
+    for md5 in fdict.keys():
+        fvalues = []
+        for key in fdict[md5].keys():
+            fvalues.append( fdict[md5][key] )
+        fvecs[md5] = fvalues
+    return fvecs
+
+def mergeAfonsoToDroidspan(datatag, afv, dfv):
+    md5list=[]
+    for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
+        md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
+
+    apklist=[]
+    for line in file ('../ML/samplelists/apks.'+datatag).readlines():
+        apklist.append (line.lstrip('\r\n').rstrip('\r\n'))
+
+    # assumed entry at line no. N in one list corresponds entry at the same line in the other list
+    apk2md5={}
+    for i in range(0, len(apklist)):
+        apk2md5 [ apklist[i] ] = md5list [i]
+
+    ret={}
+    for apk in dfv.keys():
+        '''
+        if apk not in apk2md5.keys():
+            print "Error: %s not in the list" % (apk)
+            sys.exit(0)
+        '''
+        assert apk in apk2md5.keys()
+        '''
+        if apk2md5[apk] not in afv.keys():
+            print "error: %s not in %s" % (apk2md5[apk], afv.keys())
+            sys.exit(0)
+        '''
+        dfv[apk] = dfv[apk] + afv[ apk2md5[apk] ]
+
 
 if __name__=="__main__":
     if len(sys.argv)>=2:
@@ -171,28 +253,27 @@ if __name__=="__main__":
                   {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
-    '''
-
-    datasets = [ {"benign":["zoobenign2011"], "malware":["zoo2011"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
-                  #{"benign":["zoobenign2015"], "malware":["vs2015"]} ]
-
-    '''
-    datasets = [  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
-                  {"benign":["zoobenign2013"], "malware":["vs2013"]},
-                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
-                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
-                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
 
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
                   {"benign":["zoobenign2012"], "malware":["zoo2012"]},
                   {"benign":["zoobenign2013"], "malware":["vs2013"]},
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
+                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
 
+    datasets = [ \
+                  {"benign":["zoobenign2011"], "malware":["zoo2011"]},
+                  {"benign":["benign2017"], "malware":["zoo2017"]} ,
+                  ]
+
+    '''
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
+                  {"benign":["zoobenign2011"], "malware":["zoo2011"]},
+                  {"benign":["zoobenign2013"], "malware":["vs2013"]} ]
     '''
 
     fh = sys.stdout
@@ -203,10 +284,17 @@ if __name__=="__main__":
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadBenignData("features_droidcat/"+datasets[i]['benign'][k])
+            (abf, abl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
+            mergeAfonsoToDroidspan (datasets[i]['benign'][k], getfvec(abf), bf)
+
             bft.update (bf)
             blt.update (bl)
+
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[i]['malware'][k])
+            (amf, aml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
+            mergeAfonsoToDroidspan (datasets[i]['malware'][k], getfvec(amf), mf)
+
             bft.update (mf)
             blt.update (ml)
 
@@ -217,15 +305,21 @@ if __name__=="__main__":
             (bfp, blp) = ({}, {})
             for k in range(0, len(datasets[j]['benign'])):
                 (bf, bl) = loadBenignData("features_droidcat/"+datasets[j]['benign'][k])
+                (abf, abl) = loadFeatures(datasets[j]['benign'][k], "BENIGN")
+                mergeAfonsoToDroidspan (datasets[j]['benign'][k], getfvec(abf), bf)
+
                 bfp.update (bf)
                 blp.update (bl)
             for k in range(0, len(datasets[j]['malware'])):
                 (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[j]['malware'][k])
+                (amf, aml) = loadFeatures(datasets[j]['malware'][k], "MALICIOUS")
+                #print "loaded from %s: %s" % (datasets[j]['malware'], amf)
+                mergeAfonsoToDroidspan (datasets[j]['malware'][k], getfvec(amf), mf)
+
                 bfp.update (mf)
                 blp.update (ml)
 
-            for x in range(0,10):
-                predict(bft,blt, bfp,blp, fh)
+            predict(bft,blt, bfp,blp, fh)
 
     fh.flush()
     fh.close()

@@ -24,6 +24,7 @@ import inspect, re
 
 #from classes.sample import Sample
 import pickle
+import copy
 
 g_binary = False # binary or multiple-class classification
 featureframe = {}
@@ -261,12 +262,12 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        cur_fnames = g_fnames
+        cur_fnames = copy.deepcopy(g_fnames)
 
         for j in range(i+1, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
-            g_fnames = cur_fnames
+            g_fnames = copy.deepcopy(cur_fnames)
 
             # testing dataset
             (bfp, blp) = ({}, {})

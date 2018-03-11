@@ -33,8 +33,6 @@ tagprefix="afonso.pickle."
 HOLDOUT_RATE=0.33
 #HOLDOUT_RATE=0.4
 
-g_binary = False # binary or multiple-class classification
-
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
         m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
@@ -227,7 +225,7 @@ def getfvec(fdict):
         #print md5
         #fnames = [fname for fname in fdict[md5].keys()]
         for key in fdict[md5].keys():
-            if "->" not in key:
+            if "->" in key:
                 fdict[md5][key]=0
         fvalues = [freq for freq in fdict[md5].values()]
         #print len(fnames), len(fvalues)
