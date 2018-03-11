@@ -1,0 +1,950 @@
+1 invalid lines skipped
+3947 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+2122 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ...
+1 invalid lines skipped
+3943 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+2314 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	3942
+MALICIOUS	2314
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 6256 samples for testing
+precision
+0.822123812676	
+recall
+0.797953964194	
+F1
+0.780339675755	
+accuracy
+0.797953964194	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ...
+1 invalid lines skipped
+4682 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3795 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+416 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	4681
+MALICIOUS	4210
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 8891 samples for testing
+precision
+0.554640332276	
+recall
+0.5367225284	
+F1
+0.426260837089	
+accuracy
+0.5367225284	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ...
+1 invalid lines skipped
+3912 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+468 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+6136 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+2007 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	3911
+MALICIOUS	8610
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 12521 samples for testing
+precision
+0.643014060045	
+recall
+0.368261320981	
+F1
+0.283972615616	
+accuracy
+0.368261320981	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ...
+1 invalid lines skipped
+3708 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+506 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+156 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3104 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	4212
+MALICIOUS	3259
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 7471 samples for testing
+precision
+0.545201181899	
+recall
+0.565520010708	
+F1
+0.454163990089	
+accuracy
+0.565520010708	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ...
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	5282
+MALICIOUS	1708
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 6990 samples for testing
+precision
+0.693148664436	
+recall
+0.75321888412	
+F1
+0.679766081831	
+accuracy
+0.75321888412	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 3196 samples for testing
+precision
+0.635018125454	
+recall
+0.450250312891	
+F1
+0.312280815545	
+accuracy
+0.450250312891	
+train on {'benign': ['zoo-benign-2010'], 'malware': ['zoo-2010']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3946
+MALICIOUS	2122
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6068 samples for training, 1720 samples for testing
+precision
+0.787386594967	
+recall
+0.806395348837	
+F1
+0.742107465386	
+accuracy
+0.806395348837	
+1 invalid lines skipped
+3943 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+2314 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ...
+1 invalid lines skipped
+4682 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3795 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+416 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	4681
+MALICIOUS	4210
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 8891 samples for testing
+precision
+0.403090355365	
+recall
+0.524912833202	
+F1
+0.364053133167	
+accuracy
+0.524912833202	
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ...
+1 invalid lines skipped
+3912 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+468 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+6136 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+2007 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	3911
+MALICIOUS	8610
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 12521 samples for testing
+precision
+0.571629747071	
+recall
+0.316348534462	
+F1
+0.162636933217	
+accuracy
+0.316348534462	
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ...
+1 invalid lines skipped
+3708 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+506 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+156 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3104 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	4212
+MALICIOUS	3259
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 7471 samples for testing
+precision
+0.45156150122	
+recall
+0.561102931334	
+F1
+0.409055623692	
+accuracy
+0.561102931334	
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ...
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	5282
+MALICIOUS	1708
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 6990 samples for testing
+precision
+0.716652969081	
+recall
+0.756938483548	
+F1
+0.658932893432	
+accuracy
+0.756938483548	
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 3196 samples for testing
+precision
+0.716107030694	
+recall
+0.445244055069	
+F1
+0.292523276411	
+accuracy
+0.445244055069	
+train on {'benign': ['zoo-benign-2011'], 'malware': ['zoo-2011']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3942
+MALICIOUS	2314
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6256 samples for training, 1720 samples for testing
+precision
+0.735178817987	
+recall
+0.795348837209	
+F1
+0.705784776324	
+accuracy
+0.795348837209	
+1 invalid lines skipped
+4682 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3795 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+416 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ... test on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ...
+1 invalid lines skipped
+3912 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+468 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+6136 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+2007 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4681
+MALICIOUS	4210
+======== in testing dataset =======
+BENIGN	3911
+MALICIOUS	8610
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+8891 samples for training, 12521 samples for testing
+precision
+0.745995769815	
+recall
+0.5845379762	
+F1
+0.589295683272	
+accuracy
+0.5845379762	
+train on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ... test on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ...
+1 invalid lines skipped
+3708 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+506 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+156 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3104 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4681
+MALICIOUS	4210
+======== in testing dataset =======
+BENIGN	4212
+MALICIOUS	3259
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+8891 samples for training, 7471 samples for testing
+precision
+0.68222302613	
+recall
+0.65412929996	
+F1
+0.61550568759	
+accuracy
+0.65412929996	
+train on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ... test on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ...
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4681
+MALICIOUS	4210
+======== in testing dataset =======
+BENIGN	5282
+MALICIOUS	1708
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+8891 samples for training, 6990 samples for testing
+precision
+0.783632707996	
+recall
+0.800572246066	
+F1
+0.781145176772	
+accuracy
+0.800572246066	
+train on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4681
+MALICIOUS	4210
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+8891 samples for training, 3196 samples for testing
+precision
+0.734921069131	
+recall
+0.585419274093	
+F1
+0.545598743512	
+accuracy
+0.585419274093	
+train on {'benign': ['zoo-benign-2012'], 'malware': ['zoo-2012', 'malware-2013']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4681
+MALICIOUS	4210
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+8891 samples for training, 1720 samples for testing
+precision
+0.704237714493	
+recall
+0.780813953488	
+F1
+0.719010800988	
+accuracy
+0.780813953488	
+1 invalid lines skipped
+3912 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+468 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+6136 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+2007 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ... test on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ...
+1 invalid lines skipped
+3708 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+506 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+156 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3104 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3911
+MALICIOUS	8610
+======== in testing dataset =======
+BENIGN	4212
+MALICIOUS	3259
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+12521 samples for training, 7471 samples for testing
+precision
+0.805415796374	
+recall
+0.803774595101	
+F1
+0.80422573546	
+accuracy
+0.803774595101	
+train on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ... test on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ...
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3911
+MALICIOUS	8610
+======== in testing dataset =======
+BENIGN	5282
+MALICIOUS	1708
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+12521 samples for training, 6990 samples for testing
+precision
+0.766196381448	
+recall
+0.761516452074	
+F1
+0.763703883641	
+accuracy
+0.761516452074	
+train on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3911
+MALICIOUS	8610
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+12521 samples for training, 3196 samples for testing
+precision
+0.727392712329	
+recall
+0.665519399249	
+F1
+0.658661405354	
+accuracy
+0.665519399249	
+train on {'benign': ['zoo-benign-2013'], 'malware': ['zoo-2013', 'vs-2013', 'malware-drebin']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	3911
+MALICIOUS	8610
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+12521 samples for training, 1720 samples for testing
+precision
+0.761976614555	
+recall
+0.797674418605	
+F1
+0.765405693304	
+accuracy
+0.797674418605	
+1 invalid lines skipped
+3708 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+506 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+156 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+3104 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ... test on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ...
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4212
+MALICIOUS	3259
+======== in testing dataset =======
+BENIGN	5282
+MALICIOUS	1708
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+7471 samples for training, 6990 samples for testing
+precision
+0.802156731864	
+recall
+0.799713876967	
+F1
+0.800870440212	
+accuracy
+0.799713876967	
+train on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4212
+MALICIOUS	3259
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+7471 samples for training, 3196 samples for testing
+precision
+0.7640248652	
+recall
+0.704630788486	
+F1
+0.699964762543	
+accuracy
+0.704630788486	
+train on {'benign': ['zoo-benign-2014', 'benign-2014'], 'malware': ['zoo-2014', 'vs-2014']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	4212
+MALICIOUS	3259
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+7471 samples for training, 1720 samples for testing
+precision
+0.766214424114	
+recall
+0.801744186047	
+F1
+0.765382469558	
+accuracy
+0.801744186047	
+1 invalid lines skipped
+5283 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+118 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1591 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ... test on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ...
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	5282
+MALICIOUS	1708
+======== in testing dataset =======
+BENIGN	1376
+MALICIOUS	1820
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6990 samples for training, 3196 samples for testing
+precision
+0.838447342998	
+recall
+0.781289111389	
+F1
+0.778996858578	
+accuracy
+0.781289111389	
+train on {'benign': ['zoo-benign-2015'], 'malware': ['zoo-2015', 'vs-2015']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	5282
+MALICIOUS	1708
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+6990 samples for training, 1720 samples for testing
+precision
+0.733533927617	
+recall
+0.791860465116	
+F1
+0.730503925922	
+accuracy
+0.791860465116	
+1 invalid lines skipped
+1377 valid BENIGN app training samples to be used by MamaDroid.
+0 invalid lines skipped
+199 valid MALICIOUS app training samples to be used by MamaDroid.
+1 invalid lines skipped
+1622 valid MALICIOUS app training samples to be used by MamaDroid.
+train on {'benign': ['zoo-benign-2016'], 'malware': ['zoo-2016', 'vs-2016']} ... test on {'benign': ['benign-2017'], 'malware': ['zoo-2017', 'malware-2017']} ...
+0 invalid lines skipped
+1368 valid BENIGN app training samples to be used by MamaDroid.
+1 invalid lines skipped
+257 valid MALICIOUS app training samples to be used by MamaDroid.
+0 invalid lines skipped
+96 valid MALICIOUS app training samples to be used by MamaDroid.
+feature vector length=100
+feature vector length=100
+======== in training dataset =======
+BENIGN	1376
+MALICIOUS	1820
+======== in testing dataset =======
+BENIGN	1368
+MALICIOUS	352
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=8, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=51, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+3196 samples for training, 1720 samples for testing
+precision
+0.78532697004	
+recall
+0.794186046512	
+F1
+0.789213034109	
+accuracy
+0.794186046512	

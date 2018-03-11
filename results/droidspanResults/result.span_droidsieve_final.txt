@@ -1,0 +1,782 @@
+hcai@hcai-dl580:~/gitrepo/droidcat/droidsieve$ time python tab_span_droidsieve_all.py 
+
+
+loaded from zoobenign2010: 1344 feature vectors, 1344 labels, each sample having 1561 features
+loaded from zoo2010: 1877 feature vectors, 1877 labels, each sample having 2224 features
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ...
+loaded from zoobenign2011: 1757 feature vectors, 1757 labels, each sample having 3719 features
+loaded from zoo2011: 1303 feature vectors, 1303 labels, each sample having 4085 features
+feature vector length=4085
+feature vector length=4085
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1757
+MALICIOUS   1303
+BENIGN  MALICIOUS
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+                      min_impurity_decrease=0.0, min_impurity_split=None,
+                                 min_samples_leaf=1, min_samples_split=2,
+                                            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                       oob_score=False, random_state=None, verbose=0, warm_start=False)
+3221 samples for training, 3060 samples for testing
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1135: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+  /usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1135: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+    'precision', 'predicted', average, warn_for)
+    precision
+    0.181320111923  
+    recall
+    0.425816993464  
+    F1
+    0.25433854801   
+    accuracy
+    0.425816993464  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ...
+    loaded from zoobenign2012: 1845 feature vectors, 1845 labels, each sample having 4205 features
+    loaded from zoo2012: 1945 feature vectors, 1945 labels, each sample having 5526 features
+    feature vector length=7122
+    feature vector length=7122
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 3790 samples for testing
+    precision
+    0.263366657152  
+    recall
+    0.513192612137  
+    F1
+    0.348094029854  
+    accuracy
+    0.513192612137  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ...
+    loaded from zoobenign2013: 1568 feature vectors, 1568 labels, each sample having 4165 features
+    loaded from vs2013: 1139 feature vectors, 1139 labels, each sample having 4502 features
+    feature vector length=8972
+    feature vector length=8972
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 2707 samples for testing
+    precision
+    0.177039810728  
+    recall
+    0.420760990026  
+    F1
+    0.249218287904  
+    accuracy
+    0.420760990026  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+    loaded from zoobenign2014: 2953 feature vectors, 2953 labels, each sample having 5727 features
+    loaded from vs2014: 1330 feature vectors, 1330 labels, each sample having 6790 features
+    feature vector length=12710
+    feature vector length=12710
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 4283 samples for testing
+    precision
+    0.0964288823501 
+    recall
+    0.310530002335  
+    F1
+    0.14716012938   
+    accuracy
+    0.310530002335  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 4298 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 7841 features
+    feature vector length=17324
+    feature vector length=17324
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 2611 samples for testing
+    precision
+    0.301216416243  
+    recall
+    0.548831865186  
+    F1
+    0.388959477157  
+    accuracy
+    0.548831865186  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 4547 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 8119 features
+    feature vector length=20304
+    feature vector length=20304
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 3114 samples for testing
+    precision
+    0.313657549204  
+    recall
+    0.560051380861  
+    F1
+    0.402111818946  
+    accuracy
+    0.560051380861  
+    train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 7493 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 7826 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1344
+    MALICIOUS   1877
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3221 samples for training, 1733 samples for testing
+    precision
+    0.00495590001495    
+    recall
+    0.0703981534911 
+    F1
+    0.00925991884195    
+    accuracy
+    0.0703981534911 
+    loaded from zoobenign2011: 1757 feature vectors, 1757 labels, each sample having 2294 features
+    loaded from zoo2011: 1303 feature vectors, 1303 labels, each sample having 2703 features
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ...
+    loaded from zoobenign2012: 1845 feature vectors, 1845 labels, each sample having 4567 features
+    loaded from zoo2012: 1945 feature vectors, 1945 labels, each sample having 5871 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 3790 samples for testing
+    precision
+    0.236981432878  
+    recall
+    0.486807387863  
+    F1
+    0.318778928343  
+    accuracy
+    0.486807387863  
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ...
+    loaded from zoobenign2013: 1568 feature vectors, 1568 labels, each sample having 4547 features
+    loaded from vs2013: 1139 feature vectors, 1139 labels, each sample having 4872 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 2707 samples for testing
+    precision
+    0.335517830676  
+    recall
+    0.579239009974  
+    F1
+    0.424910768486  
+    accuracy
+    0.579239009974  
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+    loaded from zoobenign2014: 2953 feature vectors, 2953 labels, each sample having 6062 features
+    loaded from vs2014: 1330 feature vectors, 1330 labels, each sample having 7100 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 4283 samples for testing
+    precision
+    0.47536887768   
+    recall
+    0.689469997665  
+    F1
+    0.562743201522  
+    accuracy
+    0.689469997665  
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 4716 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 8233 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 2611 samples for testing
+    precision
+    0.203552685872  
+    recall
+    0.451168134814  
+    F1
+    0.280536322413  
+    accuracy
+    0.451168134814  
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 4931 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 8442 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 3114 samples for testing
+    precision
+    0.193554787483  
+    recall
+    0.439948619139  
+    F1
+    0.268835686093  
+    accuracy
+    0.439948619139  
+    train on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 7874 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 8203 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1757
+    MALICIOUS   1303
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3060 samples for training, 1733 samples for testing
+    precision
+    0.864159593033  
+    recall
+    0.929601846509  
+    F1
+    0.895686946606  
+    accuracy
+    0.929601846509  
+    loaded from zoobenign2012: 1845 feature vectors, 1845 labels, each sample having 2793 features
+    loaded from zoo2012: 1945 feature vectors, 1945 labels, each sample having 4206 features
+    train on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... test on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ...
+    loaded from zoobenign2013: 1568 feature vectors, 1568 labels, each sample having 5902 features
+    loaded from vs2013: 1139 feature vectors, 1139 labels, each sample having 6207 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    ======== in testing dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3790 samples for training, 2707 samples for testing
+    precision
+    0.177039810728  
+    recall
+    0.420760990026  
+    F1
+    0.249218287904  
+    accuracy
+    0.420760990026  
+    train on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+    loaded from zoobenign2014: 2953 feature vectors, 2953 labels, each sample having 7393 features
+    loaded from vs2014: 1330 feature vectors, 1330 labels, each sample having 8360 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    ======== in testing dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3790 samples for training, 4283 samples for testing
+    precision
+    0.0964288823501 
+    recall
+    0.310530002335  
+    F1
+    0.14716012938   
+    accuracy
+    0.310530002335  
+    train on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 6117 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 9469 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    ======== in testing dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3790 samples for training, 2611 samples for testing
+    precision
+    0.301216416243  
+    recall
+    0.548831865186  
+    F1
+    0.388959477157  
+    accuracy
+    0.548831865186  
+    train on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 6323 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 9748 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3790 samples for training, 3114 samples for testing
+    precision
+    0.313657549204  
+    recall
+    0.560051380861  
+    F1
+    0.402111818946  
+    accuracy
+    0.560051380861  
+    train on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 9221 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 9550 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1845
+    MALICIOUS   1945
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3790 samples for training, 1733 samples for testing
+    precision
+    0.00495590001495    
+    recall
+    0.0703981534911 
+    F1
+    0.00925991884195    
+    accuracy
+    0.0703981534911 
+    loaded from zoobenign2013: 1568 feature vectors, 1568 labels, each sample having 2735 features
+    loaded from vs2013: 1139 feature vectors, 1139 labels, each sample having 3142 features
+    train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+    loaded from zoobenign2014: 2953 feature vectors, 2953 labels, each sample having 6363 features
+    loaded from vs2014: 1330 feature vectors, 1330 labels, each sample having 7315 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    ======== in testing dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2707 samples for training, 4283 samples for testing
+    precision
+    0.47536887768   
+    recall
+    0.689469997665  
+    F1
+    0.562743201522  
+    accuracy
+    0.689469997665  
+    train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 5021 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 8481 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    ======== in testing dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2707 samples for training, 2611 samples for testing
+    precision
+    0.203552685872  
+    recall
+    0.451168134814  
+    F1
+    0.280536322413  
+    accuracy
+    0.451168134814  
+    train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 5279 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 8767 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2707 samples for training, 3114 samples for testing
+    precision
+    0.193554787483  
+    recall
+    0.439948619139  
+    F1
+    0.268835686093  
+    accuracy
+    0.439948619139  
+    train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 8236 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 8569 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1568
+    MALICIOUS   1139
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2707 samples for training, 1733 samples for testing
+    precision
+    0.864159593033  
+    recall
+    0.929601846509  
+    F1
+    0.895686946606  
+    accuracy
+    0.929601846509  
+    loaded from zoobenign2014: 2953 feature vectors, 2953 labels, each sample having 4340 features
+    loaded from vs2014: 1330 feature vectors, 1330 labels, each sample having 5489 features
+    train on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 7263 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 10503 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    ======== in testing dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    4283 samples for training, 2611 samples for testing
+    precision
+    0.203552685872  
+    recall
+    0.451168134814  
+    F1
+    0.280536322413  
+    accuracy
+    0.451168134814  
+    train on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 7421 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 10740 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    4283 samples for training, 3114 samples for testing
+    precision
+    0.193554787483  
+    recall
+    0.439948619139  
+    F1
+    0.268835686093  
+    accuracy
+    0.439948619139  
+    train on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 10252 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 10566 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  2953
+    MALICIOUS   1330
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    4283 samples for training, 1733 samples for testing
+    precision
+    0.864159593033  
+    recall
+    0.929601846509  
+    F1
+    0.895686946606  
+    accuracy
+    0.929601846509  
+    loaded from zoobenign2015: 1178 feature vectors, 1178 labels, each sample having 2856 features
+    loaded from vs2015: 1433 feature vectors, 1433 labels, each sample having 6579 features
+    train on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ... test on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ...
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 8462 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 9838 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    ======== in testing dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2611 samples for training, 3114 samples for testing
+    precision
+    0.313657549204  
+    recall
+    0.560051380861  
+    F1
+    0.402111818946  
+    accuracy
+    0.560051380861  
+    train on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 11359 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 11685 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1178
+    MALICIOUS   1433
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    2611 samples for training, 1733 samples for testing
+    precision
+    0.00495590001495    
+    recall
+    0.0703981534911 
+    F1
+    0.00925991884195    
+    accuracy
+    0.0703981534911 
+    loaded from zoobenign2016: 1370 feature vectors, 1370 labels, each sample having 3093 features
+    loaded from vs2016: 1744 feature vectors, 1744 labels, each sample having 6810 features
+    train on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ... test on {'benign': ['benign2017'], 'malware': ['zoo2017']} ...
+    loaded from benign2017: 1612 feature vectors, 1612 labels, each sample having 11506 features
+    loaded from zoo2017: 122 feature vectors, 122 labels, each sample having 11833 features
+    feature vector length=24964
+    feature vector length=24964
+    ======== in training dataset =======
+    BENIGN  1370
+    MALICIOUS   1744
+    ======== in testing dataset =======
+    BENIGN  1611
+    MALICIOUS   122
+    BENIGN  MALICIOUS
+    model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+               max_depth=None, max_features='auto', max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                                     min_samples_leaf=1, min_samples_split=2,
+                                                min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+                                                           oob_score=False, random_state=None, verbose=0, warm_start=False)
+    3114 samples for training, 1733 samples for testing
+    precision
+    0.00495590001495    
+    recall
+    0.0703981534911 
+    F1
+    0.00925991884195    
+    accuracy
+    0.0703981534911 
+
+    real    133m13.425s
+    user    130m55.268s
+    sys 1m2.628s
+

@@ -1,0 +1,168 @@
+work on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1344
+MALICIOUS	1877
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+2159 samples for training, 1062 samples held out will be used for testing
+precision
+0.959700422786	
+recall
+0.95856873823	
+F1
+0.958332840579	
+accuracy
+0.95856873823	
+work on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1757
+MALICIOUS	1303
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+2052 samples for training, 1008 samples held out will be used for testing
+precision
+0.329454818707	
+recall
+0.572420634921	
+F1
+0.418210154724	
+accuracy
+0.572420634921	
+work on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1845
+MALICIOUS	1945
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+2541 samples for training, 1249 samples held out will be used for testing
+precision
+0.921604662486	
+recall
+0.915932746197	
+F1
+0.915787218346	
+accuracy
+0.915932746197	
+work on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1568
+MALICIOUS	1139
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+1815 samples for training, 892 samples held out will be used for testing
+precision
+0.419292622383	
+recall
+0.576233183857	
+F1
+0.42576387502	
+accuracy
+0.576233183857	
+work on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	2953
+MALICIOUS	1337
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+2875 samples for training, 1415 samples held out will be used for testing
+precision
+0.914629183933	
+recall
+0.89964664311	
+F1
+0.902109191109	
+accuracy
+0.89964664311	
+work on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1178
+MALICIOUS	1451
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+1763 samples for training, 866 samples held out will be used for testing
+precision
+0.62681078205	
+recall
+0.575057736721	
+F1
+0.46659463767	
+accuracy
+0.575057736721	
+work on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1370
+MALICIOUS	1769
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+2104 samples for training, 1035 samples held out will be used for testing
+precision
+0.618031620444	
+recall
+0.579710144928	
+F1
+0.464647450188	
+accuracy
+0.579710144928	
+work on {'benign': ['benign2017'], 'malware': ['zoo2017']} ... 
+feature vector length=163
+======== in dataset =======
+BENIGN	1611
+MALICIOUS	148
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)
+1180 samples for training, 579 samples held out will be used for testing
+precision
+0.976887593095	
+recall
+0.977547495682	
+F1
+0.976738043503	
+accuracy
+0.977547495682	

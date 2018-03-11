@@ -1,0 +1,390 @@
+work on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... 
+1344 valid benign app training samples to be used.
+1877 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1344
+MALICIOUS	1877
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+2159 samples for training, 1062 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+2159 samples for training, 1062 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+2159 samples for training, 1062 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+2159 samples for training, 1062 samples  held out will be used for testing
+precision
+0.903177854914	0.891578821193	
+0.899369827135	0.882465820808	
+recall
+0.900188323917	0.889830508475	
+0.894538606403	0.876647834275	
+F1
+0.900642240967	0.890206864716	
+0.89512158267	0.877370510583	
+accuracy
+0.900188323917	0.889830508475	
+0.894538606403	0.876647834275	
+work on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ... 
+1757 valid benign app training samples to be used.
+1303 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1757
+MALICIOUS	1303
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+2052 samples for training, 1008 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+2052 samples for training, 1008 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+2052 samples for training, 1008 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+2052 samples for training, 1008 samples  held out will be used for testing
+precision
+0.919038625216	0.909259222306	
+0.869783715345	0.870812104201	
+recall
+0.918650793651	0.90873015873	
+0.87003968254	0.871031746032	
+F1
+0.918306181741	0.90826805173	
+0.869714400279	0.870636945254	
+accuracy
+0.918650793651	0.90873015873	
+0.87003968254	0.871031746032	
+work on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ... 
+1845 valid benign app training samples to be used.
+1945 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1845
+MALICIOUS	1945
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+2541 samples for training, 1249 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+2541 samples for training, 1249 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+2541 samples for training, 1249 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+2541 samples for training, 1249 samples  held out will be used for testing
+precision
+0.901177239517	0.90649473293	
+0.85583128487	0.834296176507	
+recall
+0.899919935949	0.906325060048	
+0.854283426741	0.834267413931	
+F1
+0.899919935949	0.906339596174	
+0.854265678937	0.83427698094	
+accuracy
+0.899919935949	0.906325060048	
+0.854283426741	0.834267413931	
+work on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... 
+1568 valid benign app training samples to be used.
+1139 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1568
+MALICIOUS	1139
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+1815 samples for training, 892 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+1815 samples for training, 892 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+1815 samples for training, 892 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+1815 samples for training, 892 samples  held out will be used for testing
+precision
+0.927528205872	0.932268172867	
+0.916838582714	0.9167947479	
+recall
+0.92264573991	0.928251121076	
+0.910313901345	0.911434977578	
+F1
+0.921590545711	0.927389640311	
+0.908809554439	0.91010626152	
+accuracy
+0.92264573991	0.928251121076	
+0.910313901345	0.911434977578	
+work on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ... 
+2953 valid benign app training samples to be used.
+1337 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	2953
+MALICIOUS	1337
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+2875 samples for training, 1415 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+2875 samples for training, 1415 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+2875 samples for training, 1415 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+2875 samples for training, 1415 samples  held out will be used for testing
+precision
+0.910733242191	0.884446437818	
+0.84282977488	0.829731198069	
+recall
+0.909540636042	0.88480565371	
+0.845229681979	0.833215547703	
+F1
+0.907053603726	0.881588094188	
+0.839780642584	0.827421837639	
+accuracy
+0.909540636042	0.88480565371	
+0.845229681979	0.833215547703	
+work on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ... 
+1178 valid benign app training samples to be used.
+1451 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1178
+MALICIOUS	1451
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+1763 samples for training, 866 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+1763 samples for training, 866 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+1763 samples for training, 866 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+1763 samples for training, 866 samples  held out will be used for testing
+precision
+0.871189147053	0.840778600695	
+0.803975016228	0.795293259673	
+recall
+0.868360277136	0.84064665127	
+0.803695150115	0.795612009238	
+F1
+0.867234394509	0.840055044179	
+0.802568491008	0.795365966585	
+accuracy
+0.868360277136	0.84064665127	
+0.803695150115	0.795612009238	
+work on {'benign': ['zoobenign2016'], 'malware': ['vs2016']} ... 
+1370 valid benign app training samples to be used.
+1769 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1370
+MALICIOUS	1769
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+2104 samples for training, 1035 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+2104 samples for training, 1035 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+2104 samples for training, 1035 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+2104 samples for training, 1035 samples  held out will be used for testing
+precision
+0.886888998751	0.879572862482	
+0.849027928585	0.82812670316	
+recall
+0.885990338164	0.87922705314	
+0.849275362319	0.827053140097	
+F1
+0.885333381933	0.878691118677	
+0.848890010336	0.825506765752	
+accuracy
+0.885990338164	0.87922705314	
+0.849275362319	0.827053140097	
+work on {'benign': ['benign2017'], 'malware': ['zoo2017']} ... 
+1612 valid benign app training samples to be used.
+148 valid malicious app training samples to be used.
+feature vector length=122
+======== in dataset =======
+BENIGN	1612
+MALICIOUS	148
+BENIGN	MALICIOUS
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_FULL
+1181 samples for training, 579 samples  held out will be used for testing
+model RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=120, n_jobs=1,
+            oob_score=False, random_state=0, verbose=0, warm_start=False)	feature set FSET_SEC
+1181 samples for training, 579 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_FULL
+1181 samples for training, 579 samples  held out will be used for testing
+model ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_decrease=0.0, min_impurity_split=None,
+           min_samples_leaf=1, min_samples_split=2,
+           min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+           oob_score=False, random_state=None, verbose=0, warm_start=False)	feature set FSET_SEC
+1181 samples for training, 579 samples  held out will be used for testing
+precision
+0.973174451317	0.974029585928	
+0.971549865739	0.968318417334	
+recall
+0.972366148532	0.974093264249	
+0.970639032815	0.967184801382	
+F1
+0.96980783835	0.972221068876	
+0.967711237258	0.963424558167	
+accuracy
+0.972366148532	0.974093264249	
+0.970639032815	0.967184801382	
+
+
+real    7m15.370s
+user    7m15.648s
+sys 0m3.896s
+
