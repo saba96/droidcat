@@ -32,6 +32,17 @@ featureframe = {}
 g_fnames = set()
 tagprefix="/home/hcai/Downloads/droidsieve/static.pickle."
 
+def get_families(path_md5_families):
+    families = {}
+    metainfo = open(path_md5_families)
+    for line in metainfo.readlines():
+        split = line.split()
+        if len(split) == 2:
+            md5 = str(split[0]).strip()
+            date = str(split[1]).strip()
+            families[md5] = date
+    return families
+
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
         m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
@@ -185,18 +196,17 @@ def _loadFeatures(datatag):
     f = open(tagprefix+datatag, 'rb')
     sample_features = {}
     sample_labels = {}
-    '''
+
     md5list=[]
     for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
         md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
-    '''
+
     while 1:
         try:
             sample = pickle.load(f)
-            '''
             if sample.md5 not in md5list:
+                #print "md5: %s not in the list; skipped" % (sample.md5)
                 continue
-            '''
 
             #sample.pprint()
             fnames = [ft.name.lstrip().rstrip().encode('ascii','replace') for ft in sample.features]
@@ -303,12 +313,15 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
     datasets = [ \
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
                 {"benign":["zoobenign2015", "zoobenign2016"], "malware":["obfmg"]},
-                {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},
-                {"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
+                {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},]
+                #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
+    '''
+
+    datasets = [  {"benign":["zoo2012","zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
+                  {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
 
     #bPrune = g_binary
     bPrune = True
@@ -327,7 +340,16 @@ if __name__=="__main__":
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
             bft.update (mf)
-            blt.update (ml)
+            if g_binary:
+                blt.update (ml)
+            else:
+                mfam = get_families ("../ML/md5families/"+datasets[i]['malware'][k]+".txt")
+                newfam  = ml
+                for a in ml.keys():
+                    if a in mfam.keys():
+                        newfam[a] = mfam[a]
+                #print newfam
+                blt.update ( newfam )
 
         resetframe()
 
