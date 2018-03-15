@@ -22,16 +22,18 @@ import string
 
 import inspect, re
 
-#from classes.sample import Sample
-import pickle
+from configs import *
+from featureLoader import *
 
 g_binary = False # binary or multiple-class classification
-featureframe = {}
-g_fnames = set()
-tagprefix="afonso.pickle."
 
 HOLDOUT_RATE=0.33
-#HOLDOUT_RATE=0.4
+
+def varname(p):
+    for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
+        m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
+        if m:
+            return m.group(1)
 
 def get_families(path_md5_families):
     families = {}
@@ -43,12 +45,6 @@ def get_families(path_md5_families):
             date = str(split[1]).strip()
             families[md5] = date
     return families
-
-def varname(p):
-    for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
-        m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
-        if m:
-            return m.group(1)
 
 # hold-out 20% evaluation
 def holdout(model, features, labels):
@@ -90,7 +86,7 @@ def holdout(model, features, labels):
         trainfeatures.append(features[l])
         trainlabels.append(labels[l])
 
-    print >> sys.stdout, "%d samples for training, %d samples held out will be used for testing" % (len (trainfeatures), len(testfeatures))
+    print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
 
     predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
@@ -148,21 +144,7 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
-def malwareCatStat(labels):
-    l2c={}
-    for lab in labels:
-        if lab not in l2c.keys():
-            l2c[lab]=0
-        l2c[lab]=l2c[lab]+1
-    return l2c
-
 def predict(f, l, fh):
-    '''
-    for a in f.keys():
-        if l[a] == "BENIGN":
-            print "%s \t %s" % (l[a], f[a])
-    '''
-
     (features, labels) = adapt (f, l)
 
     print "======== in dataset ======="
@@ -174,111 +156,93 @@ def predict(f, l, fh):
     for item in labels:
         uniqLabels.add (item)
 
-    models = (RandomForestClassifier(n_estimators = 100, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), GaussianProcessClassifier(), ExtraTreesClassifier(n_estimators=120), AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
+    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+
+    #models = (RandomForestClassifier(n_estimators = 120, random_state=0), ExtraTreesClassifier(n_estimators=100), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+
+    #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
+    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
+
+    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
+    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
+    #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
+    #fsets = (FSET_FULL, FSET_G, FSET_SEC)
+    #fsets = (FSET_FULL, FSET_SEC)
+    fsets = (FSET_FULL, )
+
+    #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
 
     model2ret={}
     for model in models:
-        print >> fh, 'model ' + str(model)
-        ret = holdout(model, features, labels)
-        model2ret[str(model)] = ret
+        #for fset in (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
+        #for fset in (FSET_FULL, FSET_YYY, FSET_G):
+        #for fset in (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G):
+        for fset in fsets:
+        #for fset in (FSET_G,):
+            print >> fh, 'model ' + str(model) + "\t" + "feature set " + FSET_NAMES[str(fset)]
+            ret = holdout(model, selectFeatures( features, fset ), labels)
+            model2ret[str(model)+str(fset)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
     for i in (0,1,2,3):
-        print >> fh, tlabs[i]
+        print tlabs[i]
         cols=list()
         for model in models:
             #print 'model ' + str(model)
             col=list()
-            ret = model2ret[str(model)]
-            col.append(ret[i])
+            for fset in fsets:
+                ret = model2ret[str(model)+str(fset)]
+                col.append(ret[i])
             cols.append(col)
         for r in range(0,len(cols[0])):
             for c in range(0,len(cols)):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
 
-def loadFeatures(datatag, label):
-    f = open(tagprefix+datatag, 'rb')
-    sample_features = {}
-    sample_labels = {}
-
-    try:
-        fdict = pickle.load (f)
-        sample_features = fdict
-    except (EOFError, pickle.UnpicklingError):
-        pass
-
-    for md5 in sample_features.keys():
-        sample_labels[md5] = label
-
-    md5list=[]
-    for line in file ('../ML/samplelists/md5.apks.'+datatag).readlines():
-        md5list.append (line.lstrip('\r\n').rstrip('\r\n'))
-
-    for md5 in sample_features.keys():
-        if md5 not in md5list:
-            del sample_features[md5]
-        else:
-            sample_labels[md5] = label
-
-    f.close()
-
-    print >> sys.stderr, 'loaded from %s: %d feature vectors' % (datatag, len (sample_features))
-    return (sample_features, sample_labels)
-
-def getfvec(fdict):
-    fvecs=dict()
-    for md5 in fdict.keys():
-        #print md5
-        #fnames = [fname for fname in fdict[md5].keys()]
-        for key in fdict[md5].keys():
-            if "->>" in key:
-                fdict[md5][key]=0
-        fvalues = [freq for freq in fdict[md5].values()]
-        #print len(fnames), len(fvalues)
-        fvecs[md5] = fvalues
-    return fvecs
-
-def adapt (featureDict, labelDict):
-    r=0
-    c=None
-    for app in featureDict.keys():
-        r+=1
-        if c==None:
-            c = len (featureDict[app])
-            print "feature vector length=%d" % (c)
-            continue
-        if c != len (featureDict[app]):
-            print "inconsistent feature vector length for app: %s --- %d" % (app, len(featureDict[app]))
-        assert c == len (featureDict[app])
-
-    features = numpy.zeros( shape=(r,c) )
-    labels = list()
-    k=0
-    for app in featureDict.keys():
-        features[k] = featureDict[app]
-        labels.append (labelDict[app])
-        k+=1
-
-    return (features, labels)
-
 if __name__=="__main__":
     if len(sys.argv)>=2:
         g_binary = sys.argv[1].lower()=='true'
 
+    #bPrune = g_binary
+    bPrune = True
+
     '''
-    datasets = [ {"benign":["zoo-benign-2010"], "malware":["zoo-2010"]},
-                  {"benign":["zoo-benign-2011"], "malware":["zoo-2011"]},
-                  {"benign":["zoo-benign-2012"], "malware":["zoo-2012", "malware-2013"]},
-                  {"benign":["zoo-benign-2013"], "malware":["zoo-2013", "vs-2013", "malware-drebin"]},
-                  {"benign":["zoo-benign-2014", "benign-2014"], "malware":["zoo-2014", "vs-2014"]},
-                  {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
-                  {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]} ]
+
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]},
+                  {"benign":["zoobenign-2012"], "malware":["zoo-2012", "malware-2013"]},
+                  {"benign":["zoobenign-2013"], "malware":["zoo-2013", "vs-2013", "drebin"]},
+                  {"benign":["zoobenign-2014", "benign-2014"], "malware":["zoo-2014", "vs-2014"]},
+                  {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
+                  {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
+                  {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]},
+                  {"benign":["zoobenign-2012"], "malware":["malware-2013"]},
+                  {"benign":["zoobenign-2013"], "malware":["drebin"]},
+                  {"benign":["zoobenign-2014", "benign-2014"], "malware":["vs-2014"]},
+                  {"benign":["zoobenign-2015"], "malware":["vs-2015"]},
+                  {"benign":["zoobenign-2016"], "malware":["vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
 
-    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
+    datasets = [ {"benign":["zoobenign-2010"], "malware":["zoo-2010"]},
+                  {"benign":["zoobenign-2011"], "malware":["zoo-2011"]},
+                  {"benign":["zoobenign-2012"], "malware":["zoo-2012"]},
+                  {"benign":["zoobenign-2013"], "malware":["zoo-2013", "vs-2013"]},
+                  {"benign":["zoobenign-2014"], "malware":["zoo-2014", "vs-2014"]},
+                  {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
+                  {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
+                  {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
+
+    datasets = [ {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
                   {"benign":["zoobenign2012"], "malware":["zoo2012"]},
                   {"benign":["zoobenign2013"], "malware":["vs2013"]},
@@ -287,23 +251,19 @@ if __name__=="__main__":
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
     '''
-    '''
-    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
-                  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
-                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
-                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
-                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
-    datasets = [  {"benign":["zoobenign2012"], "malware":["vs2013"]} ]
+
     '''
 
     datasets = [  {"benign":["zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
+    '''
 
-
-    #bPrune = g_binary
-    bPrune = True
+    datasets = [ \
+                {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
+                {"benign":["zoobenign2015", "zoobenign2016"], "malware":["obfmg"]},
+                {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},]
+                #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
@@ -312,12 +272,13 @@ if __name__=="__main__":
         print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
-            (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
+            (bf, bl) = loadBenignData("features_droidcat/"+datasets[i]['benign'][k])
             #bft.update (bf)
             #blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
-            (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
+            (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[i]['malware'][k])
             bft.update (mf)
+            #blt.update (ml)
             if g_binary:
                 blt.update (ml)
             else:
@@ -326,11 +287,12 @@ if __name__=="__main__":
                 for a in ml.keys():
                     if a in mfam.keys():
                         newfam[a] = mfam[a]
+                        #print mfam[a] + "-->" + newfam[a]
                 #print newfam
                 blt.update ( newfam )
 
 
-        predict(getfvec(bft),blt, fh)
+        predict(bft,blt, fh)
 
     fh.flush()
     fh.close()

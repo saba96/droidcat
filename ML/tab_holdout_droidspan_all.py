@@ -243,6 +243,7 @@ if __name__=="__main__":
 
     datasets = [  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
 
+
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
@@ -257,7 +258,6 @@ if __name__=="__main__":
             (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[i]['malware'][k])
             bft.update (mf)
             blt.update (ml)
-
 
         predict(bft,blt, fh)
 

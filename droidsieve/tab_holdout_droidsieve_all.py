@@ -320,7 +320,7 @@ if __name__=="__main__":
                 #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
     '''
 
-    datasets = [  {"benign":["zoo2012","zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
+    datasets = [  {"benign":["zoo2011", "zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
 
     #bPrune = g_binary
@@ -335,8 +335,8 @@ if __name__=="__main__":
         print "work on %s ... " % ( datasets[i] )
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
-            bft.update (bf)
-            blt.update (bl)
+            #bft.update (bf)
+            #blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
             bft.update (mf)
