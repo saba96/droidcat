@@ -114,7 +114,8 @@ def holdout(model, features, labels):
 
     y_pred = predicted_labels
 
-    if g_binary:
+    #if g_binary:
+    if False:
         prec=precision_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         rec=recall_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         f1=f1_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
@@ -296,11 +297,17 @@ if __name__=="__main__":
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
 
     datasets = [  {"benign":["zoobenign2012"], "malware":["vs2013"]} ]
-    '''
 
     datasets = [  {"benign":["zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
+    '''
 
+
+    datasets = [ \
+                {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
+                {"benign":["zoobenign2015", "zoobenign2016"], "malware":["obfmg"]},
+                {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},]
+                #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
 
     #bPrune = g_binary
     bPrune = True
