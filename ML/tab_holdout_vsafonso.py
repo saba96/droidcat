@@ -154,6 +154,7 @@ if __name__=="__main__":
     bPrune = True
     bf1, bl1 = {}, {}
 
+    '''
     (bf1, bl1) = loadBenignData('features_droidcat/benign-2017')
     #(bf1, bl1) = loadBenignData('features_droidcat/benign-2014')
     #(bf1, bl1) = loadBenignData('features_droidcat/zoobenign-2016')
@@ -173,6 +174,7 @@ if __name__=="__main__":
     (bf5, bl5) = loadBenignData('features_droidcat/benign-2014')
     bf1.update(bf5)
     bl1.update(bl5)
+    '''
 
     '''
     (mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat/malware-2017','/home/hcai/testbed/newmalwareall', pruneMinor=bPrune, drebin=False, obf=False)
