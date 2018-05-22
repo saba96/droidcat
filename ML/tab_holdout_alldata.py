@@ -184,7 +184,7 @@ if __name__=="__main__":
     #bPrune = g_binary
     bPrune = True
 
-    (bf1, bl1) = loadBenignData('features_droidcat/zoobenign-2010')
+    (bf1, bl1) = loadBenignData('features_droidcat/zoobenign2010')
 
     '''
     (bf2, bl2) = loadBenignData('features_large/benign-2017')
@@ -200,7 +200,7 @@ if __name__=="__main__":
     bl1.update (ml1)
     '''
 
-    (mf2, ml2) = loadMalwareNoFamily('features_droidcat/zoo-2010')
+    (mf2, ml2) = loadMalwareNoFamily('features_droidcat/zoo2010')
     #(mf2, ml2) = loadMalwareData(g_binary, 'features_large/malware-2017','/home/hcai/testbed/cg.instrumented/newmalwareall/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf2)
     bl1.update (ml2)
