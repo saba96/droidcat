@@ -1,0 +1,42 @@
+1	userCode-cls Percentage out of all defined classes that are defined in user code 
+2	3rdLib-cls Percentage out of all defined classes that are defined in third-party libraries 
+3	sdk-cls Percentage out of all defined classes that are defined in SDK 
+4	userCode-me Percentage out of all defined methods that are defined in user code 
+5	3rdlib-me Percentage out of all defined methods that are defined in third-party libraries 
+6	sdk-me Percentage out of all defined methods that are defined in SDK 
+7	activity Percentage out of all defined components that are Activity components 
+8	service Percentage out of all defined components that are Service components 
+9	receiver Percentage out of all defined components that are BroadcastReceiver components 
+10	provider Percentage out of all defined components that are ContentProvider components 
+11	in-icc Percentage of method calls that are incoming ICC calls 
+12	out-icc Percentage of method calls that are outgoing ICC calls 
+13	src Percentage out of all call targets that are source APIs 
+14	sink Percentage out of all call targets that are sink APIs 
+15	ACCOUNT_INFORMATION Percentage out of all defined source APIs that access account information 
+16	CALENDAR_INFORMATION Percentage out of all defined source APIs that access calendar information 
+17	LOCATION_INFORMATION Percentage out of all defined source APIs that access location information 
+18	NETWORK_INFORMATION Percentage out of all defined source APIs that access network information 
+19	SYSTEM_SETTINGS Percentage out of all defined source APIs that access system settings 
+20	ACCOUNT_SETTINGS Percentage out of all defined sink APIs that aims at operations on account settings 
+21	FILE Percentage out of all defined sink APIs that aims at file operations 
+22	LOG Percentage out of all defined sink APIs that aims at logging operations 
+23	NETWORK Percentage out of all defined sink APIs that aims at networking operations 
+24	SMS_MMS Percentage out of all defined sink APIs that aims at messaging operations 
+25	SYSTEM_SETTINGS Percentage out of all defined sink APIs that aims at operations on system settings 
+26	lc Percentage out of all defined methods that are lifecycle (callback) methods 
+27	eh Percentage out of all defined methods that are event handlers (callback) methods 
+28	Activity Percentage out of all defined lifecycle methods that are callbacks defined in Activity components 
+29	Application Percentage out of all defined lifecycle methods that are callbacks defined in Application classes/subclasses 
+30	BroadcastReceiver Percentage out of all defined lifecycle methods that are callbacks defined in BroadcastReceiver components 
+31	ContentProvider Percentage out of all defined lifecycle methods that are callbacks defined in ContentProvider components 
+32	Service Percentage out of all defined lifecycle methods that are callbacks defined in Service components 
+33	APPLICATION_MANAGEMENT Percentage out of all defined event handlers that are callbacks handling system events for application management 
+34	SYSTEM_STATUS Percentage out of all defined event handlers that are callbacks handling system events related to system status access and management 
+35	LOCATION_STATUS Percentage out of all defined event handlers that are callbacks handling system events related to location info access and management 
+36	HARDWARE_MANAGEMENT Percentage out of all defined event handlers that are callbacks handling system events relevant to hardware management 
+37	NETWORK_MANAGEMENT Percentage out of all defined event handlers that are callbacks handling system events relevant to network management 
+38	APP_BAR Percentage out of all defined event handlers that are callbacks handling UI events relevant to application bars 
+39	MEDIA_CONTROL Percentage out of all defined event handlers that are callbacks handling UI events relevant to media controls 
+40	VIEW Percentage out of all defined event handlers that are callbacks handling UI events relevant to Views 
+41	WIDGET Percentage out of all defined event handlers that are callbacks handling UI events relevant to widgets 
+42	DIALOG Percentage out of all defined event handlers that are callbacks handling UI events relevant to dialogs 
