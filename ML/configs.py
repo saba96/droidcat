@@ -45,7 +45,7 @@ malwareFamilyListFile="malwareFamilies.txt"
 #malwareFamilyListFile="malwareFamilies.txt.short"
 
 '''threshold with which a family will be pruned if its size is under this value'''
-PRUNE_THRESHOLD=20
+PRUNE_THRESHOLD=0
 
 '''
 shell script for retrieving package name of a given APK

@@ -35,7 +35,7 @@ def load_generalFeatures(gfn):
             print "%s\n%s at line %d" % (gfn, line,n)
             continue
         '''
-        assert len(items)==30
+        assert len(items)==31
         appname = items[0]
         date = items[1]
         if (appname,date) not in gfeatures.keys():
@@ -67,7 +67,7 @@ def load_ICCFeatures(iccfn):
     for line in contents:
         line=line.lstrip().rstrip()
         items = string.split(line)
-        assert len(items)==8
+        assert len(items)==9
         appname = items[0]
         date = items[1]
         if (appname,date) not in iccfeatures.keys():
@@ -107,7 +107,7 @@ def load_securityFeatures(secfn):
             continue
         '''
 
-        assert len(items)==87
+        assert len(items)==88
         appname = items[0]
         date = items[1]
         if (appname,date) not in secfeatures.keys():
@@ -138,6 +138,13 @@ def getpackname(fnapk, prefix=False):
     if len(ret) < 2:
         print >> sys.stderr, "error in getting package name of %s: %s" % (fnapk, appname)
         sys.exit(-1)
+        '''
+        napk=fnapk
+        ri = string.rfind(fnapk, '/')
+        if ri != -1:
+            napk = fnapk[ri+1:]
+        return napk
+        '''
 
     if not prefix:
         return ret[1]
@@ -397,7 +404,6 @@ def getBenignTrainingData(\
     iccfeatures_benign = load_ICCFeatures(benign_icc)
     secfeatures_benign = load_securityFeatures(benign_sec)
 
-    allapps_benign = set(gfeatures_benign.keys()).intersection(iccfeatures_benign.keys()).intersection(secfeatures_benign.keys())
     for app in set(malbenignapps):
         for (_app,date) in gfeatures_benign.keys():
             if app == _app:
@@ -408,6 +414,7 @@ def getBenignTrainingData(\
         if (_app,date) in secfeatures_benign.keys():
             if app == _app:
                 del secfeatures_benign[(_app,date)]
+    allapps_benign = set(gfeatures_benign.keys()).intersection(iccfeatures_benign.keys()).intersection(secfeatures_benign.keys())
     for (app,date) in set(gfeatures_benign.keys()).difference(allapps_benign):
         del gfeatures_benign[(app,date)]
     for (app,date) in set(iccfeatures_benign.keys()).difference(allapps_benign):
@@ -506,10 +513,14 @@ def getMalwareTestingData(dichotomous=False, \
     allapps_malware = \
         set(gfeatures_malware.keys()).intersection(iccfeatures_malware.keys()).intersection(secfeatures_malware.keys())
 
-    allapps_malware = [app for (app,-) in allapps_malware.keys()].intersection( malFam.keys() )
-    for (app,date) in allapps_malware.keys():
+    #allapps_malware = [app for (app,_) in allapps_malware.keys()].intersection( malFam.keys() )
+
+    toremove=[]
+    for (app,date) in allapps_malware:
         if app not in malFam.keys():
-            del allapps_malware[(app,date)]
+            toremove.append( (app,date) )
+    for e in toremove:
+        allapps_malware.remove(e)
 
     for app in set(gfeatures_malware.keys()).difference(allapps_malware):
         del gfeatures_malware[app]
