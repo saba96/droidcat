@@ -59,6 +59,7 @@ def split(fnFSmapping, fnDstprefix, defaultYear):
 
     defaultDate = "%s-01-01" % (defaultYear)
     for md5 in mf.keys():
+        print md5
         #assert md5 in md52apk.keys()
         if md5 not in md52apk.keys():
             print >> sys.stderr, "md5 %s not found in samplelist..." % (md5)
@@ -79,15 +80,13 @@ def split(fnFSmapping, fnDstprefix, defaultYear):
 
             try:
                 cur_features = pickle.load (fhDst)
+                fhDst.close()
             except (EOFError, pickle.UnpicklingError):
                 print >> sys.stderr, "error in loading current dated features"
                 sys.exit(2)
             new_features.update (cur_features)
-            fhDst.close()
 
-            fhDst = file (fnDst, 'ab')
-        else:
-            fhDst = file(fnDst, 'wb+')
+        fhDst = file(fnDst, 'wb+')
 
         if not (fhDst):
             raise Exception ("unable to create result file: %s" % (fnDstprefix+str(year)))
