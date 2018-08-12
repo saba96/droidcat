@@ -13,6 +13,8 @@ from sklearn.metrics import confusion_matrix
 #from sklearn.mixture import BayesianGaussianMixture
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
 
 import numpy
 import random
@@ -24,6 +26,8 @@ import inspect, re
 
 #from classes.sample import Sample
 import pickle
+import copy
+from sklearn.feature_selection import SelectFromModel
 
 HOLDOUT_RATE=0.33
 
@@ -89,6 +93,31 @@ def holdout(model, features, labels):
         trainlabels.append(labels[l])
 
     print >> sys.stdout, "%d samples for training, %d samples held out will be used for testing" % (len (trainfeatures), len(testfeatures))
+
+    features = numpy.concatenate ( (trainfeatures, testfeatures), axis=0 )
+    print "before feature scaling and selection: %d samples each with %d features" % (len(features), len(features[0]))
+    print features[0]
+
+    scaled_features = StandardScaler().fit_transform( features )
+
+    sfm = SelectFromModel(model, threshold = 'median')
+    sfm.fit( trainfeatures, trainlabels )
+    selected_features = sfm.transform ( scaled_features )
+
+    print "after feature scaling and selection: %d samples each with %d features" % (len(selected_features), len(selected_features[0]))
+    print selected_features[0]
+
+    _trainfeatures = numpy.zeros( shape=(len(trainfeatures), len(selected_features[0])) )
+    _testfeatures = numpy.zeros( shape=(len(testfeatures), len(selected_features[0])) )
+
+    for k in range(0, len(trainfeatures)):
+        _trainfeatures[k] = selected_features[k]
+
+    for k in range(0, len(testfeatures)):
+        _testfeatures[k] = selected_features[k+len(trainfeatures)]
+
+    trainfeatures = _trainfeatures
+    testfeatures = _testfeatures
 
     predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
@@ -239,7 +268,7 @@ def _loadFeatures(datatag):
 def _regularizeFeatures(rawfeatures):
     ret={}
     for md5 in rawfeatures.keys():
-        newfdict = featureframe
+        newfdict = copy.deepcopy(featureframe)
         for fname in rawfeatures[md5].keys():
             #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]
@@ -286,8 +315,10 @@ def resetframe():
 
 def loadFeatures(datatag, label):
     _features, _labels  = _loadFeatures ( datatag )
+    '''
     for md5 in _labels.keys():
         _labels[md5] = label
+    '''
 
     return (_features, _labels)
 
@@ -318,10 +349,16 @@ if __name__=="__main__":
                 {"benign":["zoobenign2015", "zoobenign2016"], "malware":["obfmg"]},
                 {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},]
                 #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
-    '''
 
     datasets = [  {"benign":["zoo2011", "zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
+    '''
+
+    datasets = [ \
+                {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg"]},
+                {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg"]},
+                {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
+                ]
 
     #bPrune = g_binary
     bPrune = True
@@ -335,13 +372,18 @@ if __name__=="__main__":
         print "work on %s ... " % ( datasets[i] )
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
-            #bft.update (bf)
-            #blt.update (bl)
+            if g_binary:
+                bft.update (bf)
+                blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
             bft.update (mf)
             if g_binary:
-                blt.update (ml)
+                for md5 in ml.keys():
+                    print "%s\t%s" % (md5, ml[md5])
+                    if ml[md5] != "BENIGN":
+                        ml[md5] = "MALICIOUS"
+            '''
             else:
                 mfam = get_families ("../ML/md5families/"+datasets[i]['malware'][k]+".txt")
                 newfam  = ml
@@ -350,6 +392,8 @@ if __name__=="__main__":
                         newfam[a] = mfam[a]
                 #print newfam
                 blt.update ( newfam )
+            '''
+            blt.update (ml)
 
         resetframe()
 

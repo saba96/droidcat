@@ -24,6 +24,7 @@ import inspect, re
 
 #from classes.sample import Sample
 import pickle
+from common import *
 
 g_binary = False # binary or multiple-class classification
 featureframe = {}
@@ -32,6 +33,30 @@ tagprefix="features_afonso_byfirstseen/afonso.pickle."
 
 HOLDOUT_RATE=0.33
 #HOLDOUT_RATE=0.4
+
+PRUNE_THRESHOLD=0
+
+def malwareCatStat(labels):
+    l2c={}
+    for lab in labels:
+        if lab not in l2c.keys():
+            l2c[lab]=0
+        l2c[lab]=l2c[lab]+1
+    return l2c
+def pruneMinorMalware(features, labels):
+    purelabels = list()
+    for app in features.keys():
+        purelabels.append (labels[app])
+    l2c = malwareCatStat(purelabels)
+    minorapps = list()
+    for app in features.keys():
+        if l2c[ labels[app] ] < PRUNE_THRESHOLD:
+            minorapps.append( app )
+    for app in minorapps:
+        del features[app]
+        del labels[app]
+    print "%d minor apps pruned" % (len(minorapps))
+    return (features,labels)
 
 def get_families(path_md5_families):
     families = {}
@@ -111,11 +136,15 @@ def malwareCatStat(labels):
 
 def split(features, labels):
     lab2dates = {}
+    lab2features = {}
     for (app,date) in features.keys():
         lab = labels[(app,date)]
         if lab not in lab2dates.keys():
             lab2dates[lab] = []
         lab2dates[lab].append( date )
+        if lab not in lab2features.keys():
+            lab2features[lab] = {}
+        lab2features[lab][(app,date)] = features[(app,date)]
 
     testfeatures = {}
     testlabels = {}
@@ -130,20 +159,47 @@ def split(features, labels):
         pivot = alldates [ len(alldates)*7/10 ]
         print "%s pivot=%s" % (lab, pivot)
 
-        for (app,date) in features.keys():
-            key = (app,date)
+        itest = 0
+        itrain = 0
+        for (app,date) in lab2features[lab].keys():
             if date > pivot:
-                testfeatures[key] = features [key]
-                testlabels [key] = labels [key]
+                itest += 1
             else:
+                itrain += 1
+
+        # if all samples' dates are the same, then use ordinary random split
+        if itest<1 or itrain<1:
+            print >> sys.stdout, "applying random split ..."
+            idxrm=[]
+            for j in range(0, len(alldates)*7/10):
+                t = random.randint(0,len(lab2features[lab].keys())-1)
+                idxrm.append(t)
+                key = lab2features[lab].keys()[t]
+
                 trainfeatures[ key ] = features [ key ]
                 trainlabels [key] = labels [key]
+
+            for i in range(0, len(lab2features[lab].keys())):
+                if i not in idxrm:
+                    key = lab2features[lab].keys()[i]
+                    testfeatures[key] = features [key]
+                    testlabels [key] = labels [key]
+        else:
+            print >> sys.stdout, "applying split by date..."
+            for (app,date) in lab2features[lab].keys():
+                key = (app,date)
+                if date > pivot:
+                    testfeatures[key] = features [key]
+                    testlabels [key] = labels [key]
+                else:
+                    trainfeatures[ key ] = features [ key ]
+                    trainlabels [key] = labels [key]
 
     print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
 
     return trainfeatures, trainlabels, testfeatures, testlabels
 
-def predict(f, l, fh):
+def predict(f, l, fh,i):
     '''
     for a in f.keys():
         if l[a] == "BENIGN":
@@ -172,6 +228,10 @@ def predict(f, l, fh):
         uniqLabels.add (item)
 
     models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+
+    datatag = 'afonso_VSGP' if i==0 else 'afonso_ZOZO'
+    #datatag = 'afonso_PRZO1213' if i==0 else ('afonso_PRZO1415' if i==1 else 'afonso_PRZO1617')
+    roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, datatag)
 
     print >> fh, '\t'.join(uniqLabels)
 
@@ -270,6 +330,14 @@ if __name__=="__main__":
                 {"benign":["zoobenign2016", "zoobenign2017", "benign2016", "benign2017"], "malware":["vs2016","zoo2016","zoo2017"]},
                 ]
 
+    '''
+    datasets = [ \
+                {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg-afonso2017"]},
+                {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg-afonso2017"]},
+                {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg-afonso2017"]},
+                ]
+    '''
+
     #bPrune = g_binary
     bPrune = True
 
@@ -293,8 +361,10 @@ if __name__=="__main__":
             for key in blt:
                 if blt[key] != 'BENIGN':
                     blt[key] = 'MALICIOUS'
+        else:
+            pruneMinorMalware(bft, blt)
 
-        predict(getfvec(bft),blt, fh)
+        predict(getfvec(bft),blt, fh,i)
 
     fh.flush()
     fh.close()

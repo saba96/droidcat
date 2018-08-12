@@ -25,6 +25,7 @@ import inspect, re
 
 from configs import *
 from featureLoader_wdate import *
+from common import *
 
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
@@ -312,7 +313,8 @@ if __name__=="__main__":
     bf1.update(bf3)
     bl1.update(bl3)
 
-    bf1, bl1 = {}, {}
+    if not g_binary:
+        bf1, bl1 = {}, {}
 
     (mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/malware2010','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf1)
@@ -403,6 +405,9 @@ if __name__=="__main__":
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_SEC)
+
+    roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, 'droidcat_MGGP')
+    sys.exit(0)
 
     labels = list()
     for item in trainlabels:

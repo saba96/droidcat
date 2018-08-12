@@ -6,7 +6,7 @@ from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
 
 from sklearn.cross_validation import cross_val_score
-from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score
+from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score,auc,roc_curve
 
 from sklearn.metrics import confusion_matrix
 
@@ -15,6 +15,10 @@ from sklearn.metrics import confusion_matrix
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
 
+from sklearn import preprocessing
+
+import matplotlib.pyplot as plt
+
 import numpy
 import random
 import os
@@ -22,9 +26,11 @@ import sys
 import string
 
 import inspect, re
+import pickle
 
 from configs import *
 from featureLoader_wdate import *
+from common import *
 
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
@@ -244,6 +250,7 @@ def split(features, labels):
 
         for (app,date) in features.keys():
             key = (app,date)
+            if labels [key] != lab: continue
             if date > pivot:
                 testfeatures[key] = features [key]
                 testlabels [key] = labels [key]
@@ -313,7 +320,8 @@ if __name__=="__main__":
     bf1.update(bf3)
     bl1.update(bl3)
 
-    bf1, bl1 = {}, {}
+    if not g_binary:
+        bf1, bl1 = {}, {}
 
     (mf1, ml1) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/malware2010','/home/hcai/testbed/cg.instrumented/malware/installed', pruneMinor=bPrune, drebin=False, obf=False)
     bf1.update (mf1)
@@ -356,7 +364,6 @@ if __name__=="__main__":
     (mf8, ml8) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/zoo2011','/home/hcai/Downloads/AndroZoo/2011', pruneMinor=bPrune, drebin=False, obf=True)
     bf1.update (mf8)
     bl1.update (ml8)
-
 
     (mf9, ml9) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/drebin2009','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
     bf1.update (mf9)
@@ -418,6 +425,9 @@ if __name__=="__main__":
     for lab in l2c.keys():
         print "%s\t%s" % (lab, l2c[lab])
     print "%d classes in total" % len(l2c.keys())
+
+    roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, 'droidcat_MGGP_full')
+    #sys.exit(0)
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')

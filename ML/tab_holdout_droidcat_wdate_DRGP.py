@@ -25,6 +25,7 @@ import inspect, re
 
 from configs import *
 from featureLoader_wdate import *
+from common import *
 
 #HOLDOUT_RATE=0.33
 HOLDOUT_RATE=0.4
@@ -324,7 +325,8 @@ if __name__=="__main__":
     bl1.update (ml2)
     '''
 
-    bf1, bl1 = {}, {}
+    if not g_binary:
+        bf1, bl1 = {}, {}
 
     (mf3, ml3) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/drebin2011','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
     '''
@@ -381,6 +383,9 @@ if __name__=="__main__":
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_SEC)
+
+    roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, 'droidcat_DRGP')
+    sys.exit(0)
 
     labels = list()
     for item in trainlabels:
