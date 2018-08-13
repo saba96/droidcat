@@ -3,6 +3,33 @@
 rootdir=features_droidcat_byfirstseen
 mkdir -p $rootdir
 
+for fn in gfeatures iccfeatures securityfeatures 
+do
+    python splitByFirstSeen.py firstseendates/firstseen-obfcontagio.txt features_droidcat/obfcontagio/$fn.txt new-obfcontagio 2017
+
+    for d in new-obfcontagio*
+    do
+        dstdir=$rootdir/${d##*-}
+        mkdir -p $dstdir
+        cat $d >> $dstdir/$fn.txt
+    done
+    rm new-obfcontagio*
+done
+
+for fn in gfeatures iccfeatures securityfeatures 
+do
+    python splitByFirstSeen.py firstseendates/firstseen-obfmg.txt features_droidcat/obfmg/$fn.txt new-obfmg 2017
+
+    for d in new-obfmg*
+    do
+        dstdir=$rootdir/${d##*-}
+        mkdir -p $dstdir
+        cat $d >> $dstdir/$fn.txt
+    done
+    rm new-obfmg*
+done
+
+
 for ((i=0;i<=6;i++))
 do
     for fn in gfeatures iccfeatures securityfeatures 

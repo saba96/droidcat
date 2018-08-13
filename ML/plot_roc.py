@@ -56,8 +56,8 @@ if __name__=="__main__":
     plt.figure()
 
     #print "categorization"
-    plot_one (plt, "roc_curves/pickle.droidcat_MGGP.cat")
     '''
+    plot_one (plt, "roc_curves/pickle.droidcat_MGGP.cat")
     plot_one (plt, "roc_curves/pickle.droidcat_MGGP_full.cat")
     plot_one (plt, "roc_curves/pickle.droidcat_DRGP.cat")
     plot_one (plt, "roc_curves/pickle.droidcat_DRGP_full.cat")
@@ -67,9 +67,11 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidcat_ZOZO_full.cat")
     '''
 
-    plot_one (plt, "roc_curves/pickle.afonso_PRZO1415.cat")
+    plot_one (plt, "roc_curves/pickle.afonso_PRZO.cat")
     plot_one (plt, "roc_curves/pickle.afonso_VSGP.cat")
     plot_one (plt, "roc_curves/pickle.afonso_ZOZO.cat")
+
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO.cat")
 
     #print "detection"
     '''
@@ -88,6 +90,10 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.afonso_PRZO1617.det")
     plot_one (plt, "roc_curves/pickle.afonso_VSGP.det")
     plot_one (plt, "roc_curves/pickle.afonso_ZOZO.det")
+
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1213.det")
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1415.det")
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1617.det")
 
 
     plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')

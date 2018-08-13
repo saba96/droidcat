@@ -229,8 +229,8 @@ def predict(f, l, fh,i):
 
     models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
-    datatag = 'afonso_VSGP' if i==0 else 'afonso_ZOZO'
-    #datatag = 'afonso_PRZO1213' if i==0 else ('afonso_PRZO1415' if i==1 else 'afonso_PRZO1617')
+    #datatag = 'afonso_VSGP' if i==0 else 'afonso_ZOZO'
+    datatag = 'afonso_PRZO1213' if i==0 else ('afonso_PRZO1415' if i==1 else 'afonso_PRZO1617')
     roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, datatag)
 
     print >> fh, '\t'.join(uniqLabels)
@@ -325,18 +325,18 @@ if __name__=="__main__":
                 ]
     '''
 
+    '''
     datasets = [ \
                 {"benign":["zoobenign2014", "zoobenign2015", "benign2014", "benign2015"], "malware":["vs2014","vs2015","zoo2014","zoo2015"]},
                 {"benign":["zoobenign2016", "zoobenign2017", "benign2016", "benign2017"], "malware":["vs2016","zoo2016","zoo2017"]},
                 ]
-
     '''
+
     datasets = [ \
                 {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg-afonso2017"]},
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg-afonso2017"]},
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg-afonso2017"]},
                 ]
-    '''
 
     #bPrune = g_binary
     bPrune = True

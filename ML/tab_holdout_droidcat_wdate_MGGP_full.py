@@ -427,7 +427,6 @@ if __name__=="__main__":
     print "%d classes in total" % len(l2c.keys())
 
     roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, 'droidcat_MGGP_full')
-    #sys.exit(0)
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')

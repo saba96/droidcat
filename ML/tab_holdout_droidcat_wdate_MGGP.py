@@ -245,6 +245,7 @@ def split(features, labels):
 
         for (app,date) in features.keys():
             key = (app,date)
+            if labels[key] != lab: continue
             if date > pivot:
                 testfeatures[key] = features [key]
                 testlabels [key] = labels [key]
@@ -407,7 +408,6 @@ if __name__=="__main__":
     #fsets = (FSET_FULL, FSET_SEC)
 
     roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, 'droidcat_MGGP')
-    sys.exit(0)
 
     labels = list()
     for item in trainlabels:

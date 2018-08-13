@@ -24,19 +24,18 @@ import string
 
 import inspect, re
 
-#from classes.sample import Sample
-import pickle
-import copy
-from common import *
+from configs import *
+from featureLoader_wdate import *
 
 from sklearn.feature_selection import SelectFromModel
+
+from common import *
 
 g_binary = False # binary or multiple-class classification
 featureframe = {}
 g_fnames = set()
 tagprefix="/home/hcai/Downloads/droidsieve/features_droidsieve_byfirstseen/static.pickle."
-PRUNE_THRESHOLD=0
-HOLDOUT_RATE=1.95/10.0
+PRUNE_THRESHOLD=20
 
 def malwareCatStat(labels):
     l2c={}
@@ -91,6 +90,7 @@ def holdout_bydate(model, trainfeatures, trainlabels, testfeatures, testlabels):
     testfeatures = sfm.transform( testfeatures )
     '''
 
+    '''
     features = numpy.concatenate ( (trainfeatures, testfeatures), axis=0 )
     print "before feature scaling and selection: %d samples each with %d features" % (len(features), len(features[0]))
     print features[0]
@@ -115,6 +115,7 @@ def holdout_bydate(model, trainfeatures, trainlabels, testfeatures, testlabels):
 
     trainfeatures = _trainfeatures
     testfeatures = _testfeatures
+    '''
 
     predicted_labels=list()
     model.fit ( trainfeatures, trainlabels )
@@ -195,7 +196,7 @@ def split(features, labels):
         alldates.sort()
         #print alldates
 
-        pivot = alldates [ int(len(alldates)*HOLDOUT_RATE) ]
+        pivot = alldates [ int(len(alldates)*8/10) ]
         print "%s pivot=%s" % (lab, pivot)
 
         itest = 0
@@ -210,7 +211,7 @@ def split(features, labels):
         if itest<1 or itrain<1:
             print >> sys.stdout, "applying random split ..."
             idxrm=[]
-            for j in range(0, int(len(alldates)*HOLDOUT_RATE)):
+            for j in range(0, int(len(alldates)*8/10)):
                 t = random.randint(0,len(lab2features[lab].keys())-1)
                 idxrm.append(t)
                 key = lab2features[lab].keys()[t]
@@ -238,7 +239,7 @@ def split(features, labels):
 
     return trainfeatures, trainlabels, testfeatures, testlabels
 
-def predict(f, l, fh, i):
+def predict(f, l, fh,i):
     _trainfeatures, _trainlabels, _testfeatures, _testlabels = split(f, l)
     (trainfeatures, trainlabels) = adapt (_trainfeatures, _trainlabels)
     (testfeatures, testlabels) = adapt (_testfeatures, _testlabels)
@@ -258,13 +259,12 @@ def predict(f, l, fh, i):
     for item in labels:
         uniqLabels.add (item)
 
-    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
-    models = (ExtraTreesClassifier(n_estimators=1000), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (ExtraTreesClassifier(n_estimators=1000), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     print >> fh, '\t'.join(uniqLabels)
 
-    datatag = 'droidsieve_VSGP' if i==0 else 'droidsieve_ZOZO'
-    #datatag = 'droidsieve_PRZO1213' if i==0 else ('droidsieve_PRZO1415' if i==1 else 'droidsieve_PRZO1617')
+    datatag = 'droidcat_PRZO1213' if i==0 else ('droidcat_PRZO1415' if i==1 else 'droidcat_PRZO1617')
     roc_bydate(g_binary, models[0], trainfeatures, trainlabels, testfeatures, testlabels, datatag)
 
     model2ret={}
@@ -288,126 +288,9 @@ def predict(f, l, fh, i):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
 
-
-def filter_features(fdict):
-    icnt=0
-    for key in fdict.keys():
-        for name in fdict[key][1].keys():
-            '''
-            if 'incognito' in name:
-                print name
-            '''
-            lname = name.lower()
-            if lname.startswith('string_') or lname.startswith('ascii_') or lname.startswith('cert_'):
-                del fdict[key][1][name]
-                icnt+=1
-    print >> sys.stdout, "%d features removed" % (icnt)
-
-def loadFeatures(datatag):
-    global g_fnames
-    f = open(tagprefix+datatag, 'rb')
-    sample_features = {}
-    sample_labels = {}
-
-    try:
-        fdict = pickle.load (f)
-        filter_features(fdict)
-        #print fdict
-    except (EOFError, pickle.UnpicklingError):
-        pass
-
-    for key in fdict.keys():
-        sample_features [key] = fdict[key][1]
-        sample_labels [key] = fdict[key][0]
-
-        fnames = [ft for ft in fdict[key][1].keys()]
-        g_fnames = g_fnames.union (set(fnames))
-
-    f.close()
-    print >> sys.stderr, 'loaded from %s: %d feature vectors, %d labels, each sample having %d features' % (datatag, len (sample_features), len(sample_labels), len(g_fnames))
-    return sample_features, sample_labels
-
-def _regularizeFeatures(rawfeatures):
-    ret={}
-    for md5 in rawfeatures.keys():
-        newfdict = copy.deepcopy(featureframe)
-        for fname in rawfeatures[md5].keys():
-            assert fname in newfdict.keys()
-            newfdict[fname] = rawfeatures[md5][fname]
-        ret[md5] = newfdict
-    return ret
-
-def _getfvec(fdict):
-    fvecs=dict()
-    for md5 in fdict.keys():
-        #print md5
-        #fnames = [fname for fname in fdict[md5].keys()]
-        fvalues = [freq for freq in fdict[md5].values()]
-        #print len(fnames), len(fvalues)
-        fvecs[md5] = fvalues
-    return fvecs
-
-def adapt (featureDict, labelDict):
-    r=0
-    c=None
-    for app in featureDict.keys():
-        r+=1
-        if c==None:
-            c = len (featureDict[app])
-            print "feature vector length=%d" % (c)
-            continue
-        if c != len (featureDict[app]):
-            print "inconsistent feature vector length for app: %s --- %d" % (app, len(featureDict[app]))
-        assert c == len (featureDict[app])
-
-    features = numpy.zeros( shape=(r,c) )
-    labels = list()
-    k=0
-    for app in featureDict.keys():
-        features[k] = featureDict[app]
-        labels.append (labelDict[app])
-        k+=1
-
-    return (features, labels)
-
-def resetframe():
-    global featureframe, g_fnames
-    featureframe={}
-    newnames=set()
-    icnt=0
-
-    for name in g_fnames:
-        '''
-        if name.lower().startswith('string_'):
-            icnt=icnt+1
-            continue
-        if name.lower().startswith('ascii_'):
-            icnt=icnt+1
-            continue
-        if name.lower().startswith('cert_'):
-            icnt=icnt+1
-            continue
-        '''
-        newnames.add (name)
-
-    g_fnames = newnames
-
-    print >> sys.stdout, "%d features removed" % (icnt)
-
-    for name in g_fnames:
-        featureframe[name] = 0.0
-
 if __name__=="__main__":
     if len(sys.argv)>=2:
         g_binary = sys.argv[1].lower()=='true'
-
-    datasets = [ \
-                {"benign":["zoobenign2014", "zoobenign2015", "benign2014", "benign2015"], "malware":["vs2014","vs2015","zoo2014","zoo2015"]},
-                {"benign":["zoobenign2016", "zoobenign2017", "benign2016", "benign2017"], "malware":["vs2016","zoo2016","zoo2017"]},
-                ]
-    '''
-    datasets = [ {"benign":["benign2015"], "malware":["zoo2015"]} ]
-    '''
 
     '''
     datasets = [ \
@@ -417,13 +300,11 @@ if __name__=="__main__":
                 ]
     '''
 
-    '''
     datasets = [ \
                 {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg2017","obfcontagio2017"]},
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg2017","obfcontagio2017"]},
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg2017","obfcontagio2017"]},
                 ]
-    '''
 
     #bPrune = g_binary
     bPrune = True
@@ -436,14 +317,29 @@ if __name__=="__main__":
         print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
-            (bf, bl) = loadFeatures(datasets[i]['benign'][k])
+            (bf, bl) = loadBenignData("features_droidcat_byfirstseen/"+datasets[i]['benign'][k])
             if g_binary:
                 bft.update (bf)
                 blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
-            (mf, ml) = loadFeatures(datasets[i]['malware'][k])
+            (mf, ml) = loadMalwareNoFamily("features_droidcat_byfirstseen/"+datasets[i]['malware'][k])
             bft.update (mf)
-            blt.update (ml)
+
+            fnFam = "../ML/md5families/"+datasets[i]['malware'][k]+".txt"
+            if datasets[i]['malware'][k] == 'obfmg2017':
+                fnFam = "../ML/md5families/obfmg-afonso2017.txt"
+                #print fnFam
+            mfam = get_families (fnFam)
+            newfam  = {}
+            newfam.update(ml)
+            for (app,date) in ml.keys():
+                if app in mfam.keys():
+                    newfam[(app,date)] = mfam[app]
+                    #print "-->" + newfam[(app,date)]
+                else:
+                    print "error finding family for " % app
+            #print newfam
+            blt.update ( newfam )
 
         if g_binary:
             for key in blt:
@@ -451,52 +347,8 @@ if __name__=="__main__":
                     blt[key] = 'MALICIOUS'
         else:
             pruneMinorMalware(bft, blt)
-            g_fnames=set()
 
-            for key in bft.keys():
-                fnames = [ft for ft in bft[key].keys()]
-                g_fnames = g_fnames.union (set(fnames))
-
-            print >> sys.stderr, 'loaded %d feature vectors, %d labels, each sample having %d features' % (len (bft), len(blt), len(g_fnames))
-
-        '''
-        pruneMinorMalware(bft, blt)
-        g_fnames=set()
-
-        for key in bft.keys():
-            fnames = [ft for ft in bft[key].keys()]
-            g_fnames = g_fnames.union (set(fnames))
-
-        print >> sys.stderr, 'loaded %d feature vectors, %d labels, each sample having %d features' % (len (bft), len(blt), len(g_fnames))
-
-        if g_binary:
-            for key in blt:
-                if blt[key] != 'BENIGN':
-                    blt[key] = 'MALICIOUS'
-        '''
-
-        resetframe()
-
-        '''
-        fhx = file('droidsieve_feature_names.txt', 'w+')
-        for name in g_fnames:
-            print >> fhx, name
-        fhx.close()
-        '''
-
-        _bft = _regularizeFeatures ( bft )
-
-        ''' debugging ...
-        for x in bft:
-            if x[0]=="caf3505926f01934e5f03022105c0b1b":
-                print x, bft[x]
-
-        for x in _bft:
-            if x[0]=="caf3505926f01934e5f03022105c0b1b":
-                print x, _bft[x]
-        '''
-
-        predict(_getfvec(_bft),blt, fh, i)
+        predict(bft, blt, fh, i)
 
     fh.flush()
     fh.close()
