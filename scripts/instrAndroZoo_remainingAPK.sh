@@ -21,25 +21,33 @@ timeout() {
 
 s=0
 #for year in 2016 2015 2014
-for year in 2016
+#for year in 2013 2011 2010
+#for year in "benign-2016"
+#for year in "benign-2010" "benign-2011" "benign-2012" "benign-2013"
+for year in 2011
 do
-    local c=0
+    logfile=log.instr.androzoo.$year
+    >$logfile
+    c=0
     echo "================================="
     echo "instrument year $year ..."
     echo "================================="
     echo
     echo
-    >log.instr.virusshare.$year
 
-    tgtdir=/home/hcai/testbed/cg.instrumented/VirusShare/$year
+    tgtdir=/home/hcai/testbed/cg.instrumented/AndroZoo/${year}-new
     mkdir -p $tgtdir
-    for apk in /home/hcai/Downloads/VirusShare/$year/*.apk
+    for apk in /home/hcai/Downloads/AndroZoo/$year/used/*.apk; 
     do
         if [ -s $tgtdir/${apk##*/} ];then
             echo "$apk already instrumented, skipped"
             continue
         fi
-        timeout 3600 "cgInstr.sh $apk $tgtdir 2>/dev/null >>log.instr.virusshare.$year"
+        if [ `grep -a -c ${apk##*/} remaining.apks` -lt 1 ];then
+            echo "$apk not in the remaining list, skipped"
+            continue
+        fi
+        timeout 1800 "cgInstr.sh $apk $tgtdir >> $logfile"
         echo "$apk instrumented."
         ((c+=1))
     done
@@ -52,3 +60,4 @@ done
 echo "$s apps in total instrumented successfully."
 
 exit $s
+

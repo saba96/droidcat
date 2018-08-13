@@ -90,7 +90,7 @@ s=0
 #for cate in 2016 2015 2014
 #for cate in 2013 2011 2010
 #for cate in "benign-2016"
-for cate in 2010
+for cate in "2011-new"
 do
     c=0
     echo "================================="

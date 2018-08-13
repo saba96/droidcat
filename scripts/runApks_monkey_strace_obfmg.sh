@@ -27,10 +27,10 @@ tryInstall()
 
     #srcdir=/home/hcai/testbed/$cate
     #srcdir=/home/hcai/Downloads/AndroZoo/$cate/BENIGN
-    srcdir=/home/hcai/Downloads/AndroZoo/$cate/used
-    finaldir=$srcdir
+    srcdir=/home/hcai/testbed/input/
+    finaldir="$srcdir/$cate"
 
-    OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/${cate}-new
+    OUTDIR=/home/hcai/testbed/straceLogs/$cate
     mkdir -p $OUTDIR
 
 	k=1
@@ -45,7 +45,7 @@ tryInstall()
         #if [ "$flag" != true ];then
         #    continue
         #fi
-        if [ ! -s /home/hcai/testbed/androZooLogs/${cate}-new/${fnapk##*/}.logcat ];then
+        if [ ! -s /home/hcai/testbed/PraguardMalgenomeLogs/${fnapk##*/}.logcat ];then
             continue
         fi
 
@@ -123,8 +123,10 @@ s=0
 #for cate in "newmalwareall/all"
 #for cate in "benign-2014"
 #for cate in 2013 2012
-#for cate in "benign-2010"
-for cate in "2011"
+
+
+
+for cate in "PraguardMalgenome"
 do
     c=0
     echo "================================="
