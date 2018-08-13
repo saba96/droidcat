@@ -65,6 +65,9 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidcat_VSGP_full.cat")
     plot_one (plt, "roc_curves/pickle.droidcat_ZOZO.cat")
     plot_one (plt, "roc_curves/pickle.droidcat_ZOZO_full.cat")
+
+
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO.cat")
     '''
 
     plot_one (plt, "roc_curves/pickle.afonso_PRZO.cat")
@@ -72,6 +75,8 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.afonso_ZOZO.cat")
 
     plot_one (plt, "roc_curves/pickle.droidsieve_PRZO.cat")
+    plot_one (plt, "roc_curves/pickle.droidsieve_VSGP.cat")
+    plot_one (plt, "roc_curves/pickle.droidsieve_ZOZO.cat")
 
     #print "detection"
     '''
@@ -83,6 +88,10 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidcat_VSGP_full.det")
     plot_one (plt, "roc_curves/pickle.droidcat_ZOZO.det")
     plot_one (plt, "roc_curves/pickle.droidcat_ZOZO_full.det")
+
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1213.det")
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1415.det")
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1617.det")
     '''
 
     plot_one (plt, "roc_curves/pickle.afonso_PRZO1213.det")
@@ -94,6 +103,8 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1213.det")
     plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1415.det")
     plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1617.det")
+    plot_one (plt, "roc_curves/pickle.droidsieve_VSGP.det")
+    plot_one (plt, "roc_curves/pickle.droidsieve_ZOZO.det")
 
 
     plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
