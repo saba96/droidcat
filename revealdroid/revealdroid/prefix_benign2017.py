@@ -20,8 +20,8 @@ for f in os.listdir(rootdir):
     for cat in cates:
         if basename.startswith(cat):
             newname = basename.replace(cat, 'benign2017')
-            #os.system('cp ' + fullf + ' /tmp/apiusage_benign2017')
-            #print "will mv to " + (fpath + os.sep + newname)
+            os.system('cp ' + fullf + ' /tmp/apiusage_benign2017')
+            print "will mv to " + (fpath + os.sep + newname)
             os.system('mv ' + fullf + ' ' + (fpath+os.sep+newname))
             break
 
