@@ -24,10 +24,13 @@ import sys
 import string
 
 import inspect, re
+import copy
+import pickle
 
 g_binary = False # binary or multiple-class classification
-dataprefix="/home/hcai/Downloads/rd_workspace/revealdroid/"
-g_names=set()
+dataprefix="/home/hcai/Downloads/rd_workspace/revealdroid/pickled/pickle."
+g_fnames=set()
+featureframe = {}
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -94,14 +97,6 @@ def predict(bf1, bl1, bf2, bl2, fh):
     for item in testlabels:
         uniqLabels.add (item)
 
-        start_time = time.time()
-        if clf_type == 's':
-            clf = SVC()
-        elif clf_type == 'l':
-            clf = LinearSVC(C=0.01,penalty="l1",dual=False)
-        elif clf_type == 'r':
-            clf = LogisticRegression(max_iter=1000)
-
     #models = (RandomForestClassifier(n_estimators = 100, random_state=0), )#ExtraTreesClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
     models = (SVC(), LinearSVC(C=0.01, penalty='l1', dual=False), LogisticRegression(max_iter=1000))
 
@@ -128,90 +123,12 @@ def predict(bf1, bl1, bf2, bl2, fh):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
 
-def retrieveFeature(datatag, apk):
-    basename = os.path.basename(apk)
-    prefix_name, ext = os.path.splitext(basename)
-
-    def populate_fv(fv,fnfeature):
-        f = open(fnfeature,'r')
-        for line in f:
-            k,v = line.strip().split(',')
-            fv[k] = v
-        return fv
-
-    fv = dict() # initialize feature vector when first used
-
-    PAPI_DIR=dataprefix+'data/apiusage/'
-    '''
-    papi_f = None
-    for f in os.listdir(PAPI_DIR):
-        fnfeature=datatag+'_'+prefix_name + '_apiusage.txt'
-        print "locating %s ..." % (fnfeature)
-        if f.endswith(fnfeature):
-            print 'Found matching papi file: {}'.format(f)
-            papi_f=f
-            break
-    fv = populate_fv(fv,papi_f,PAPI_DIR)
-    #print fv
-    '''
-
-    fnapifeature=PAPI_DIR+os.sep+datatag+'_'+prefix_name + '_apiusage.txt'
-    if os.path.isfile(fnapifeature):
-        print 'Found matching papi file: {}'.format(fnapifeature)
-        fv = populate_fv(fv,fnapifeature)
-
-    REF_DIR=dataprefix+'../android-reflection-analysis/data/'
-    '''
-    ref_f = None
-    for f in os.listdir(REF_DIR):
-        if f.endswith(prefix_name + '_reflect.txt'):
-            print 'Found matching ref file: {}'.format(f)
-            ref_f = f
-            break
-    fv = populate_fv(fv,ref_f,REF_DIR)
-    #print fv
-    '''
-    fnreffeature=REF_DIR+os.sep+datatag+'_'+prefix_name + '_reflect.txt'
-    if os.path.isfile(fnreffeature):
-        print 'Found matching ref file: {}'.format(fnreffeature)
-        fv = populate_fv(fv,fnreffeature)
-
-    NEC_DIR='data/native_external_calls/'
-    '''
-    nec_f = None
-    for f in os.listdir(NEC_DIR):
-        if f.endswith(prefix_name + '_nec.txt'):
-            print 'Found matching nec file: {}'.format(f)
-            nec_f=f
-            break
-    fv = populate_fv(fv,nec_f,NEC_DIR)
-    #print fv
-    '''
-    fnnecfeature=NEC_DIR+os.sep+datatag+'_'+prefix_name + '_nec.txt'
-    if os.path.isfile(fnnecfeature):
-        print 'Found matching nec file: {}'.format(fnnecfeature)
-        fv = populate_fv(fv,fnnecfeature)
-
-    return fv
-
 def loadFeatures(datatag, label):
-    apks=[]
-    for line in file ('/home/hcai/gitrepo/droidcat//ML/samplelists/apks.'+datatag).readlines():
-        apks.append (line.lstrip('\r\n').rstrip('\r\n'))
-
-    global g_names
+    global g_fnames
     sample_features = {}
     sample_labels = {}
-    for apk in apks:
-        sample_features[apk] = retrieveFeature(datatag,apk)
-        for name in sample_features[apk].keys():
-            g_names.add (name)
-        sample_labels[apk] = label
 
-    '''
-    f = open(tagprefix+datatag, 'rb')
-    sample_features = {}
-    sample_labels = {}
+    f = open(dataprefix+datatag, 'rb')
 
     try:
         fdict = pickle.load (f)
@@ -219,11 +136,32 @@ def loadFeatures(datatag, label):
     except (EOFError, pickle.UnpicklingError):
         pass
 
-    f.close()
-    '''
+    for key in fdict.keys():
+        sample_features[key] = fdict[key]
+        fnames = [ft.lower().lstrip().rstrip() for ft in fdict[key].keys()]
+        g_fnames = g_fnames.union (set(fnames))
 
-    print >> sys.stderr, 'loaded from %s: %d feature vectors; feature vector length: %d' % (datatag, len (sample_features), len(g_names))
+        sample_labels[key] = label
+
+    f.close()
+
+    print >> sys.stderr, 'loaded from %s: %d feature vectors; feature vector length: %d' % (datatag, len (sample_features), len(g_fnames))
     return (sample_features, sample_labels)
+
+def regularizeFeatures(rawfeatures):
+    ret={}
+    for md5 in rawfeatures.keys():
+        newfdict = featureframe
+        for fname in rawfeatures[md5].keys():
+            #assert fname in newfdict.keys()
+            newfdict[fname] = rawfeatures[md5][fname]
+        ret[md5] = newfdict
+    return ret
+
+def resetframe():
+    global featureframe
+    for name in g_fnames:
+        featureframe[name] = 0.0
 
 def getfvec(fdict):
     fvecs=dict()
@@ -276,15 +214,6 @@ if __name__=="__main__":
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
     '''
 
-    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
-                  {"benign":["zoobenign2011"], "malware":["zoo2011"]},
-                  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
-                  {"benign":["zoobenign2013"], "malware":["vs2013"]},
-                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
-                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
-                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
-
     '''
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2012"], "malware":["zoo2012"]},
@@ -298,6 +227,20 @@ if __name__=="__main__":
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
     '''
 
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
+                  {"benign":["zoobenign2011"], "malware":["zoo2011"]},
+                  {"benign":["zoobenign2012"], "malware":["zoo2012"]},
+                  {"benign":["zoobenign2013"], "malware":["vs2013"]},
+                  {"benign":["zoobenign2014"], "malware":["vs2014"]},
+                  {"benign":["zoobenign2015"], "malware":["vs2015"]},
+                  {"benign":["zoobenign2016"], "malware":["vs2016"]},
+                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+
+    '''
+    datasets = [  {"benign":["zoobenign2014"], "malware":["vs2014"]},
+                  {"benign":["benign2017"], "malware":["zoo2011"]} ]
+    '''
+
     #bPrune = g_binary
     bPrune = True
 
@@ -305,6 +248,7 @@ if __name__=="__main__":
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
     for i in range(0, len(datasets)-1):
+        g_fnames=set()
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
         (bft, blt) = ({}, {})
@@ -331,7 +275,18 @@ if __name__=="__main__":
                 bfp.update (mf)
                 blp.update (ml)
 
-            predict(getfvec(bft),blt, getfvec(bfp),blp, fh)
+            resetframe()
+
+            _bft = regularizeFeatures ( bft )
+            _bfp = regularizeFeatures ( bfp )
+
+            predict(getfvec(_bft),blt, getfvec(_bfp),blp, fh)
+
+            fh = file ('revealdroid_features_names.txt', 'w+')
+            for name in g_fnames:
+                print >> fh, name
+
+            fh.close()
 
     fh.flush()
     fh.close()

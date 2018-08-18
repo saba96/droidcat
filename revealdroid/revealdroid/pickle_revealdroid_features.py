@@ -44,6 +44,8 @@ def retrieveFeature(datatag, apk):
         f = open(fnfeature,'r')
         for line in f:
             k,v = line.strip().split(',')
+            k = k.lower().lstrip().rstrip()
+            v = v.lower().lstrip().rstrip()
             fv[k] = v
         return fv
 
@@ -79,7 +81,7 @@ def retrieveFeature(datatag, apk):
     fv = populate_fv(fv,ref_f,REF_DIR)
     #print fv
     '''
-    fnreffeature=REF_DIR+os.sep+datatag+'_'+prefix_name + '_reflect.txt'
+    fnreffeature=REF_DIR+os.sep+prefix_name + '_reflect.txt'
     if os.path.isfile(fnreffeature):
         print 'Found matching ref file: {}'.format(fnreffeature)
         fv = populate_fv(fv,fnreffeature)
@@ -95,10 +97,11 @@ def retrieveFeature(datatag, apk):
     fv = populate_fv(fv,nec_f,NEC_DIR)
     #print fv
     '''
-    fnnecfeature=NEC_DIR+os.sep+datatag+'_'+prefix_name + '_nec.txt'
+    fnnecfeature=NEC_DIR+os.sep+prefix_name + '_nec.txt'
     if os.path.isfile(fnnecfeature):
         print 'Found matching nec file: {}'.format(fnnecfeature)
         fv = populate_fv(fv,fnnecfeature)
+        del fv['apk_name']
 
     return fv
 
@@ -137,10 +140,13 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+    '''
+    datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2011"]} ]
+    '''
 
     fh = sys.stdout
 
-    for i in range(0, len(datasets)-1):
+    for i in range(0, len(datasets)):
         for k in range(0, len(datasets[i]['benign'])):
             pickleFeatures(datasets[i]['benign'][k], "BENIGN")
         for k in range(0, len(datasets[i]['malware'])):
