@@ -5,7 +5,7 @@ from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,
 
 import matplotlib.pyplot as plt
 
-import numpy as np
+import numpy
 import pickle
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectFromModel
@@ -19,7 +19,7 @@ def roc_bydate(g_binary, model, trainfeatures, trainlabels, testfeatures, testla
     labels=set()
     for l in trainlabels: labels.add(l)
     for l in testlabels: labels.add(l)
-    labels = np.array(list(labels))
+    labels = numpy.array(list(labels))
     trainlabels = label_binarize(trainlabels, classes=labels)
     testlabels = label_binarize(testlabels, classes=labels)
     n_classes = len(labels)
@@ -51,7 +51,7 @@ def roc_bydate(g_binary, model, trainfeatures, trainlabels, testfeatures, testla
     pickle.dump( (fpr, tpr, roc_auc), fhTarget )
     fhTarget.close()
 
-def processingFeatures(trainfeatures, trainlabels, testfeatures, testlabels):
+def processingFeatures(model, trainfeatures, trainlabels, testfeatures, testlabels):
     features = numpy.concatenate ( (trainfeatures, testfeatures), axis=0 )
     print "before feature scaling and selection: %d samples each with %d features" % (len(features), len(features[0]))
     print features[0]
