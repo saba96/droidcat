@@ -27,6 +27,8 @@ import inspect, re
 import copy
 import pickle
 
+HOLDOUT_RATE=0.33
+
 g_binary = False # binary or multiple-class classification
 dataprefix="/home/hcai/Downloads/rd_workspace/revealdroid/pickled/pickle."
 g_fnames=set()
