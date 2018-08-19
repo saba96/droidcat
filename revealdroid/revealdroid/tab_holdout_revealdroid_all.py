@@ -204,7 +204,7 @@ def loadFeatures(datatag, label):
 def regularizeFeatures(rawfeatures):
     ret={}
     for md5 in rawfeatures.keys():
-        newfdict = featureframe
+        newfdict = copy.deepcopy(featureframe)
         for fname in rawfeatures[md5].keys():
             #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]

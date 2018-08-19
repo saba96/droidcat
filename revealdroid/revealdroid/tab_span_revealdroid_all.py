@@ -151,7 +151,7 @@ def loadFeatures(datatag, label):
 def regularizeFeatures(rawfeatures):
     ret={}
     for md5 in rawfeatures.keys():
-        newfdict = featureframe
+        newfdict = copy.deepcopy(featureframe)
         for fname in rawfeatures[md5].keys():
             #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]
@@ -282,7 +282,7 @@ if __name__=="__main__":
 
             predict(getfvec(_bft),blt, getfvec(_bfp),blp, fh)
 
-            fhfeatures = file ('revealdroid_features_names-train-on-'+datasets[i]+'-test-on-'+datasets[j]+'.txt', 'w+')
+            fhfeatures = file ('revealdroid_features_names-train-on-'+str(i)+'-test-on-'+str(j)+'.txt', 'w+')
             for name in g_fnames:
                 print >> fhfeatures, name
 
