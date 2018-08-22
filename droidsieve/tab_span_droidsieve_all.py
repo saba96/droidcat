@@ -26,6 +26,8 @@ import inspect, re
 import pickle
 import copy
 
+from common import *
+
 g_binary = False # binary or multiple-class classification
 featureframe = {}
 g_fnames = set()
@@ -38,6 +40,7 @@ def varname(p):
             return m.group(1)
 
 def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
+    trainfeatures, testfeatures  = processingFeatures(model, trainfeatures, trainlabels, testfeatures, testlabels)
 
     print >> sys.stdout, "%d samples for training, %d samples for testing" % (len (trainfeatures), len(testfeatures))
 
@@ -96,7 +99,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     for item in testlabels:
         uniqLabels.add (item)
 
-    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (ExtraTreesClassifier(n_estimators=1000), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     print >> fh, '\t'.join(uniqLabels)
 
@@ -166,7 +169,7 @@ def _loadFeatures(datatag):
 def _regularizeFeatures(rawfeatures):
     ret={}
     for md5 in rawfeatures.keys():
-        newfdict = featureframe
+        newfdict = copy.deepcopy(featureframe)
         for fname in rawfeatures[md5].keys():
             #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]
@@ -208,6 +211,7 @@ def adapt (featureDict, labelDict):
 
 def resetframe():
     global featureframe
+    featureframe={}
     for name in g_fnames:
         featureframe[name] = 0.0
 

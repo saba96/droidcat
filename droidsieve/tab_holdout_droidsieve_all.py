@@ -195,7 +195,7 @@ def predict(f, l, fh):
     for item in labels:
         uniqLabels.add (item)
 
-    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (ExtraTreesClassifier(n_estimators=1000), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     print >> fh, '\t'.join(uniqLabels)
 
@@ -310,6 +310,7 @@ def adapt (featureDict, labelDict):
 
 def resetframe():
     global featureframe
+    featureframe={}
     for name in g_fnames:
         featureframe[name] = 0.0
 
@@ -335,6 +336,7 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
+    '''
 
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -344,6 +346,8 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+
+    '''
     datasets = [ \
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
                 {"benign":["zoobenign2015", "zoobenign2016"], "malware":["obfmg"]},
@@ -352,13 +356,13 @@ if __name__=="__main__":
 
     datasets = [  {"benign":["zoo2011", "zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
-    '''
 
     datasets = [ \
                 {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg"]},
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg"]},
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
                 ]
+    '''
 
     #bPrune = g_binary
     bPrune = True
@@ -380,7 +384,7 @@ if __name__=="__main__":
             bft.update (mf)
             if g_binary:
                 for md5 in ml.keys():
-                    print "%s\t%s" % (md5, ml[md5])
+                    #print "%s\t%s" % (md5, ml[md5])
                     if ml[md5] != "BENIGN":
                         ml[md5] = "MALICIOUS"
             '''

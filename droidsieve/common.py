@@ -3,8 +3,6 @@ from sklearn.preprocessing import label_binarize
 
 from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score,auc,roc_curve
 
-import matplotlib.pyplot as plt
-
 import numpy
 import pickle
 from sklearn.preprocessing import StandardScaler

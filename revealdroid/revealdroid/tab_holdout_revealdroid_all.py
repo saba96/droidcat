@@ -213,6 +213,7 @@ def regularizeFeatures(rawfeatures):
 
 def resetframe():
     global featureframe
+    featureframe={}
     for name in g_fnames:
         featureframe[name] = 0.0
 
@@ -300,7 +301,8 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)):
+    #for i in range(0, len(datasets)):
+    for i in range(1, len(datasets)):
         g_fnames=set()
         print "same-period hold-out evaluation: work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})

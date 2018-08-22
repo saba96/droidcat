@@ -26,6 +26,7 @@ from configs import *
 from featureLoader import *
 
 import pickle
+from common import *
 
 g_binary = False # binary or multiple-class classification
 tagprefix="../afonso/afonso.pickle."
@@ -38,6 +39,7 @@ def varname(p):
 
 # hold-out 20% evaluation
 def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
+    trainfeatures, testfeatures  = processingFeatures(model, trainfeatures, trainlabels, testfeatures, testlabels)
 
     print >> sys.stdout, "%d samples for training, %d samples for testing" % (len (trainfeatures), len(testfeatures))
 
