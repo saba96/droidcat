@@ -29,7 +29,7 @@ import pickle
 import copy
 from sklearn.feature_selection import SelectFromModel
 
-HOLDOUT_RATE=0.33
+HOLDOUT_RATE=0.995
 
 g_binary = False # binary or multiple-class classification
 featureframe = {}

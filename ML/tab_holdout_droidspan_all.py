@@ -24,10 +24,11 @@ import inspect, re
 
 from configs import *
 from featureLoader import *
+from common import *
 
 g_binary = False # binary or multiple-class classification
 
-HOLDOUT_RATE=0.33
+HOLDOUT_RATE=0.1
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -74,6 +75,8 @@ def holdout(model, features, labels):
             continue
         trainfeatures.append(features[l])
         trainlabels.append(labels[l])
+
+    #trainfeatures, testfeatures  = processingFeatures(model, trainfeatures, trainlabels, testfeatures, testlabels)
 
     print >> sys.stdout, "%d samples for training, %d samples  held out will be used for testing" % (len (trainfeatures), len(testfeatures))
 
@@ -149,10 +152,10 @@ def predict(f, l, fh):
     #models = (ExtraTreesClassifier(n_estimators=128, random_state=0),  AdaBoostClassifier(n_estimators=120), GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
     #models = (SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
-    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
+    #models = (RandomForestClassifier(n_estimators = 128, random_state=0), )#SVC(kernel='rbf'), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), GaussianNB(), MultinomialNB(), BernoulliNB())
 
     #models = (RandomForestClassifier(n_estimators = 120, random_state=0), ExtraTreesClassifier(n_estimators=100), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
-    models = (ExtraTreesClassifier(n_estimators=120), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
+    models = (RandomForestClassifier(n_estimators = 128, random_state=0), ExtraTreesClassifier(n_estimators=1000), )#GradientBoostingClassifier(n_estimators=120), BaggingClassifier (n_estimators=120), SVC(kernel='linear'), DecisionTreeClassifier(random_state=None), KNeighborsClassifier(n_neighbors=5), MultinomialNB())
 
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
@@ -230,6 +233,7 @@ if __name__=="__main__":
                   {"benign":["zoobenign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoobenign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017"]} ]
+    '''
 
     datasets = [ {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -239,10 +243,10 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
+
     '''
-
     datasets = [  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
-
+    '''
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
@@ -259,7 +263,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        predict(bft,blt, fh)
+        for i in range(0,10):
+            predict(bft,blt, fh)
 
     fh.flush()
     fh.close()

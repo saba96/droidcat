@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import precision_score,recall_score,f1_score,roc_auc_score,accuracy_score
 
 from sklearn.metrics import confusion_matrix
+from sklearn.cross_validation import cross_val_score
 
 #from sklearn.mixture import GaussianMixture
 #from sklearn.mixture import BayesianGaussianMixture
@@ -33,31 +34,12 @@ def varname(p):
         if m:
             return m.group(1)
 
-def span_detect(model, trainfeatures, trainlabels, testfeatures, testlabels):
+def cv(model, features, labels):
+    cvprec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='precision_weighted')
+    cvrec = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='recall_weighted')
+    cvf1 = cross_val_score(estimator=model, X=features, y=labels, cv=10, scoring='f1_weighted')
 
-    print >> sys.stdout, "%d samples for training, %d samples for testing" % (len (trainfeatures), len(testfeatures))
-
-    model.fit ( trainfeatures, trainlabels )
-
-    y_pred = model.predict ( testfeatures )
-
-    if g_binary:
-        prec=precision_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
-        rec=recall_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
-        f1=f1_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
-    else:
-        prec=precision_score(testlabels, y_pred, average='weighted')
-        rec=recall_score(testlabels, y_pred, average='weighted')
-        f1=f1_score(testlabels, y_pred, average='weighted')
-
-    acc=accuracy_score( testlabels, y_pred )
-
-    #print "precision=%f, recall=%f, f1=%f, acc=%f" % (prec, rec, f1, acc)
-
-    #return confusion_matrix(testlabels, predicted_labels, labels=list(uniqLabels))
-    #return confusion_matrix(sublabels, predicted_labels, labels=big_families)
-    return (prec, rec, f1, acc)
-
+    return (numpy.average(cvprec), numpy.average(cvrec), numpy.average(cvf1), 0)
 
 def selectFeatures(features, selection):
     featureSelect=[idx-1 for idx in selection]
@@ -66,22 +48,16 @@ def selectFeatures(features, selection):
         selectedfeatures.append ( featureRow[ featureSelect ] )
     return selectedfeatures
 
-def predict(bf1, bl1, bf2, bl2, fh):
-    (trainfeatures, trainlabels) = adapt (bf1, bl1)
-    (testfeatures, testlabels) = adapt (bf2, bl2)
+def predict(f, l, fh):
+    (features, labels) = adapt (f, l)
 
-    print "======== in training dataset ======="
-    l2c = malwareCatStat(trainlabels)
-    for lab in l2c.keys():
-        print "%s\t%s" % (lab, l2c[lab])
-
-    print "======== in testing dataset ======="
-    l2c = malwareCatStat(testlabels)
+    print "======== in dataset ======="
+    l2c = malwareCatStat(labels)
     for lab in l2c.keys():
         print "%s\t%s" % (lab, l2c[lab])
 
     uniqLabels = set()
-    for item in testlabels:
+    for item in labels:
         uniqLabels.add (item)
 
     if mode=="family":
@@ -107,7 +83,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     model2ret={}
     for model in models:
         print >> fh, 'model ' + str(model)
-        ret = span_detect (model, trainfeatures, trainlabels, testfeatures, testlabels)
+        ret = cv(model, features, labels)
         model2ret[str(model)] = ret
 
     tlabs=('precision', 'recall', 'F1', 'accuracy')
@@ -148,10 +124,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
                   {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
 
-    datasets = [  {"benign":["zoobenign2015"], "malware":["vs2015"]},
-                  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
+    '''
+    datasets = [  {"benign":["zoobenign2011"], "malware":["zoo2011"]} ]
     '''
 
     #bPrune = g_binary
@@ -164,9 +139,8 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)-1):
-        # training dataset
-        #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
+    for i in range(0, len(datasets)):
+        print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadMamaFeatures(datasets[i]['benign'][k], mode, "BENIGN")
@@ -177,22 +151,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        for j in range(i+1, len(datasets)):
-            print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
-            # testing dataset
-            (bfp, blp) = ({}, {})
-            for k in range(0, len(datasets[j]['benign'])):
-                (bf, bl) = loadMamaFeatures(datasets[j]['benign'][k], mode, "BENIGN")
-                bfp.update (bf)
-                blp.update (bl)
-            for k in range(0, len(datasets[j]['malware'])):
-                (mf, ml) = loadMamaFeatures(datasets[j]['malware'][k], mode, "MALICIOUS")
-                bfp.update (mf)
-                blp.update (ml)
-
-
-            predict(bft,blt, bfp,blp, fh)
+        predict(bft, blt, fh)
 
     fh.flush()
     fh.close()
