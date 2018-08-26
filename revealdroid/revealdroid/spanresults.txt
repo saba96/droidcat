@@ -1,0 +1,450 @@
+loaded from zoobenign2010: 1344 feature vectors; feature vector length: 33152
+loaded from zoo2010: 1877 feature vectors; feature vector length: 55256
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ...
+loaded from zoobenign2011: 1757 feature vectors; feature vector length: 155183
+loaded from zoo2011: 1303 feature vectors; feature vector length: 167693
+feature vector length=167693
+feature vector length=167693
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1757
+MALICIOUS   1303
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 3060 samples for testing
+
+
+
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1135: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+  /usr/local/lib/python2.7/dist-packages/sklearn/metrics/classification.py:1135: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+    'precision', 'predicted', average, warn_for)
+    model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+         intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+              multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+                   verbose=0)
+    3221 samples for training, 3060 samples for testing
+    model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+              intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                        penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                                  verbose=0, warm_start=False)
+    3221 samples for training, 3060 samples for testing
+    precision
+    0.181320111923  0.181320111923  0.181320111923  
+    recall
+    0.425816993464  0.425816993464  0.425816993464  
+    F1
+    0.25433854801   0.25433854801   0.25433854801   
+    accuracy
+    0.425816993464  0.425816993464  0.425816993464  
+
+
+===========================
+
+
+loaded from zoobenign2010: 1344 feature vectors; feature vector length: 33152
+loaded from zoo2010: 1877 feature vectors; feature vector length: 55256
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ...
+loaded from zoobenign2011: 1757 feature vectors; feature vector length: 155183
+loaded from zoo2011: 1303 feature vectors; feature vector length: 167693
+feature vector length=167693
+feature vector length=167693
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1757
+MALICIOUS   1303
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 3060 samples for testing
+
+
+model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+               verbose=0)
+3221 samples for training, 3060 samples for testing
+model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                    penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                              verbose=0, warm_start=False)
+3221 samples for training, 3060 samples for testing
+precision
+0.770976589108  0.825371066666  0.830788017926  
+recall
+0.771568627451  0.81862745098   0.825163398693  
+F1
+0.771192386807  0.819564072955  0.826020459808  
+accuracy
+0.771568627451  0.81862745098   0.825163398693  
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ...
+loaded from zoobenign2012: 1845 feature vectors; feature vector length: 266255
+loaded from zoo2012: 1945 feature vectors; feature vector length: 475390
+dfeature vector length=475390
+feature vector length=475390
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1845
+MALICIOUS   1945
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 3790 samples for testing
+
+
+===== 
+hcai@hcai-dl580:~/Downloads/rd_workspace/revealdroid$ time python tab_span_revealdroid_all.py 
+loaded from zoobenign2010: 1344 feature vectors; feature vector length: 33152
+loaded from zoo2010: 1877 feature vectors; feature vector length: 55256
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2011'], 'malware': ['zoo2011']} ...
+loaded from zoobenign2011: 1757 feature vectors; feature vector length: 155183
+loaded from zoo2011: 1303 feature vectors; feature vector length: 167693
+feature vector length=167693
+feature vector length=167693
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1757
+MALICIOUS   1303
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 3060 samples for testing
+
+
+model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+               verbose=0)
+3221 samples for training, 3060 samples for testing
+model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                    penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                              verbose=0, warm_start=False)
+3221 samples for training, 3060 samples for testing
+precision
+0.770976589108  0.825371066666  0.830788017926  
+recall
+0.771568627451  0.81862745098   0.825163398693  
+F1
+0.771192386807  0.819564072955  0.826020459808  
+accuracy
+0.771568627451  0.81862745098   0.825163398693  
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2012'], 'malware': ['zoo2012']} ...
+loaded from zoobenign2012: 1845 feature vectors; feature vector length: 266255
+loaded from zoo2012: 1945 feature vectors; feature vector length: 475390
+dfeature vector length=475390
+feature vector length=475390
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1845
+MALICIOUS   1945
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 3790 samples for testing
+
+model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+               verbose=0)
+3221 samples for training, 3790 samples for testing
+model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                    penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                              verbose=0, warm_start=False)
+3221 samples for training, 3790 samples for testing
+precision
+0.524323068399  0.735124825657  0.669807305428  
+recall
+0.511081794195  0.726385224274  0.659366754617  
+F1
+0.478544449887  0.724835732747  0.656066965052  
+accuracy
+0.511081794195  0.726385224274  0.659366754617  
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ...
+loaded from zoobenign2013: 1568 feature vectors; feature vector length: 584448
+loaded from vs2013: 1139 feature vectors; feature vector length: 584467
+
+
+Killed
+
+real    1203m5.008s
+user    815m27.916s
+sys 123m23.136s
+
+
+===
+loaded from zoobenign2010: 1344 feature vectors; feature vector length: 33152
+loaded from zoo2010: 1877 feature vectors; feature vector length: 55256
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ...
+loaded from zoobenign2013: 1568 feature vectors; feature vector length: 223564
+loaded from vs2013: 1139 feature vectors; feature vector length: 223632
+feature vector length=223632
+feature vector length=223632
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1568
+MALICIOUS   1139
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 2707 samples for testing
+model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+               verbose=0)
+3221 samples for training, 2707 samples for testing
+model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                    penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                              verbose=0, warm_start=False)
+3221 samples for training, 2707 samples for testing
+precision
+0.405603540056  0.777587136234  0.710725307688  
+recall
+0.469523457702  0.778721832287  0.706686368674  
+F1
+0.420023470002  0.777080954754  0.707927057461  
+accuracy
+0.469523457702  0.778721832287  0.706686368674  
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+loaded from zoobenign2014: 2953 feature vectors; feature vector length: 452387
+loaded from vs2014: 1337 feature vectors; feature vector length: 529552
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^CTraceback (most recent call last):
+  File "tab_span_revealdroid_all.py", line 289, in <module>
+  ^C    predict(getfvec(_bft),blt, getfvec(_bfp),blp, fh)
+
+  ^C^C^CException KeyboardInterrupt in <module 'threading' from '/usr/lib/python2.7/threading.pyc'> ignored
+  ^C^C^CError in sys.exitfunc:
+  ^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C
+  ^C^C^C^C^\^\
+  Quit (core dumped)
+
+  real  646m53.317s
+  user  415m34.200s
+  sys   52m21.728s
+
+
+
+===========================
+
+
+loaded from zoobenign2010: 1344 feature vectors; feature vector length: 33152
+loaded from zoo2010: 1877 feature vectors; feature vector length: 55256
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+loaded from zoobenign2014: 2953 feature vectors; feature vector length: 452387
+loaded from vs2014: 1337 feature vectors; feature vector length: 529552
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+feature vector length=529552
+feature vector length=529552
+
+
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  2953
+MALICIOUS   1337
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 4290 samples for testing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+               verbose=0)
+3221 samples for training, 4290 samples for testing
+model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                    penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                              verbose=0, warm_start=False)
+3221 samples for training, 4290 samples for testing
+precision
+0.567654643 0.679502309351  0.594504200299  
+recall
+0.57668997669   0.654079254079  0.524475524476  
+F1
+0.571889537252  0.662952942288  0.541977959141  
+accuracy
+0.57668997669   0.654079254079  0.524475524476  
+train on {'benign': ['zoobenign2010'], 'malware': ['zoo2010']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+loaded from zoobenign2015: 1178 feature vectors; feature vector length: 313464
+loaded from vs2015: 1451 feature vectors; feature vector length: 664777
+feature vector length=664777
+feature vector length=664777
+======== in training dataset =======
+BENIGN  1344
+MALICIOUS   1877
+======== in testing dataset =======
+BENIGN  1178
+MALICIOUS   1451
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+3221 samples for training, 2629 samples for testing
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C
+
+^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^CQuit (core dumped)
+
+real    1246m51.162s
+user    896m26.328s
+sys 190m57.004s
+
+
+==========================
+
+
+loaded from zoobenign2013: 1568 feature vectors; feature vector length: 186349
+loaded from vs2013: 1139 feature vectors; feature vector length: 186431
+train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['zoobenign2014'], 'malware': ['vs2014']} ...
+
+
+
+loaded from zoobenign2014: 2953 feature vectors; feature vector length: 502809
+loaded from vs2014: 1337 feature vectors; feature vector length: 569914
+
+
+
+
+
+feature vector length=569914
+feature vector length=569914
+======== in training dataset =======
+BENIGN  1568
+MALICIOUS   1139
+======== in testing dataset =======
+BENIGN  2953
+MALICIOUS   1337
+BENIGN  MALICIOUS
+model SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+      tol=0.001, verbose=False)
+2707 samples for training, 4290 samples for testing
+ 
+ model LinearSVC(C=0.01, class_weight=None, dual=False, fit_intercept=True,
+      intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+           multi_class='ovr', penalty='l1', random_state=None, tol=0.0001,
+                verbose=0)
+ 2707 samples for training, 4290 samples for testing
+ model LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+           intercept_scaling=1, max_iter=1000, multi_class='ovr', n_jobs=1,
+                     penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+                               verbose=0, warm_start=False)
+ 2707 samples for training, 4290 samples for testing
+ precision
+ 0.76708334972  0.805230243948  0.821934586606  
+ recall
+ 0.77296037296  0.796037296037  0.795337995338  
+ F1
+ 0.752198137957 0.772386108656  0.764374204465  
+ accuracy
+ 0.77296037296  0.796037296037  0.795337995338  
+ train on {'benign': ['zoobenign2013'], 'malware': ['vs2013']} ... test on {'benign': ['zoobenign2015'], 'malware': ['vs2015']} ...
+ loaded from zoobenign2015: 1178 feature vectors; feature vector length: 403524
+ loaded from vs2015: 1451 feature vectors; feature vector length: 733707
+ ^C^C^C^C^C^C^C^C^C^C^C^C^C^C
+
+ ^C^C^C^C^CTraceback (most recent call last):
+   File "tab_span_revealdroid_all_2.py", line 299, in <module>
+       _bft = regularizeFeatures ( bft )
+       KeyboardInterrupt
+       ^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^Cc
+
+
+       ^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^C^\^\^\^\^\
+       ^\^\^\^M^C^C^C^C^C
+
+
+       ^C^C^C^C^C\^\^\
+       ^C^C^C
+
+
+       real 557m15.503s
+       user 341m30.424s
+       sys  175m55.972s
+

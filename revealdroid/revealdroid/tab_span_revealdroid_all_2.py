@@ -148,7 +148,7 @@ def loadFeatures(datatag, label):
     print >> sys.stderr, 'loaded from %s: %d feature vectors; feature vector length: %d' % (datatag, len (sample_features), len(g_fnames))
     return (sample_features, sample_labels)
 
-def regularizeFeatures(rawfeatures):
+def regularizeFeatures_slow(rawfeatures):
     ret={}
     for md5 in rawfeatures.keys():
         newfdict = copy.deepcopy(featureframe)
@@ -156,6 +156,17 @@ def regularizeFeatures(rawfeatures):
             #assert fname in newfdict.keys()
             newfdict[fname] = rawfeatures[md5][fname]
         ret[md5] = newfdict
+    return ret
+
+def regularizeFeatures(rawfeatures):
+    ret={}
+    for md5 in rawfeatures.keys():
+        ret[md5]={}
+        for key in featureframe:
+            ret[md5][key] = 0.0
+
+        for fname in rawfeatures[md5].keys():
+            ret[md5][fname] = rawfeatures[md5][fname]
     return ret
 
 def resetframe():
@@ -248,7 +259,7 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)-1):
+    for i in range(3, len(datasets)-1):
         g_fnames=set()
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
@@ -262,13 +273,15 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        s_fnames = copy.deepcopy(g_fnames)
+        #s_fnames = copy.deepcopy(g_fnames)
+        s_fnames = []
+        for name in g_fnames:
+            s_fnames.append (name)
 
-        inc=4 if i==0 else 1
-        for j in range(i+inc, len(datasets)):
+        for j in range(i+1, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
-            g_fnames = s_fnames
+            g_fnames = set(s_fnames)
 
             # testing dataset
             (bfp, blp) = ({}, {})
