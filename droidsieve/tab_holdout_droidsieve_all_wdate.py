@@ -36,7 +36,7 @@ featureframe = {}
 g_fnames = set()
 tagprefix="/home/hcai/Downloads/droidsieve/features_droidsieve_byfirstseen/static.pickle."
 PRUNE_THRESHOLD=0
-HOLDOUT_RATE=1.95/10.0
+HOLDOUT_RATE=5/10.0
 
 def malwareCatStat(labels):
     l2c={}

@@ -27,8 +27,8 @@ from configs import *
 from featureLoader_wdate import *
 from common import *
 
-#HOLDOUT_RATE=0.33
-HOLDOUT_RATE=0.4
+HOLDOUT_RATE=0.33
+#HOLDOUT_RATE=0.4
 
 g_binary = False # binary or multiple-class classification
 
@@ -240,7 +240,7 @@ def split(features, labels):
         alldates.sort()
         #print alldates
 
-        pivot = alldates [ len(alldates)*7/10 ]
+        pivot = alldates [ len(alldates)*5/10 ]
         print "%s pivot=%s" % (lab, pivot)
 
         for (app,date) in features.keys():

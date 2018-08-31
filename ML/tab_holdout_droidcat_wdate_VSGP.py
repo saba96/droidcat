@@ -27,8 +27,8 @@ from configs import *
 from featureLoader_wdate import *
 from common import *
 
-#HOLDOUT_RATE=0.33
-HOLDOUT_RATE=0.4
+HOLDOUT_RATE=0.33
+#HOLDOUT_RATE=0.4
 
 g_binary = False # binary or multiple-class classification
 
@@ -240,7 +240,7 @@ def split(features, labels):
         alldates.sort()
         #print alldates
 
-        pivot = alldates [ len(alldates)*7/10 ]
+        pivot = alldates [ len(alldates)*5/10 ]
         print "%s pivot=%s" % (lab, pivot)
 
         for (app,date) in features.keys():
@@ -314,11 +314,9 @@ if __name__=="__main__":
     bf1.update(bf3)
     bl1.update(bl3)
 
-    '''
     (bf4, bl4) = loadBenignData('features_droidcat_byfirstseen/benign2016')
     bf1.update(bf4)
     bl1.update(bl4)
-    '''
 
     if not g_binary:
         bf1, bl1 = {}, {}
@@ -349,13 +347,10 @@ if __name__=="__main__":
     bf1.update (mf3)
     bl1.update (ml3)
 
-    '''
     (mf4, ml4) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/vs2016','/home/hcai/Downloads/VirusShare/2016/', pruneMinor=bPrune, drebin=False, obf=True)
     #(mf4, ml4) = loadMalwareData(g_binary, 'features_droidcat_byfirstseen/drebin2012','/home/hcai/Downloads/Drebin', pruneMinor=bPrune, drebin=True, obf=False)
     bf1.update (mf4)
     bl1.update (ml4)
-    '''
-
 
     '''
     (mf4, ml4) = loadMalwareData(g_binary, 'features_large/malware-zoo/2014','/home/hcai/testbed/cg.instrumented/AndroZoo/2014', pruneMinor=bPrune, drebin=False, obf=False)

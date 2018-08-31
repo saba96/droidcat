@@ -156,7 +156,7 @@ def split(features, labels):
         alldates.sort()
         #print alldates
 
-        pivot = alldates [ len(alldates)*7/10 ]
+        pivot = alldates [ len(alldates)*5/10 ]
         print "%s pivot=%s" % (lab, pivot)
 
         itest = 0
@@ -171,7 +171,7 @@ def split(features, labels):
         if itest<1 or itrain<1:
             print >> sys.stdout, "applying random split ..."
             idxrm=[]
-            for j in range(0, len(alldates)*7/10):
+            for j in range(0, len(alldates)*5/10):
                 t = random.randint(0,len(lab2features[lab].keys())-1)
                 idxrm.append(t)
                 key = lab2features[lab].keys()[t]
