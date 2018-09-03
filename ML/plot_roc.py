@@ -85,6 +85,10 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidsieve_VSGP.cat", 'DroidSieve', color='green', ls='dashdot')
     '''
 
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO.cat", 'DroidCat', color='black', ls='solid')
+    plot_one (plt, "roc_curves/pickle.afonso_PRZO.cat", 'Afonso', color='blue', ls='dashed')
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO.cat", 'DroidSieve', color='green', ls='dashdot')
+
 
     '''
     plot_one (plt, "roc_curves/pickle.droidcat_PRZO.cat")
@@ -119,11 +123,25 @@ if __name__=="__main__":
     plot_one (plt, "roc_curves/pickle.droidsieve_ZOZO.det", 'DroidSieve', color='green', ls='dashdot')
     '''
 
-    #'''
+    '''
     plot_one (plt, "roc_curves/pickle.droidcat_VSGP.det", 'DroidCat', color='black', ls='solid')
     plot_one (plt, "roc_curves/pickle.afonso_VSGP.det", 'Afonso', color='blue', ls='dashed')
     plot_one (plt, "roc_curves/pickle.droidsieve_VSGP.det", 'DroidSieve', color='green', ls='dashdot')
-    #'''
+    '''
+
+    '''
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1617.det", 'DroidCat', color='black', ls='solid')
+    plot_one (plt, "roc_curves/pickle.afonso_PRZO1617.det", 'Afonso', color='blue', ls='dashed')
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1617.det", 'DroidSieve', color='green', ls='dashdot')
+
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1415.det", 'DroidCat', color='black', ls='solid')
+    plot_one (plt, "roc_curves/pickle.afonso_PRZO1415.det", 'Afonso', color='blue', ls='dashed')
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1415.det", 'DroidSieve', color='green', ls='dashdot')
+
+    plot_one (plt, "roc_curves/pickle.droidcat_PRZO1213.det", 'DroidCat', color='black', ls='solid')
+    plot_one (plt, "roc_curves/pickle.afonso_PRZO1213.det", 'Afonso', color='blue', ls='dashed')
+    plot_one (plt, "roc_curves/pickle.droidsieve_PRZO1213.det", 'DroidSieve', color='green', ls='dashdot')
+    '''
 
 
     '''

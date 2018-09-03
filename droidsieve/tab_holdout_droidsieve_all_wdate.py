@@ -405,6 +405,7 @@ if __name__=="__main__":
                 {"benign":["zoobenign2014", "zoobenign2015", "benign2014", "benign2015"], "malware":["vs2014","vs2015","zoo2014","zoo2015"]},
                 {"benign":["zoobenign2016", "zoobenign2017", "benign2016", "benign2017"], "malware":["vs2016","zoo2016","zoo2017"]},
                 ]
+
     '''
     datasets = [ {"benign":["benign2015"], "malware":["zoo2015"]} ]
     '''
@@ -415,9 +416,7 @@ if __name__=="__main__":
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg2017"]},
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg2017"]},
                 ]
-    '''
 
-    '''
     datasets = [ \
                 {"benign":["zoobenign2012", "zoobenign2013"], "malware":["obfmg2017","obfcontagio2017"]},
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg2017","obfcontagio2017"]},
