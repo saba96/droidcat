@@ -8,6 +8,8 @@
    python prepare_mudflow_data_sameperiod.py
    python prepare_susi_data_sameperiod.py
 
-3. cp 1class.R to scripts/ to replace original one
+3. unzip mudflow_scripts.zip
 
-4. run doAll.sh
+4. cp 1class.R to scripts/ to replace original one
+
+5. run doAll.sh
