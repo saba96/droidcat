@@ -172,11 +172,11 @@ sink(results_file,append=TRUE)
 cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
 #cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
 cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
-cat(output, precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
 sink()
 cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
 #cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
 cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
-cat(output, precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
 
 ###########################
