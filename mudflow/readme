@@ -1,0 +1,13 @@
+1. run compute_tainflows.sh to compute taint flows using Flowdroid
+   assume the flows are put in the data/taintflows directory 
+
+2. goto data/taintflows, 
+   python prepare_mudflow_data.py
+   python prepare_susi_data.py
+
+   python prepare_mudflow_data_sameperiod.py
+   python prepare_susi_data_sameperiod.py
+
+3. cp 1class.R to scripts/ to replace original one
+
+4. run doAll.sh
