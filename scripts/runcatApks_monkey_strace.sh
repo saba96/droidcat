@@ -33,12 +33,6 @@ tryInstall()
 
 	k=1
 
-    #/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
-    #/home/hcai/testbed/setupEmu.sh Nexus-One-10
-    /home/hcai/testbed/setupEmu.sh $avd $port
-    sleep 3
-    pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
-
     flag=false
     for fnapk in $finaldir/*.apk;
 	do
@@ -57,31 +51,39 @@ tryInstall()
         fi
 
 		echo "tracing $fnapk ..."
+        #/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
+        #/home/hcai/testbed/setupEmu.sh Nexus-One-10
+        /home/hcai/testbed/setupEmu.sh $avd $port
+        sleep 2
+        pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
-            #kill -9 $pidemu
+            echo "installation failed for $fnapk: $ret"
+            kill -9 $pidemu
             continue
         fi
 
 		# try running it and seeing if it immediately crashes (in one minute)
 
         tgtp=`~/bin/getpackage.sh $fnapk | awk '{print $2}'`
-        adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 &>$OUTDIR/${fnapk##*/}.monkey &
+        adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeouts --ignore-security-exceptions --throttle 200 10000000 2>&1 1>$OUTDIR/${fnapk##*/}.monkey &
         pidmonkey=$!
 
-        sleep 3
+        sleep 1
         pidapp=`adb -s $did shell ps | grep -v "grep" | grep "$tgtp" | awk '{print $2}'`
         if [ ${#pidapp} -lt 1 ];then
             echo "app $tgtp did not start"
             kill -9 $pidmonkey
+            kill -9 $pidemu
             continue
         else
             echo "app $tgtp started with pid=$pidapp"
         fi
         #timeout $tmv "adb -s $did shell strace -p $pidapp $ >$OUTDIR/${fnapk##*/}.logcat"
-        adb -s $did shell strace -p $pidapp -cfF >$OUTDIR/${fnapk##*/}.logcat &
+        #adb -s $did shell strace -p $pidapp -cfF >$OUTDIR/${fnapk##*/}.logcat &
+        adb -s $did shell strace -p $pidapp -c >$OUTDIR/${fnapk##*/}.logcat &
         pidadb=$!
 
         sleep $tmv
@@ -89,13 +91,12 @@ tryInstall()
 
         kill -9 $pidmonkey
         kill -9 $pidadb
-        #kill -9 $pidemu
+        kill -9 $pidemu
 		k=`expr $k + 1`
         rm -rf /tmp/android-hcai/*
 	done
 
 	echo "totally $k apps in category $cate successfully traced."
-    kill -9 $pidemu
 }
 
 

@@ -6,8 +6,8 @@ APKDIR=$1
 TRACEDIR=$2
 RESULTDIR=$3
 
-mkdir -p $RESULTDIR/ICCReport
-resultlog=$RESULTDIR/ICCReport/log.ICCReport.all
+mkdir -p $RESULTDIR/generalReport
+resultlog=$RESULTDIR/generalReport/log.generalReport.all
 > $resultlog
 for orgapk in $APKDIR/*.apk
 do
@@ -17,7 +17,7 @@ do
         echo $orgapk did not have trace.
 		continue
 	fi
-    if [ `grep -a -c $packname $RESULTDIR/ICCReport/iccfeatures.txt` -ge 1 ];then
+    if [ `grep -a -c $packname $RESULTDIR/generalReport/generalfeatures.txt` -ge 1 ];then
         echo "$orgapk has been processed."
         continue;
     fi
@@ -25,12 +25,11 @@ do
 	#if [ $rt -lt 1 ];then
 		echo "result for $orgapk" >> $resultlog 2>&1
 		/home/hcai/bin/getpackage.sh $orgapk >> $resultlog 2>&1
-		sh /home/hcai/testbed/ICCReport.sh \
+		sh /home/hcai/testbed/generalReport.sh \
 			$orgapk \
 			$TRACEDIR/$packname.logcat \
-            $RESULTDIR/ICCReport >> $resultlog 2>&1
+            $RESULTDIR/generalReport/ >> $resultlog 2>&1
 	#fi
 done
 
 exit 0
-

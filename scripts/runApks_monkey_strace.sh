@@ -25,16 +25,13 @@ tryInstall()
 {
     cate=$1
 
-    #srcdir=/home/hcai/testbed/$cate
-    #srcdir=/home/hcai/Downloads/AndroZoo/$cate/BENIGN
-    srcdir=/home/hcai/Downloads/AndroZoo/$cate/used
+    srcdir=/home/hcai/Downloads/AndroZoo/$cate
     finaldir=$srcdir
 
-    OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/${cate}-new
+    OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/$cate
     mkdir -p $OUTDIR
 
 	k=1
-
 
     flag=false
     for fnapk in $finaldir/*.apk;
@@ -45,9 +42,6 @@ tryInstall()
         #if [ "$flag" != true ];then
         #    continue
         #fi
-        if [ ! -s /home/hcai/testbed/androZooLogs/${cate}-new/${fnapk##*/}.logcat ];then
-            continue
-        fi
 
         echo "================ RUN INDIVIDUAL APP: ${fnapk##*/} ==========================="
         if [ -s $OUTDIR/${fnapk##*/}.logcat ];
@@ -59,16 +53,16 @@ tryInstall()
 		echo "tracing $fnapk ..."
         #/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
         #/home/hcai/testbed/setupEmu.sh Nexus-One-10
-        /home/hcai/testbed/setupEmuMulti.sh $avd $port
+        /home/hcai/testbed/setupEmu.sh $avd $port
         sleep 2
         pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
+            echo "installation failed for $fnapk: $ret" > $OUTDIR/${fnapk##*/}.logcat
             kill -9 $pidemu
-            # no need to retry if installation fails
-            echo "installation failed for $fnapk: $ret" 1> $OUTDIR/${fnapk##*/}.logcat 2>&1
             continue
         fi
 
@@ -120,11 +114,8 @@ s=0
 #for cate in 2016 2015 2014
 #for cate in 2013 2011 2010
 #for cate in "benign-2016"
-#for cate in "newmalwareall/all"
-#for cate in "benign-2014"
-#for cate in 2013 2012
-#for cate in "benign-2010"
-for cate in "2011"
+#for cate in "benign-2016" "benign-2015"
+for cate in "2010"
 do
     c=0
     echo "================================="

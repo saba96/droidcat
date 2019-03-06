@@ -1,7 +1,7 @@
 #!/bin/bash
 ls *.logcat | while read fn;
 	do 
-		echo ${fn##*/}"\t"`cat $fn | \
+		echo -e ${fn##*/}"\t"`cat $fn | \
 		grep -v -E "crash|beginning" | \
 		sort -n -k4 | \
 		tail -n1 | \

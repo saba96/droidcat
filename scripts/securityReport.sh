@@ -6,6 +6,7 @@ fi
 
 apkfile=$1
 tracefile=$2
+resultdir=${3:-"./"}
 
 ROOT=/home/hcai/
 subjectloc=`pwd`
@@ -37,7 +38,8 @@ java -Xmx5g -ea -cp ${MAINCP} reporters.securityReport \
 	-catsink /home/hcai/libs/catsinks.txt.final \
 	-catcallback /home/hcai/libs/catCallbacks.txt \
 	-process-dir $apkfile \
-	-trace $tracefile
+	-trace $tracefile \
+    -resultdir $resultdir 
 
 stoptime=`date +%s%N | cut -b1-13`
 

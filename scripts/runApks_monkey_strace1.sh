@@ -25,13 +25,14 @@ tryInstall()
 {
     cate=$1
 
-    srcdir=/home/hcai/Downloads/VirusShare/$cate
+    srcdir=/home/hcai/Downloads/AndroZoo/$cate
     finaldir=$srcdir
 
-    OUTDIR=/home/hcai/testbed/straceLogs/VirusShare/$cate
+    OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/$cate
     mkdir -p $OUTDIR
 
 	k=1
+
 
     flag=false
     for fnapk in $finaldir/*.apk;
@@ -54,7 +55,7 @@ tryInstall()
         #/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
         #/home/hcai/testbed/setupEmu.sh Nexus-One-10
         /home/hcai/testbed/setupEmu.sh $avd $port
-        sleep 3
+        sleep 2
         pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
@@ -114,7 +115,7 @@ s=0
 #for cate in 2013 2011 2010
 #for cate in "benign-2016"
 #for cate in "benign-2016" "benign-2015"
-for cate in "2014"
+for cate in "benign-2015"
 do
     c=0
     echo "================================="

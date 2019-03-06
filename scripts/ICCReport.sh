@@ -6,6 +6,7 @@ fi
 
 apkfile=$1
 tracefile=$2
+resultdir=${3:-"./"}
 
 ROOT=/home/hcai/
 subjectloc=`pwd`
@@ -31,7 +32,8 @@ java -Xmx4g -ea -cp ${MAINCP} reporters.iccReport \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
 	-d $OUTDIR \
 	-process-dir $apkfile \
-	-trace $tracefile
+	-trace $tracefile \
+    -resultdir $resultdir 
 
 stoptime=`date +%s%N | cut -b1-13`
 

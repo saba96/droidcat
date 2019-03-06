@@ -15,6 +15,7 @@ timeout() {
     fi
 
 }
+
 getgraph()
 {
     mkdir -p $2
@@ -31,18 +32,16 @@ getgraph()
     done
 }
 
-#getgraph /home/hcai/testbed/input/pairs.thirdset /home/hcai/Downloads/Mamadroid/mamadroid_code/graphs/benign-2015
 
+#getgraph /home/hcai/testbed/newmalware/ /home/hcai/Downloads/Mamadroid/mamadroid_code/graphs/malware-2017
+#getgraph /home/hcai/testbed/newmalware2 /home/hcai/Downloads/Mamadroid/mamadroid_code/graphs/malware-2017
 
-cats=""
-while read cate;
-do
-    cats="$cats""$cate""    "
-done < /home/hcai/testbed/cat-final.txt
+#getgraph /home/hcai/testbed/uniqMalware  /home/hcai/Downloads/Mamadroid/mamadroid_code/graphs/malware-2012
 
-for cate in $cats;
-do
-    getgraph /home/hcai/bin/apks2017/$cate /home/hcai/mama/graphs/benign-2017
-done
+#for subdir in 2013  2014
+
+getgraph /home/xqfu/MLtasks/zoo2011 /home/xqfu/MLtasks/mama/graphs/malware-2011
+getgraph /home/xqfu/MLtasks/benign2016 /home/xqfu/MLtasks/mama/graphs/benign-2016
+getgraph /home/xqfu/MLtasks/malware2016 /home/xqfu/MLtasks/mama/graphs/malware-2016
 
 

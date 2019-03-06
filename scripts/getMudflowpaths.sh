@@ -5,6 +5,7 @@ if [ $# -lt 1 ];then
 fi
 
 apkfile=$1
+outdir=$2
 
 ROOT=/home/hcai/
 subjectloc=`pwd`
@@ -20,19 +21,23 @@ done
 suffix=${apkfile##*/}
 suffix=${suffix%.*}
 
-LOGDIR=out-dynInstr-cg
+LOGDIR=out-mudflow-cg
 mkdir -p $LOGDIR
-logout=$LOGDIR/instr-$suffix.out
-logerr=$LOGDIR/instr-$suffix.err
+logout=$LOGDIR/mudflow-$suffix.out
+logerr=$LOGDIR/mudflow-$suffix.err
 
 starttime=`date +%s%N | cut -b1-13`
 
     #/home/hcai/Android/Sdk/platforms/android-21/android.jar"
-cmd="java -Xmx100g -ea -cp ${MAINCP} dynCG.enumCallSeq \
+cmd="java -Xmx60g -ea -cp ${MAINCP} dynCG.forMudflow \
     $apkfile \
-    /home/hcai/Android/Sdk/platforms/"
+    /home/hcai/Android/Sdk/platforms/ \
+    $outdir \
+	-catsrc /home/hcai/libs/catsources.txt.final \
+	-catsink /home/hcai/libs/catsinks.txt.final "
 
-($cmd | tee $logout) 3>&1 1>&2 2>&3 | tee $logerr
+$cmd
+#($cmd | tee $logout) 3>&1 1>&2 2>&3 | tee $logerr
 #${cmd} 2>&1 | tee $logout
 
 stoptime=`date +%s%N | cut -b1-13`

@@ -27,17 +27,17 @@ tryInstall()
 
     #srcdir=/home/hcai/testbed/$cate
     #srcdir=/home/hcai/Downloads/AndroZoo/$cate/BENIGN
-    #srcdir=/home/hcai/Downloads/AndroZoo/$cate
-    #finaldir=$srcdir
-
-    #OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/$cate
-    #mkdir -p $OUTDIR
-
-    srcdir=/home/hcai/Downloads/VirusShare/$cate
+    srcdir=/home/hcai/Downloads/AndroZoo/$cate
     finaldir=$srcdir
 
-    OUTDIR=/home/hcai/testbed/straceLogs/VirusShare/$cate
+    OUTDIR=/home/hcai/testbed/straceLogs/AndroZoo/$cate
     mkdir -p $OUTDIR
+
+    #srcdir=/home/hcai/Downloads/VirusShare/$cate
+    #finaldir=$srcdir
+
+    #OUTDIR=/home/hcai/testbed/straceLogs/VirusShare/$cate
+    #mkdir -p $OUTDIR
 
 	k=1
 
@@ -51,7 +51,8 @@ tryInstall()
         #if [ "$flag" != true ];then
         #    continue
         #fi
-        if [ ! -s /home/hcai/testbed/virusShareLogs/$cate/${fnapk##*/}.logcat ];then
+        #if [ ! -s /home/hcai/testbed/virusShareLogs/$cate/${fnapk##*/}.logcat ];then
+        if [ ! -s /home/hcai/testbed/androZooLogs/$cate/${fnapk##*/}.logcat ];then
             continue
         fi
 
@@ -127,7 +128,8 @@ s=0
 #for cate in "benign-2016"
 #for cate in "newmalwareall/all"
 #for cate in "benign-2014"
-for cate in 2015
+#for cate in 2015
+for cate in "benign-2013"
 do
     c=0
     echo "================================="

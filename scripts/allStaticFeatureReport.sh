@@ -22,10 +22,6 @@ do
         fi
     fi
 
-    if [ ! -s $orgapk.result ];then
-        continue
-    fi
-
     echo "result for $orgapk" >> $resultlog 2>&1
     /home/hcai/bin/getpackage.sh $orgapk >> $resultlog 2>&1
     sh /home/hcai/testbed/staticFeatureReport.sh \
