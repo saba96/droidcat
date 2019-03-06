@@ -62,6 +62,9 @@ benign = mdata[mdata$malicious == 0,]
 cat("m:",nrow(malic),"b:",nrow(benign),"\n")
 cat("size: ",dim(mdata),"\n")
 run_res=list()
+P=0
+R=0
+F1=0
 for (iter in 1:n.runs) {
   data_set = split_data_train_test(mdata, n.folds, benign, malic)
   results_fold = list()  
@@ -96,6 +99,29 @@ for (iter in 1:n.runs) {
     false_negatives = merged_results[(merged_results$malicious == 1 & merged_results$predicted == TRUE),]
     true_positives = merged_results[(merged_results$malicious == 1 & merged_results$predicted == FALSE),]
     true_negatives = merged_results[(merged_results$malicious == 0 & merged_results$predicted == TRUE),]
+
+    MP=nrow(true_positives)/(nrow(true_positives)+nrow(false_positives))
+    MR=nrow(true_positives)/(nrow(true_positives)+nrow(false_negatives))
+    MF1=2*MP*MR/(MP+MR)
+
+    #cat("for malware class", "\t", MP, "\t", MR, "\t", MF1, "\t", 0, "\n") 
+
+    bfalse_positives = merged_results[(merged_results$malicious == 1 & merged_results$predicted == TRUE),]
+    bfalse_negatives = merged_results[(merged_results$malicious == 0 & merged_results$predicted == FALSE),]
+    btrue_positives = merged_results[(merged_results$malicious == 0 & merged_results$predicted == TRUE),]
+    btrue_negatives = merged_results[(merged_results$malicious == 1 & merged_results$predicted == FALSE),]
+
+    BP=nrow(btrue_positives)/(nrow(btrue_positives)+nrow(bfalse_positives))
+    BR=nrow(btrue_positives)/(nrow(btrue_positives)+nrow(bfalse_negatives))
+    BF1=2*BP*BR/(BP+BR)
+
+    BN=nrow(benign)
+    MN=nrow(malic)
+
+    P = (BP*BN + MP*MN) / (BN+MN)
+    R = (BR*BN + MR*MN) / (BN+MN)
+    F1 = (BF1*BN + MF1*MN) / (BN+MN)
+
 
     results_fold[[fold]] = list(model=model,
      predict_data=predict_data, 
@@ -169,14 +195,17 @@ recall=tpos/(tpos+fneg)
 f1=2*precision*recall/(precision+recall)
 
 sink(results_file,append=TRUE)
-cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
-#cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
-cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
-cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+#cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
+##cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
+#cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
+#cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+cat(output, "\t", P, "\t", R, "\t", F1, "\t", 0, "\n") 
+
 sink()
-cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
-#cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
-cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
-cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+#cat(output,"knn",orca_knn,"nu",nu,"g",g,"acc",acc,"tpr",tpr,"tnr",tnr,"\n")
+##cat(output, "precision\t", precision, "recall\t", recall, "f1\t", f1, "accuracy\t", acc,"\n")
+#cat(output, "precision\t", "recall\t", "f1\t", "accuracy\t","\n")
+#cat(output, "\t", precision, "\t", recall, "\t", f1, "\t", acc, "\n") 
+cat(output, "\t", P, "\t", R, "\t", F1, "\t", 0, "\n") 
 
 ###########################
