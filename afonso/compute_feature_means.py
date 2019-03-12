@@ -25,6 +25,9 @@ import inspect, re
 #from classes.sample import Sample
 import pickle
 
+import pandas
+import math
+
 g_binary = False # binary or multiple-class classification
 featureframe = {}
 g_fnames = set()
@@ -347,28 +350,49 @@ if __name__=="__main__":
             fnames = bf[md5].keys()
             break
 
+        fnames = ["recvfrom", "ioctl"]
         bavg={}
         mavg={}
 
         mn=0
         bn=0
 
+        bf2v = {}
+        mf2v = {}
+
         for name in fnames:
             bavg[name] = 0
             mavg[name] = 0
+            bf2v[name] = []
+            mf2v[name] = []
 
         for md5 in bf.keys():
             for name in fnames:
                 bavg[name] += bf[md5][name]
+                bf2v[name].append (bf[md5][name])
 
         for md5 in mf.keys():
             for name in fnames:
                 mavg[name] += mf[md5][name]
+                mf2v[name].append (mf[md5][name])
 
         print "for year %d" % (i+1)
+        bdf = pandas.DataFrame(bf2v, columns=fnames)
+        mdf = pandas.DataFrame(mf2v, columns=fnames)
         for name in fnames:
-            print "%s %f" % (name, bavg[name]/len(bf.keys()))
-            print "%s %f" % (name, mavg[name]/len(mf.keys()))
+            bmean = bdf[name].mean(skipna=True)
+            bstd = bdf[name].std(skipna=True)
+
+            mmean = mdf[name].mean(skipna=True)
+            mstd = mdf[name].std(skipna=True)
+
+            #print "%f %f %f" % (math.sqrt(4/(9*0.05)), bstd, math.sqrt(len(bdf[name])))
+
+            print "%s %f %f" % (name, bmean,  bstd / math.sqrt(len(bdf[name])) * math.sqrt(4/(9*0.05)))
+            print "%s %f %f" % (name, mmean,  mstd / math.sqrt(len(mdf[name])) * math.sqrt(4/(9*0.05)))
+
+            #print "%s %f" % (name, bavg[name]/len(bf.keys()))
+            #print "%s %f" % (name, mavg[name]/len(mf.keys()))
 
 
     fh.flush()
