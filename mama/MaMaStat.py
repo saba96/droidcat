@@ -72,15 +72,19 @@ else:
 	print "starting the abstraction to families"
 	famdatabase=cTF.main(dbs,wflag,cores,callsdatabase)
 	print "abstraction to families is finished"
+
 	print "starting the abstraction to packages"
 	packdatabase=cTP.main(dbs,wflag,cores,callsdatabase)
 	callsdatabase=None
 	print "abstraction to packages is finished"
+
 	print "starting the Markov model creation in families abstraction"
 	MC.main(dbs,wflag,'Families',famdatabase,appslist)
 	famdatabase=None
 	print "Markov model in families abstraction finished, features file created in Features/Families/"
+
 	print "starting the Markov model creation in packages abstraction"
 	MC.main(dbs,wflag,'Packages',packdatabase,appslist)
 	packdatabase=None
 	print "Markov model in packages abstraction finished, features file created in Features/Packages/"
+
