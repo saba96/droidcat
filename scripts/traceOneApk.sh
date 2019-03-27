@@ -40,4 +40,4 @@ timeout $tmv "adb -s $did shell monkey -p $tgtp --ignore-crashes --ignore-timeou
 #timeout 30 "/home/hcai/bin/apkuninstall $fnapk $did"
 /home/hcai/bin/apkuninstall $fnapk $did
 kill -9 $pidadb
-exit 0
+exit 2

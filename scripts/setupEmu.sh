@@ -36,7 +36,7 @@ while [[ ${OUT:0:7}  != 'stopped' ]]; do
   echo '   Waiting for emulator to fully boot...'
   sleep 5
   ((timeout=timeout+5))
-  if [ $timeout -ge 120 ];then
+  if [ $timeout -ge 180 ];then
       echo "booting emulator time out; bailing out"
       exit 1
   fi

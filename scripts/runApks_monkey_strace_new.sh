@@ -43,6 +43,7 @@ tryInstall()
 
 
     flag=false
+    >tried.strace.malware-2017
     for fnapk in $finaldir/*.apk;
 	do
         #if [ ${fnapk##*/} = "00634FE7BDEAEA00D66FEF5EB53A3DC001A8E7B3F9046771D61DC240B4A4E693.apk" ];then
@@ -63,10 +64,19 @@ tryInstall()
             continue
         fi
 
+        if [ `grep -a -c "${fnapk##*/}" tried.strace.malware-2017` -ge 1 ];
+        then
+            echo "$fnapk has been tried, skipped."
+            continue
+        fi
+
+        echo "${fnapk##*/}" >> tried.strace.malware-2017
+
 		echo "tracing $fnapk ..."
         #/home/hcai/testbed/setupEmu.sh Galaxy-Nexus-23
         #/home/hcai/testbed/setupEmu.sh Nexus-One-10
-        /home/hcai/testbed/setupEmuMulti.sh $avd $port
+        #/home/hcai/testbed/setupEmuMulti.sh $avd $port
+        /home/hcai/testbed/setupEmu.sh ${avd} $port
         sleep 2
         pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
 
@@ -74,7 +84,8 @@ tryInstall()
 		n1=`echo $ret | grep -a -c "Success"`
 		if [ $n1 -lt 1 ];then 
             kill -9 $pidemu
-            echo "installation failed for $fnapk: $ret" > $OUTDIR/${fnapk##*/}.logcat
+            #echo "installation failed for $fnapk: $ret" > $OUTDIR/${fnapk##*/}.logcat
+            echo "installation failed for $fnapk: $ret" 
             continue
         fi
 
@@ -129,7 +140,7 @@ s=0
 #for cate in "newmalwareall/all"
 #for cate in "benign-2014"
 #for cate in 2015
-for cate in "benign-2013"
+for cate in "malware-2017"
 do
     c=0
     echo "================================="

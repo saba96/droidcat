@@ -22,7 +22,8 @@ timeout() {
 s=0
 #for year in 2016 2015 2014
 #for year in 2013 2011 2010
-for year in "benign-2016"
+#for year in "benign-2016"
+for year in "malware-2017"
 do
     logfile=log.instr.androzoo.$year
     >$logfile
@@ -37,6 +38,10 @@ do
     mkdir -p $tgtdir
     ls /home/hcai/Downloads/AndroZoo/$year/*.apk | while read apk;
     do
+        if [ -s $tgtdir/${apk##*/} ];then
+            echo "$apk has been instrumented already"
+            continue
+        fi
         timeout 1800 "cgInstr.sh $apk $tgtdir >> $logfile"
         echo "$apk instrumented."
         ((c+=1))

@@ -17,9 +17,11 @@ do
         echo $orgapk did not have trace.
 		continue
 	fi
-    if [ `grep -a -c $packname $RESULTDIR/securityReport/securityfeatures.txt` -ge 1 ];then
-        echo "$orgapk has been processed."
-        continue;
+    if [ -s $RESULTDIR/securityReport/securityfeatures.txt ];then
+        if [ `grep -a -c $packname $RESULTDIR/securityReport/securityfeatures.txt` -ge 1 ];then
+            echo "$orgapk has been processed."
+            continue;
+        fi
     fi
 	#rt=`cat lowcov_malware | awk '{print $1}' | grep -a -c "^${i}.apk.logcat$"`
 	#if [ $rt -lt 1 ];then

@@ -52,10 +52,19 @@ tryInstall()
             continue
         fi
 
+        if [ `grep -a -c "${fnapk##*/}" tried.malware-2017` -ge 1 ];
+        then
+            echo "$fnapk has been tried, skipped."
+            continue
+        fi
+
+        echo "${fnapk##*/}.apk" >> tried.malware-2017
+
 		echo "tracing $fnapk ..."
 		/home/hcai/testbed/setupEmu.sh ${avd} $port
         sleep 3
         pidemu=`ps axf | grep -v grep | grep -a -E "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`

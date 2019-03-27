@@ -4,6 +4,7 @@ tmv=${1:-"60"}
 port=${2:-"5554"}
 avd=${3:-"Nexus-One-10"}
 year=${4:-"2010"}
+apilevel=${5:-"21"}
 did="emulator-$port"
 
 timeout() {
@@ -70,8 +71,13 @@ tryInstall()
 
         #if [ `grep -a -c ${fnapk##*/} otheremulators/list.malware-vs-$year.txt` -lt 1 ];then
         #if [ `grep -a -c ${fnapk##*/} otheremulators/apkname_run_fail_malware-$year.txt` -lt 1 ];then
-        if [ `grep -a -c ${fnapk##*/} otheremulators/installedapks/emulator-25/malware-vs-${year}` -lt 1 ];then
+        if [ `grep -a -c ${fnapk##*/} otheremulators/installedapks/emulator-${apilevel}/malware-vs-${year}` -lt 1 ];then
             echo "$fnapk was not included in previous run-time study"
+            continue
+        fi
+
+        if [ `grep -a -c ${fnapk##*/} vs2015.api24.remaining` -lt 1 ];then
+            echo "tried already, skipping"
             continue
         fi
 
@@ -83,7 +89,7 @@ tryInstall()
         fi
 
         timeout 180 "traceOneApk.sh $tmv $fnapk $did $OUTDIR"
-        if [ $? -ne 0 ];then
+        if [ $? -ne 2 ];then
             continue
         fi
 		k=`expr $k + 1`

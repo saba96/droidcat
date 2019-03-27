@@ -44,7 +44,8 @@ getgraph()
 #getgraph /home/hcai/mama/benign-2016 /home/hcai/mama/graphs/benign-2016
 
 #for subdir in 2010  2011  2012  2013  2017 "benign-2010"  "benign-2011" "benign-2012"  "benign-2013"  "benign-2015"
-for subdir in "benign-2015"
+#for subdir in "benign-2015"
+for subdir in "malware-2017-more"
 do
-    getgraph /home/hcai/Downloads/AndroZoo/$subdir /home/hcai/mama/graphs/AndroZoo/$subdir
+    getgraph /home/hcai/Downloads/AndroZoo/$subdir /home/hcai/mama/graphs//$subdir
 done
