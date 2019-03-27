@@ -40,7 +40,13 @@ do
         continue
     fi
 
+    #if [ ! -s $rootdir/${fnapk##*/}.result ];then
+    #    echo "$fnapk might not be a malware app, skipped."
+    #    continue
+    #fi
+
     #timeout 1800 "bash getMudflowpaths.sh $fnapk $resdir | grep "elapsed" >> $resdir/timecost.txt"
+    >> $resdir/${fnapk##*/}.txt
     bash getMudflowpaths.sh $fnapk $resdir | grep "elapsed" >> $resdir/timecost.txt
 
 done

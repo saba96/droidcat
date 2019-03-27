@@ -45,14 +45,14 @@ logerr=$LOGDIR/mudflow-$suffix.err
 starttime=`date +%s%N | cut -b1-13`
 
     #/home/hcai/Android/Sdk/platforms/android-21/android.jar"
-cmd="java -Xmx13g -ea -cp ${MAINCP} dynCG.forMudflow \
+cmd="java -Xmx400g -ea -cp ${MAINCP} dynCG.forMudflow \
     $apkfile \
     /home/hcai/Android/Sdk/platforms/ \
     $outdir \
 	-catsrc /home/hcai/libs/catsources.txt.final \
 	-catsink /home/hcai/libs/catsinks.txt.final"
 
-timeout 3600 "$cmd"
+timeout 1800 "$cmd"
 #$cmd
 #($cmd | tee $logout) 3>&1 1>&2 2>&3 | tee $logerr
 #${cmd} 2>&1 | tee $logout
