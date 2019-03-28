@@ -78,7 +78,7 @@ tryInstall()
         #/home/hcai/testbed/setupEmuMulti.sh $avd $port
         /home/hcai/testbed/setupEmu.sh ${avd} $port
         sleep 2
-        pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-boot-anim -no-window -port $port" | awk '{print $1}'`
+        pidemu=`ps axf | grep -v "grep" | grep "$avd -scale .3 -no-window -port $port" | awk '{print $1}'`
 
 		ret=`/home/hcai/bin/apkinstall $fnapk $did`
 		n1=`echo $ret | grep -a -c "Success"`
