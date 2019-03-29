@@ -288,7 +288,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
 
     '''
     datasets = [  {"benign":["zoobenign2014"], "malware":["vs2014"]},
@@ -301,8 +303,16 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
+
+    whitelist = []
+    for app in file('/home/hcai/gitrepo/droidcat/ML/samplelists/apks.malware-2017-more').readlines():
+        whitelist.append (app.lstrip().rstrip())
+
     #for i in range(0, len(datasets)):
-    for i in range(1, len(datasets)):
+    for i in range(7, len(datasets)):
         g_fnames=set()
         print "same-period hold-out evaluation: work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
@@ -312,6 +322,13 @@ if __name__=="__main__":
             blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
+            x=0
+            for app in mf.keys():
+                if (app in blacklist) or (app not in whitelist):
+                    del mf[app]
+                    del ml[app]
+                    x+=1
+            print "%d non-malware removed." % (x)
             bft.update (mf)
             blt.update (ml)
 

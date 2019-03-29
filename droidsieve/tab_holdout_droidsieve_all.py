@@ -29,7 +29,8 @@ import pickle
 import copy
 from sklearn.feature_selection import SelectFromModel
 
-HOLDOUT_RATE=0.995
+HOLDOUT_RATE=0.90
+#HOLDOUT_RATE=0.33
 
 g_binary = False # binary or multiple-class classification
 featureframe = {}
@@ -141,7 +142,7 @@ def holdout(model, features, labels):
 
     y_pred = predicted_labels
 
-    if g_binary:
+    if False and g_binary:
         prec=precision_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         rec=recall_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
         f1=f1_score(testlabels, y_pred, average='binary', pos_label='MALICIOUS')
@@ -345,7 +346,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]},
+                ]
 
     '''
     datasets = [ \
@@ -362,6 +365,9 @@ if __name__=="__main__":
                 {"benign":["zoobenign2014", "zoobenign2015"], "malware":["obfmg"]},
                 {"benign":["zoobenign2016", "benign2017"], "malware":["obfmg"]},
                 ]
+    datasets = [  \
+                {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+               ]
     '''
 
     #bPrune = g_binary
@@ -369,8 +375,11 @@ if __name__=="__main__":
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/md5.non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
 
-    for i in range(0, len(datasets)):
+    for i in range(7, len(datasets)):
         g_fnames=set()
         (bft, blt) = ({}, {})
         print "work on %s ... " % ( datasets[i] )
@@ -381,6 +390,10 @@ if __name__=="__main__":
                 blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
+            for app in mf.keys():
+                if app in blacklist:
+                    del mf[app]
+                    del ml[app]
             bft.update (mf)
             if g_binary:
                 for md5 in ml.keys():

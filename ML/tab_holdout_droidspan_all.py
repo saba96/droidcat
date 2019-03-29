@@ -28,7 +28,7 @@ from common import *
 
 g_binary = False # binary or multiple-class classification
 
-HOLDOUT_RATE=0.1
+HOLDOUT_RATE=0.4
 
 def varname(p):
     for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
@@ -242,14 +242,19 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
 
-    '''
-    datasets = [  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
-    '''
+    #datasets = [  {"benign":["benign2017"], "malware":["zoo2017","malware2017","malware2017-more"]} ]
+    #datasets = [  {"benign":["benign2017"], "malware":["zoo2017","malware2017-more"]} ]
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
+
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
 
     for i in range(0, len(datasets)):
         print "work on %s ... " % ( datasets[i] )
@@ -260,6 +265,10 @@ if __name__=="__main__":
             blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[i]['malware'][k])
+            for app in mf.keys():
+                if app in blacklist:
+                    del mf[app]
+                    del ml[app]
             bft.update (mf)
             blt.update (ml)
 

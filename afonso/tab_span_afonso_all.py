@@ -207,7 +207,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
 
     '''
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
@@ -228,6 +230,10 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/md5.non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
+
     for i in range(0, len(datasets)-1):
         # training dataset
         #(bf1, bl1) = loadMamaFeatures(datasets[i]['benign'][0], mode, "BENIGN")
@@ -241,7 +247,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        for j in range(i+1, len(datasets)):
+        #for j in range(i+1, len(datasets)):
+        for j in range(7, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
             # testing dataset
@@ -252,6 +259,10 @@ if __name__=="__main__":
                 blp.update (bl)
             for k in range(0, len(datasets[j]['malware'])):
                 (mf, ml) = loadFeatures(datasets[j]['malware'][k], "MALICIOUS")
+                for app in mf.keys():
+                    if app in blacklist:
+                        del mf[app]
+                        del ml[app]
                 bfp.update (mf)
                 blp.update (ml)
 

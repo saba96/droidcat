@@ -123,7 +123,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
                 print >> fh, "%s\t" % cols[c][r],
             print >> fh
 
-def loadFeatures(datatag, label):
+def loadFeatures(datatag, label, filtering=False):
     global g_fnames
     sample_features = {}
     sample_labels = {}
@@ -132,11 +132,15 @@ def loadFeatures(datatag, label):
 
     try:
         fdict = pickle.load (f)
-        sample_features = fdict
+        #sample_features = fdict
     except (EOFError, pickle.UnpicklingError):
         pass
 
+    global blacklist, whitelist
     for key in fdict.keys():
+        if filtering==True and ((key in blacklist) or (key not in whitelist)):
+            continue
+
         sample_features[key] = fdict[key]
         fnames = [ft.lower().lstrip().rstrip() for ft in fdict[key].keys()]
         g_fnames = g_fnames.union (set(fnames))
@@ -235,7 +239,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
 
     '''
     datasets = [  {"benign":["zoobenign2014"], "malware":["vs2014"]},
@@ -247,6 +253,15 @@ if __name__=="__main__":
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
+
+    blacklist = []
+    whitelist = []
+
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
+
+    for app in file('/home/hcai/gitrepo/droidcat/ML/samplelists/apks.malware-2017-more').readlines():
+        whitelist.append (app.lstrip().rstrip())
 
     for i in range(0, len(datasets)-1):
         g_fnames=set()
@@ -264,8 +279,9 @@ if __name__=="__main__":
 
         s_fnames = copy.deepcopy(g_fnames)
 
-        inc=4 if i==0 else 1
-        for j in range(i+inc, len(datasets)):
+        #inc=4 if i==0 else 1
+        #for j in range(i+inc, len(datasets)):
+        for j in range(7, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
             g_fnames = s_fnames
@@ -277,7 +293,13 @@ if __name__=="__main__":
                 bfp.update (bf)
                 blp.update (bl)
             for k in range(0, len(datasets[j]['malware'])):
-                (mf, ml) = loadFeatures(datasets[j]['malware'][k], "MALICIOUS")
+                (mf, ml) = loadFeatures(datasets[j]['malware'][k], "MALICIOUS", k==1)
+                '''
+                for app in mf.keys():
+                    if (app in blacklist) or (app not in whitelist):
+                        del mf[app]
+                        del ml[app]
+                '''
                 bfp.update (mf)
                 blp.update (ml)
 

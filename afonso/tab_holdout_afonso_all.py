@@ -31,7 +31,7 @@ g_fnames = set()
 tagprefix="afonso.pickle."
 
 HOLDOUT_RATE=0.33
-#HOLDOUT_RATE=0.4
+HOLDOUT_RATE=0.4
 
 def get_families(path_md5_families):
     families = {}
@@ -278,6 +278,7 @@ if __name__=="__main__":
                   {"benign":["zoo-benign-2015"], "malware":["zoo-2015", "vs-2015"]},
                   {"benign":["zoo-benign-2016"], "malware":["zoo-2016", "vs-2016"]},
                   {"benign":["benign-2017"], "malware":["zoo-2017", "malware-2017"]} ]
+    '''
 
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2011"], "malware":["zoo2011"]},
@@ -286,8 +287,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
-    '''
+                  {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
     '''
     datasets = [  {"benign":["zoobenign2010"], "malware":["zoo2010"]},
                   {"benign":["zoobenign2012"], "malware":["zoo2012"]},
@@ -300,7 +302,6 @@ if __name__=="__main__":
 
     datasets = [  {"benign":["zoobenign2014","zoobenign2015", "zoobenign2016"], "malware":["zoo2010","zoo2011"]},
                   {"benign":["benign2017","zoobenign2014"], "malware":["vs2016","vs2015"]} ]
-    '''
 
 
     datasets = [ \
@@ -309,21 +310,35 @@ if __name__=="__main__":
                 {"benign":["zoobenign2013","zoobenign2014"], "malware":["obfmg"]},]
                 #{"benign":["zoobenign2011","zoobenign2012"], "malware":["obfmg"]} ]
 
+    datasets = [  \
+                {"benign":["benign2017"], "malware":["zoo2017","malware-2017-more"]},
+               ]
+    '''
+
+
     #bPrune = g_binary
     bPrune = True
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/md5.non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
+
     for i in range(0, len(datasets)):
         print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
             (bf, bl) = loadFeatures(datasets[i]['benign'][k], "BENIGN")
-            #bft.update (bf)
-            #blt.update (bl)
+            bft.update (bf)
+            blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadFeatures(datasets[i]['malware'][k], "MALICIOUS")
+            for app in mf.keys():
+                if app in blacklist:
+                    del mf[app]
+                    del ml[app]
             bft.update (mf)
             if g_binary:
                 blt.update (ml)

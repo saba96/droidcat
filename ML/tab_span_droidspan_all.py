@@ -105,7 +105,7 @@ def predict(bf1, bl1, bf2, bl2, fh):
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, ) #FSET_SEC)
+    fsets = (FSET_FULL, FSET_SEC)
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -202,10 +202,14 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware2017-more"]},
+                ]
 
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
 
     for i in range(0, len(datasets)-1):
         # training dataset
@@ -219,7 +223,8 @@ if __name__=="__main__":
             bft.update (mf)
             blt.update (ml)
 
-        for j in range(i+1, len(datasets)):
+        #for j in range(i+1, len(datasets)):
+        for j in range(7, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
             # testing dataset
@@ -230,10 +235,15 @@ if __name__=="__main__":
                 blp.update (bl)
             for k in range(0, len(datasets[j]['malware'])):
                 (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[j]['malware'][k])
+                #(mf, ml) = loadMalwareData(True,"features_droidcat/"+datasets[j]['malware'][k], "/home/hcai/Downloads/AndroZoo/malware-2017", True, False, True)
+                for app in mf.keys():
+                    if app in blacklist:
+                        del mf[app]
+                        del ml[app]
                 bfp.update (mf)
                 blp.update (ml)
 
-            for x in range(0,10):
+            for x in range(0,1):
                 predict(bft,blt, bfp,blp, fh)
 
     fh.flush()
