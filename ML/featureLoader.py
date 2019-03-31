@@ -463,8 +463,8 @@ def loadMalwareNoFamily(rootdir):
         malwareLabels[app] = 'MALICIOUS'
 
     for app in allfeatures_malware.keys():
-        #if sum(allfeatures_malware[app]) < 0.00005:
-        if sum(allfeatures_malware[app]) < 21:
+        if sum(allfeatures_malware[app]) < 0.00005:
+        #if sum(allfeatures_malware[app]) < 21:
             del allfeatures_malware[app]
             del malwareLabels[app]
 

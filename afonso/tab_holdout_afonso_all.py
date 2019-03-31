@@ -234,9 +234,11 @@ def getfvec(fdict):
     for md5 in fdict.keys():
         #print md5
         #fnames = [fname for fname in fdict[md5].keys()]
+        '''
         for key in fdict[md5].keys():
             if "->>" in key:
                 fdict[md5][key]=0
+        '''
         fvalues = [freq for freq in fdict[md5].values()]
         #print len(fnames), len(fvalues)
         fvecs[md5] = fvalues

@@ -136,8 +136,15 @@ def loadFeatures(datatag, label, filtering=False):
     except (EOFError, pickle.UnpicklingError):
         pass
 
+    allkeys = fdict.keys()
+    skeys=[]
+    for i in range(0, 250):
+        t = random.randint(0,len(allkeys)-1)
+        skeys.append(allkeys[t])
+
     global blacklist, whitelist
-    for key in fdict.keys():
+    #for key in fdict.keys():
+    for key in skeys:
         if filtering==True and ((key in blacklist) or (key not in whitelist)):
             continue
 

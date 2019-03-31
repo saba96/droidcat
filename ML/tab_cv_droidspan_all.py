@@ -78,8 +78,8 @@ def predict(f, l, fh):
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC)
-    #fsets = (FSET_FULL, FSET_SEC)
-    fsets = (FSET_FULL, )
+    fsets = (FSET_FULL, FSET_SEC)
+    #fsets = (FSET_FULL, )
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -156,7 +156,9 @@ if __name__=="__main__":
                   {"benign":["zoobenign2014"], "malware":["vs2014"]},
                   {"benign":["zoobenign2015"], "malware":["vs2015"]},
                   {"benign":["zoobenign2016"], "malware":["vs2016"]},
-                  {"benign":["benign2017"], "malware":["zoo2017"]} ]
+                  {"benign":["benign2017"], "malware":["zoo2017","malware2017-more"]},
+                  #{"benign":["benign2017"], "malware":["zoo2017"]}
+                ]
 
     '''
     datasets = [  {"benign":["zoobenign2016"], "malware":["vs2016"]} ]
@@ -165,7 +167,11 @@ if __name__=="__main__":
     fh = sys.stdout
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
 
-    for i in range(0, len(datasets)):
+    blacklist = []
+    for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
+        blacklist.append (app.lstrip().rstrip())
+
+    for i in range(7, len(datasets)):
         print "work on %s ... " % ( datasets[i] )
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
@@ -174,6 +180,10 @@ if __name__=="__main__":
             blt.update (bl)
         for k in range(0, len(datasets[i]['malware'])):
             (mf, ml) = loadMalwareNoFamily("features_droidcat/"+datasets[i]['malware'][k])
+            for app in mf.keys():
+                if app in blacklist:
+                    del mf[app]
+                    del ml[app]
             bft.update (mf)
             blt.update (ml)
 

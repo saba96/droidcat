@@ -154,9 +154,11 @@ def getfvec(fdict):
     for md5 in fdict.keys():
         #print md5
         #fnames = [fname for fname in fdict[md5].keys()]
+        '''
         for key in fdict[md5].keys():
             if "->" in key:
                 fdict[md5][key]=0
+        '''
         fvalues = [freq for freq in fdict[md5].values()]
         #print len(fnames), len(fvalues)
         fvecs[md5] = fvalues
@@ -248,7 +250,7 @@ if __name__=="__main__":
             blt.update (ml)
 
         #for j in range(i+1, len(datasets)):
-        for j in range(7, len(datasets)):
+        for j in range(0, len(datasets)):
             print "train on %s ... test on %s ..." % ( datasets[i], datasets[j] )
 
             # testing dataset

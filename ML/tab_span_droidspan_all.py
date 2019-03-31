@@ -101,11 +101,11 @@ def predict(bf1, bl1, bf2, bl2, fh):
     #fsets = (FSET_FULL,FSET_NOICC, FSET_MIN, FSET_YYY_G, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_Y, FSET_YY, FSET_YYY):
 
-    #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
+    fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP, FSET_YYY_TOP, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_FULL, FSET_G, FSET_ICC, FSET_SEC, FSET_YYY, FSET_FULL_TOP_G, FSET_YYY_TOP_G)
     #fsets = (FSET_NOICC, FSET_G, FSET_SEC)
     #fsets = (FSET_FULL, FSET_G, FSET_SEC)
-    fsets = (FSET_FULL, FSET_SEC)
+    #fsets = (FSET_FULL, FSET_SEC)
 
     #fh = file ('confusion_matrix_formajorfamilyonly_holdout_all.txt', 'w')
     print >> fh, '\t'.join(uniqLabels)
@@ -211,7 +211,7 @@ if __name__=="__main__":
     for app in file('/home/hcai/Downloads/AndroZoo/malware-2017/non-malware-list.txt').readlines():
         blacklist.append (app.lstrip().rstrip())
 
-    for i in range(0, len(datasets)-1):
+    for i in range(2, len(datasets)-1):
         # training dataset
         (bft, blt) = ({}, {})
         for k in range(0, len(datasets[i]['benign'])):
