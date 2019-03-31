@@ -27,7 +27,7 @@ def get_families(path_md5_families):
     return families
 
 def get_metainfo_dir(apk_path, first_seen, out_metainfo, families = None):
-    md5list=open("obfmg2.txt", "w")
+
     pkl = open(out_metainfo, "wb")
     subdirectories = io.get_directories(apk_path)
     for apk_directory in subdirectories:
@@ -44,7 +44,6 @@ def get_metainfo_dir(apk_path, first_seen, out_metainfo, families = None):
                 except KeyError:
                     print 'Warning', md5, 'without ground truth', file
                     continue
-            print >> md5list, md5 + "\t" + family
             try:
                 time = first_seen[md5]
             except:
@@ -178,10 +177,12 @@ def main():
 
     families = get_families ('/home/hcai/gitrepo/droidcat/ML/md5families/zoo-2010.txt')
     get_metainfo_dir('/home/hcai/Downloads/AndroZoo/2010/', first_seen, 'metainfo.pickle.zoo2010', families)
+    '''
 
-    families = get_families ('/home/hcai/gitrepo/droidcat/ML/md5families/zoo-2011.txt')
-    get_metainfo_dir('/home/hcai/Downloads/AndroZoo/2011/', first_seen, 'metainfo.pickle.zoo2011', families)
+    #families = get_families ('/home/hcai/gitrepo/droidcat/ML/md5families/zoo2011.txt')
+    #get_metainfo_dir('/home/hcai/Downloads/AndroZoo/2011/', first_seen, 'metainfo.pickle.zoo2011', families)
 
+    '''
     families = get_families ('/home/hcai/gitrepo/droidcat/ML/md5families/zoo-2012.txt')
     get_metainfo_dir('/home/hcai/Downloads/AndroZoo/2012/', first_seen, 'metainfo.pickle.zoo2012', families)
 
@@ -192,11 +193,11 @@ def main():
     get_metainfo_dir('/home/hcai/Downloads/AndroZoo/2014/', first_seen, 'metainfo.pickle.zoo2014', families)
     '''
 
-    #get_metainfo_dir('/home/hcai/Downloads/PraGuard/TRIVIAL+STRING_ENCRYPTION+REFLECTION+CLASS_ENCRYPTION_APK/Malgenome/', first_seen, 'metainfo.pickle.obfmg')
-    #get_metainfo_dir('/home/hcai/Downloads/PraGuard/TRIVIAL+STRING_ENCRYTPION+REFLECTION_APK/Malgenome/', first_seen, 'metainfo.pickle.obfmg2')
+    '''
+    get_metainfo_dir('/home/hcai/Downloads/PraGuard/TRIVIAL+STRING_ENCRYPTION+REFLECTION+CLASS_ENCRYPTION_APK/Malgenome/', first_seen, 'metainfo.pickle.obfmg')
+    '''
 
-    families = get_families ('/home/hcai/gitrepo/droidcat/ML/md5families/obfcontagio.txt')
-    get_metainfo_dir('/home/hcai/testbed/input/Contagio/', first_seen, 'metainfo.pickle.obfcontagio', families)
+    get_metainfo_dir('/home/hcai/Downloads/AndroZoo/malware-2017', first_seen, 'metainfo.pickle.malware-2017-more')
 
     #first_seen = {} #get_first_seen('')
     #get_metainfo_dir('/media/dataset/android/samples/PRAGuard/obfuscated_samples/TRIVIAL+STRING_ENCRYPTION+REFLECTION+CLASS_ENCRYPTION_APK', first_seen, 'metainfo.pickle.prg.all')
