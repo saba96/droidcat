@@ -6,20 +6,14 @@ fi
 
 apkfile=$1
 
-ROOT=/home/hcai/
+ROOT=/home/droidcat
 subjectloc=`pwd`
 
 OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
 
-MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/workspace/duafdroid/bin:$ROOT/workspace/droidfax/bin:$ROOT/libs/java_cup.jar"
+MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/libs/duafdroid.jar:$ROOT/libs/droidfax.jar:$ROOT/libs/java_cup.jar"
 
-SOOTCP="$ROOT/workspace/droidfax/bin:/home/hcai/Android/Sdk/platforms/android-21/android.jar"
-
-for i in $ROOT/libs/*.jar;
-do
-	#SOOTCP=$SOOTCP:$i
-    MAINCP=$MAINCP:$i
-done
+SOOTCP="$ROOT/libs/droidfax.jar:$Root/libs/android.jar"
 
 # get the apk file name without prefixing path and suffixing extension
 suffix=${apkfile##*/}
@@ -70,9 +64,8 @@ stoptime=`date +%s%N | cut -b1-13`
 echo "StaticAnalysisTime for $suffix elapsed: " `expr $stoptime - $starttime` milliseconds
 echo "static analysis finished."
 
-echo "chapple" | ./signandalign.sh $OUTDIR/${suffix}.apk
+echo "chapple" | scripts/signandalign.sh $OUTDIR/${suffix}.apk
 exit 0
 
 
 # hcai vim :set ts=4 tw=4 sws=4
-
