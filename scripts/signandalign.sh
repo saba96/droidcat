@@ -1,3 +1,5 @@
+set -x
+pwd
 #!/bin/bash
 
 if [ $# -lt 1 ];
@@ -11,9 +13,9 @@ echo "sign the apk ..."
 jarsigner -verbose \
 		-sigalg SHA1withRSA \
 		-digestalg SHA1 \
-		-keystore hcai4android.keystore \
+		-keystore key \
 		$apkfile \
-		hcai_for_android
+		key0
 
 echo "verify the signature just added ..."
 jarsigner -verify -verbose -certs $apkfile
