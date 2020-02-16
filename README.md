@@ -8,12 +8,11 @@ You can find usage information at https://chapering.github.io/droidcat.
 Note: This repo is going to be completed. Results are not reproducable yet. 
 I tried to make results reproducable.
 1) First install [Docker](https://docs.docker.com/install/).
-2) Clone this repo: `git clone https://github.com/saba96/droidcat.git`
-3) Go to where you have cloned the repo: `cd <where you cloned the repo>/droidcat`
-4) Set up docker for having correct environment. `./build.sh`
-5) `./run.sh`
-6) Then open a new terminal. Paste this `docker ps` to see what is the container id associating with droidcat. Copy the container id for next step.
-7) Copy droidcat to your docker container. `cp /<where you cloned the repo>/droidcat <containerId>:/home`
-8) Go back to your docker terminal and follow steps at http://chapering.github.io/droidcat/page_usage.html.DroidCat is a dynamic malware detection and categorization technique using supervised learning algorithms on behavioral characterization of Android apps. 
+2) Open a terminal and run `./build.sh` to set up the right environment in Docker.
+3) Then run `./run.sh`. This will open a bash shell in your docker container.
+4) Then go to home directory `cd /home`.
+5) Clone this repo: `git clone https://github.com/saba96/droidcat.git`
+6) Then `cd ./droidcat`.
+7) Now run `scripts/cgInstr.sh <Your APK file>`. You can expect to see instrumented apk file under cg.instrumented folder now. If there is no file, an error may have occured so please check out-dynInstr-cg folder to find possible error in instr-<yourApkFile>.err.
 
 You can find usage information at https://chapering.github.io/droidcat.
