@@ -1,3 +1,4 @@
+set -x
 #!/bin/bash
 if [ $# -lt 1 ];then
 	echo "Usage: $0 apk-file"
@@ -11,9 +12,14 @@ subjectloc=`pwd`
 
 OUTDIR=${2:-"$subjectloc/cg.instrumented/"}
 
-MAINCP="$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/libs/duafdroid.jar:$ROOT/libs/droidfax.jar:$ROOT/libs/java_cup.jar"
+MAINCP="$ROOT/libs/soot-infoflow-android.jar:$ROOT/libs/soot-infoflow.jar:$ROOT/libs/rt.jar:$ROOT/libs/polyglot.jar:$ROOT/libs/soot-trunk.jar:$ROOT/libs/duafdroid.jar:$ROOT/libs/droidfax.jar:$ROOT/libs/java_cup.jar"
 
 SOOTCP="$ROOT/libs/droidfax.jar:$Root/libs/android.jar"
+
+for i in $ROOT/libs/bin/*.jar;
+do
+    MAINCP=$MAINCP:$i
+done
 
 # get the apk file name without prefixing path and suffixing extension
 suffix=${apkfile##*/}
@@ -48,8 +54,8 @@ starttime=`date +%s%N | cut -b1-13`
 	#-dumpJimple \
     #-noMonitorCalls \
     #-monitorEvents \
-	#-catcallback /home/hcai/libs/catCallbacks.txt \
-    #-instrlifecycle \
+    #-catcallback /home/hcai/libs/catCallbacks.txt \
+   #-instrlifecycle \
 cmd="java -Xmx200g -Xss1g -ea -cp ${MAINCP} dynCG.sceneInstr \
 	-w -cp $SOOTCP -p cg verbose:false,implicit-entry:true \
 	-p cg.spark verbose:false,on-fly-cg:true,rta:false \
