@@ -10,17 +10,15 @@ fi
 apkfile=$1
 
 echo "sign the apk ..."
-jarsigner -verbose \
+echo 123456 | jarsigner -verbose \
 		-sigalg SHA1withRSA \
 		-digestalg SHA1 \
-		-keystore key \
+		-keystore /home/droidcat/key \
 		$apkfile \
 		key0
 
 echo "verify the signature just added ..."
 jarsigner -verify -verbose -certs $apkfile
-
-exit 0
 
 echo "align the signed APK package ..."
 outfn=${apkfile%.*}_signed.apk
@@ -29,6 +27,7 @@ then
 	echo "remove existing version - $outfn"
 	rm -f ${outfn}
 fi
+
 zipalign -v 4 $apkfile $outfn
 
 echo "finished signing and aligning successfully."
